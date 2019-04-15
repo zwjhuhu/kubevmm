@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/libvirt/libvirt-go-xml"
 	"reflect"
-	"strings"
 )
 
 /**
