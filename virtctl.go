@@ -13,6 +13,9 @@ import (
  * @author wuheng(@otcaix.iscas.ac.cn)
  * @since 2019/4/14
  *
+ * go get github.com/libvirt/libvirt-go
+ * go get github.com/libvirt/libvirt-go-xml
+ * go get github.com/kubesys/kubevirt
  */
 
  func main() {
