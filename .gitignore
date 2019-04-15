@@ -9,6 +9,10 @@ __pycache__/
 # Go
 .idea/
 
+# python
+.project       
+.pydevproject
+
 # Distribution / packaging
 .Python
 build/
