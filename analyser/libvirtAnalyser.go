@@ -4,8 +4,8 @@
 package analyser
 
 import (
-	"fmt"
 	"reflect"
+	"strings"
 )
 
 /**
@@ -14,19 +14,66 @@ import (
  *
  */
 
- func GetMethod(input interface{}) {
+func DoAnalyse(objType reflect.Type) (string) {
+	return analyse(objType, "", "", "")
+}
 
-	 getType := reflect.TypeOf(input)
-	 fmt.Println("get Type is :", getType.Name())
+func analyse(objType reflect.Type, xmlinfo string, previous string, endelem string) (string) {
 
-	 // 获取方法字段
-	 // 1. 先获取interface的reflect.Type，然后通过NumField进行遍历
-	 // 2. 再通过reflect.Type的Field获取其Field
-	 // 3. 最后通过Field的Interface()得到对应的value
-	 for i := 0; i < getType.NumField(); i++ {
-		 field := getType.Field(i)
-		 fmt.Printf("%s: %v = %v: %s\n", field.Name, field.Type, field.Tag)
-	 }
+	for i := 0; i < objType.NumField(); i++ {
+
+		field := objType.Field(i)
+		xmlTag := field.Tag.Get("xml")
+
+		if len(endelem) == 0 {
+			attr := strings.Split(xmlTag, ",")[0]
+			endelem  = "</" + attr  + ">"
+			previous = "<" + attr + ">"
+			xmlinfo  = "<" + attr + ">"
+		} else if len(xmlTag) == 0 || strings.EqualFold(xmlTag, "-") || len(strings.Split(xmlTag, ",")[0]) == 0 {
+			continue
+		} else if strings.Contains(xmlTag, "attr") {
+			old := previous
+			new := ""
+			if strings.EqualFold(previous[1:len(previous) - 1], strings.Split(xmlTag, ",")[0])        {
+				new =  "<" +
+					strings.Split(xmlTag, ",")[0] +
+					"=\"" + field.Type.String() + "\">"
+			} else {
+				new =  previous[0:len(previous)-1] + " " +
+					strings.Split(xmlTag, ",")[0] +
+					"=\"" + field.Type.String() + "\">"
+			}
+			xmlinfo = strings.Replace(xmlinfo, old, new, -1)
+			previous = new
+		} else {
+			if strings.Contains(field.Type.String(), "libvirtxml") {
+				attr := strings.Split(xmlTag, ",")[0]
+				end  := "</" + attr  + ">"
+				prev := "<" + attr + ">"
+				name := field.Type.String()
+				if strings.Contains(name, "*") {
+					previous = analyse(reflect.TypeOf(reflect.New(field.Type.Elem()).Elem().Interface()), prev, prev, end)
+				} else if strings.Contains(name, "[]") {
+					previous = analyse(reflect.New(field.Type.Elem()).Elem().Type(), prev, prev, end)
+				} else {
+					previous = analyse(reflect.TypeOf(reflect.New(field.Type).Elem().Interface()), prev, prev, end)
+				}
+			} else {
+				previous = "<" + strings.Split(xmlTag, ",")[0] + ">" +
+					field.Type.String() +
+					"</" + strings.Split(xmlTag, ",")[0] + ">"
+
+			}
+
+			if !strings.Contains(xmlinfo, previous) {
+				xmlinfo += previous
+			}
+
+		}
+	}
+
+	return xmlinfo + endelem
  }
 
 
