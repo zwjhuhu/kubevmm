@@ -60,40 +60,8 @@ and learn more about the major components by taking a look at
  * [Cockpit][cockpit]
  * [Kubevirt-ansible][kubevirt-ansible]
 
-## Submitting patches
 
-When sending patches to the project, the submitter is required to certify that
-they have the legal right to submit the code. This is achieved by adding a line
-
-    Signed-off-by: Real Name <email@address.com>
-
-to the bottom of every commit message. Existence of such a line certifies
-that the submitter has complied with the Developer's Certificate of Origin 1.1,
-(as defined in the file docs/developer-certificate-of-origin).
-
-This line can be automatically added to a commit in the correct format, by
-using the '-s' option to 'git commit'.
-
-## License
-
-KubeVirt is distributed under the
-[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
-
-    Copyright 2016
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
-[//]: # (Reference links)
+## (Reference links)
    [k8s]: https://kubernetes.io
    [crd]: https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/
    [ovirt]: https://www.ovirt.org
