@@ -5,7 +5,8 @@ package main
 
 import (
 	"fmt"
-	"k8s.io/libvirt-go"
+	"github.com/kubesys/kubevirt/analyser"
+	libvirtxml "github.com/libvirt/libvirt-go-xml"
 	"reflect"
 )
 
@@ -15,7 +16,7 @@ import (
  *
  */
 func main() {
-	domain := libvirt.Domain{}
-	fmt.Println(reflect.TypeOf(domain))
-	//fmt.Println(analyser.DoAnalyse(reflect.TypeOf(domain)))
+	domain  := libvirtxml.Domain{}
+	objType := reflect.TypeOf(domain)
+	fmt.Println(analyser.Analyse(objType, "domain"))
 }
