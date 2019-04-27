@@ -15,8 +15,16 @@ import (
  * @since 2019/4/26
  *
  */
+
+
+
 func main() {
-	domain  := libvirtxml.Domain{}
-	objType := reflect.TypeOf(domain)
-	fmt.Println(analyser.Analyse(objType, "domain"))
+	xmlDesc(reflect.TypeOf(libvirtxml.Domain{}), "domain")
+	xmlDesc(reflect.TypeOf(libvirtxml.Network{}), "network")
+	xmlDesc(reflect.TypeOf(libvirtxml.StoragePool{}), "pool")
+	xmlDesc(reflect.TypeOf(libvirtxml.DomainSnapshot{}), "domainsnapshot")
+}
+
+func xmlDesc(objType reflect.Type, tag string)  {
+	fmt.Println(analyser.Analyse(objType, tag))
 }

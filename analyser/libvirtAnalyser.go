@@ -48,20 +48,22 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 		// I do not known why only some classes have this attr,
 		// may be we cannot use libvit-go in production
 		attrDesc := field.Tag.Get("xml")
-		if len(xmlTag) == 0 ||
+		if len(xmlTag) == 0 || len(attrDesc) == 0 ||
 			strings.EqualFold(attrDesc, "-") ||
-			len(strings.Split(attrDesc, ",")[0]) == 0  ||
+			strings.Contains(attrDesc, "innerxml") ||
 			strings.Contains(attrDesc, "omitempty") {
 			continue
 		}
 
 		attr := strings.Split(attrDesc, ",")[0]
-		if strings.Contains(attrDesc, "attr") {
+		if len(attr) == 0 && strings.Contains(attrDesc, "chardata") {
+			xml = xml + "value"
+		} else if strings.Contains(attrDesc, "attr") {
 			xml = xml[:len(xml) - 1] + " " + attr +
 						"='" + field.Type.String() + "'>"
 		} else if !strings.Contains(field.Type.String(), "libvirtxml") {
 			xml = xml + "<" + attr + ">" + field.Type.String() + "</" + attr + ">"
-		} else {
+		} else if strings.Contains(field.Type.String(), "libvirtxml")  {
 			objRef := objType
 
 			if strings.Contains(field.Type.String(), "*") {
