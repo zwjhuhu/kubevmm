@@ -1,5 +1,5 @@
 /**
- * Copyright (2018, ) Institute of Software, Chinese Academy of Sciences
+ * Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
  */
 package analyser
 
@@ -14,66 +14,77 @@ import (
  *
  */
 
-func DoAnalyse(objType reflect.Type) (string) {
-	return analyse(objType, "", "", "")
-}
+func Analyse(objType reflect.Type, xmlTag string) (string) {
 
-func analyse(objType reflect.Type, xmlinfo string, previous string, endelem string) (string) {
+	xml := "<" + xmlTag  + ">"
+
+	/**
+	 *  take libvirtxml.domain for example, the structure is
+	 *  type Domain struct {
+	 *  XMLName        xml.Name              `xml:"domain"`
+	 *  Type           string                `xml:"type,attr,omitempty"`
+	 *  ID             *int                  `xml:"id,attr"`
+	 *  Name           string                `xml:"name,omitempty"`
+	 *  UUID           string                `xml:"uuid,omitempty"`
+	 *  GenID          *DomainGenID          `xml:"genid"`
+	 * ...}
+	 *
+	 *  the term 'field' is a row, such as 'MLName        xml.Name              `xml:"domain"`'
+	 *  the term 'attrDesc' is a substring of the third column, such as 'domain', 'type, attr, omitempty'
+	 *  the term 'attr' is a substring of the third column, such as 'domain', 'type', 'id'
+	 */
 
 	for i := 0; i < objType.NumField(); i++ {
 
+		// ignore this case
+		// I do not known why only some classes have this attr,
+		// may be we cannot use libvit-go in production
 		field := objType.Field(i)
-		xmlTag := field.Tag.Get("xml")
-
-		if len(endelem) == 0 {
-			attr := strings.Split(xmlTag, ",")[0]
-			endelem  = "</" + attr  + ">"
-			previous = "<" + attr + ">"
-			xmlinfo  = "<" + attr + ">"
-		} else if len(xmlTag) == 0 || strings.EqualFold(xmlTag, "-") || len(strings.Split(xmlTag, ",")[0]) == 0 {
+		if strings.EqualFold(field.Type.String(), "xml.Name") {
 			continue
-		} else if strings.Contains(xmlTag, "attr") {
-			old := previous
-			new := ""
-			if strings.EqualFold(previous[1:len(previous) - 1], strings.Split(xmlTag, ",")[0])        {
-				new =  "<" +
-					strings.Split(xmlTag, ",")[0] +
-					"=\"" + field.Type.String() + "\">"
-			} else {
-				new =  previous[0:len(previous)-1] + " " +
-					strings.Split(xmlTag, ",")[0] +
-					"=\"" + field.Type.String() + "\">"
-			}
-			xmlinfo = strings.Replace(xmlinfo, old, new, -1)
-			previous = new
-		} else {
-			if strings.Contains(field.Type.String(), "libvirtxml") {
-				attr := strings.Split(xmlTag, ",")[0]
-				end  := "</" + attr  + ">"
-				prev := "<" + attr + ">"
-				name := field.Type.String()
-				if strings.Contains(name, "*") {
-					previous = analyse(reflect.TypeOf(reflect.New(field.Type.Elem()).Elem().Interface()), prev, prev, end)
-				} else if strings.Contains(name, "[]") {
-					previous = analyse(reflect.New(field.Type.Elem()).Elem().Type(), prev, prev, end)
-				} else {
-					previous = analyse(reflect.TypeOf(reflect.New(field.Type).Elem().Interface()), prev, prev, end)
-				}
-			} else {
-				previous = "<" + strings.Split(xmlTag, ",")[0] + ">" +
-					field.Type.String() +
-					"</" + strings.Split(xmlTag, ",")[0] + ">"
-
-			}
-
-			if !strings.Contains(xmlinfo, previous) {
-				xmlinfo += previous
-			}
-
 		}
+
+		// ignore this case
+		// I do not known why only some classes have this attr,
+		// may be we cannot use libvit-go in production
+		attrDesc := field.Tag.Get("xml")
+		if len(xmlTag) == 0 || len(attrDesc) == 0 ||
+			strings.EqualFold(attrDesc, "-") ||
+			strings.Contains(attrDesc, "innerxml") ||
+			strings.Contains(attrDesc, "omitempty") {
+			continue
+		}
+
+		attr := strings.Split(attrDesc, ",")[0]
+		if len(attr) == 0 && strings.Contains(attrDesc, "chardata") {
+			xml = xml + "value"
+		} else if strings.Contains(attrDesc, "attr") {
+			xml = xml[:len(xml) - 1] + " " + attr +
+						"='" + field.Type.String() + "'>"
+		} else if !strings.Contains(field.Type.String(), "libvirtxml") {
+			xml = xml + "<" + attr + ">" + field.Type.String() + "</" + attr + ">"
+		} else if strings.Contains(field.Type.String(), "libvirtxml")  {
+			objRef := objType
+
+			if strings.Contains(field.Type.String(), "*") {
+				objRef = reflect.TypeOf(reflect.New(field.Type.Elem()).Elem().Interface())
+			} else if strings.Contains(field.Type.String(), "[]") {
+				objRef = reflect.New(field.Type.Elem()).Elem().Type()
+			} else {
+				objRef = reflect.TypeOf(reflect.New(field.Type).Elem().Interface())
+			}
+
+			// nested loop
+			if strings.EqualFold(objType.String(), objRef.String()) {
+				continue
+			}
+			xml = xml + Analyse(objRef, attr)
+		}
+
 	}
 
-	return xmlinfo + endelem
- }
+	return xml + "</" + xmlTag  + ">"
+}
+
 
 
