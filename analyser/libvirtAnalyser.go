@@ -55,6 +55,7 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 			continue
 		}
 
+		repeat := 1
 		attr := strings.Split(attrDesc, ",")[0]
 		if len(attr) == 0 && strings.Contains(attrDesc, "chardata") {
 			xml = xml + "value"
@@ -70,6 +71,8 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 				objRef = reflect.TypeOf(reflect.New(field.Type.Elem()).Elem().Interface())
 			} else if strings.Contains(field.Type.String(), "[]") {
 				objRef = reflect.New(field.Type.Elem()).Elem().Type()
+				// may write twice because it is an array
+				repeat = 2
 			} else {
 				objRef = reflect.TypeOf(reflect.New(field.Type).Elem().Interface())
 			}
@@ -78,7 +81,10 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 			if strings.EqualFold(objType.String(), objRef.String()) {
 				continue
 			}
-			xml = xml + Analyse(objRef, attr)
+
+			for a := 0; a < repeat; a++ {
+				xml = xml + Analyse(objRef, attr)
+			}
 		}
 
 	}
