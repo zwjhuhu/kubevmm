@@ -50,8 +50,8 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 		attrDesc := field.Tag.Get("xml")
 		if len(xmlTag) == 0 || len(attrDesc) == 0 ||
 			strings.EqualFold(attrDesc, "-") ||
-			strings.Contains(attrDesc, "innerxml") ||
-			strings.Contains(attrDesc, "omitempty") {
+			strings.Contains(attrDesc, "innerxml") {
+			//strings.Contains(attrDesc, "omitempty") {
 			continue
 		}
 
