@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: cloudplus
+   labels:
+     name: cloudplus
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kubevirt-controller-manager
+  namespace: cloudplus
+  labels:
+    app: kubevirt-controller-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubevirt-controller-manager
+  template:
+    metadata:
+      labels:
+        app: kubevirt-controller-manager
+    spec:
+      containers:
+      - image: github.com/kubevirt-controller-manager:v1.14.1
+        imagePullPolicy: IfNotPresent
+        name: kubevirt-controller-manager
+        volumeMounts:
+        - name: admin
+          mountPath: /etc/kubernetes/admin.conf
+      volumes:
+      - name: admin
+        hostPath:
+          path: /etc/kubernetes/admin.conf
