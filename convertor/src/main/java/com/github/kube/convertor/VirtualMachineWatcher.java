@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.github.kube.convertor.crd.DoneableVirtualMachine;
@@ -37,6 +39,8 @@ import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
  * @since Wed May 01 17:26:22 CST 2019
  **/
 public class VirtualMachineWatcher extends CustomResourceWatcher {
+	
+	protected final static Logger m_logger = Logger.getLogger(VirtualMachineWatcher.class.getName());
 
 	public final static String ACTION_CREATE  = "ADDED";
 	
@@ -96,10 +100,18 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					pod.setSpec(spec );
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() == null) {
 						client.pods().inNamespace(POD_NAMESPACE).create(pod );
+						m_logger.log(Level.INFO, "Create VM '" + vm.getMetadata().getName() 
+								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
+						m_logger.log(Level.INFO, "Create Pod '" + podName 
+								+ "' in namespace '" + POD_NAMESPACE + "'");
 					}
 				} else if (action.toString().equals(ACTION_REMOVE)) {
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() != null) {
 						client.pods().inNamespace(POD_NAMESPACE).withName(podName).delete();
+						m_logger.log(Level.INFO, "Delete Pod '" + podName 
+								+ "' in namespace '" + POD_NAMESPACE + "'");
+						m_logger.log(Level.INFO, "Delete VM '" + vm.getMetadata().getName() 
+								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
 					}
 				}
 			}
