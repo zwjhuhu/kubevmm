@@ -16,8 +16,6 @@ import (
  *
  */
 
-
-
 func main() {
 	xmlDesc(reflect.TypeOf(libvirtxml.Domain{}), "domain")
 	xmlDesc(reflect.TypeOf(libvirtxml.Network{}), "network")
