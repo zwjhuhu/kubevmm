@@ -37,26 +37,31 @@ import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
  * @author shizhonghao17@otcaix.iscas.ac.cn
  * @author yangchen18@otcaix.iscas.ac.cn
  * @since Wed May 01 17:26:22 CST 2019
+ * 
+ * https://www.json2yaml.com/
+ * http://www.bejson.com/xml2json/
  **/
 public class VirtualMachineWatcher extends CustomResourceWatcher {
 	
 	protected final static Logger m_logger = Logger.getLogger(VirtualMachineWatcher.class.getName());
 
-	public final static String ACTION_CREATE  = "ADDED";
+	public final static String ACTION_CREATE      = "ADDED";
 	
-	public final static String ACTION_REMOVE  = "DELETED";
+	public final static String ACTION_REMOVE      = "DELETED";
 	
-	public final static String POD_PREFIX     = "vm2pod";
+	public final static String POD_PREFIX         = "vm2pod";
 	
-	public final static String POD_NAMESPACE  = "default";
+	public final static String POD_NAMESPACE      = "default";
 	
-	public final static String POD_ANNOTATION = "NotPod";
+	public final static String KIND_ANNOTATION    = "NotPod";
 	
-	public final static String CPU_RESOURCE   = "cpu";
+	public final static String CONTENT_ANNOTATION = "VM";
 	
-	public final static String RAM_RESOURCE   = "memory";
+	public final static String CPU_RESOURCE       = "cpu";
 	
-	public final static String DEFAULT_IMAGE  = "fake";
+	public final static String RAM_RESOURCE       = "memory";
+	
+	public final static String DEFAULT_IMAGE      = "fake";
 	
 	public VirtualMachineWatcher() throws Exception {
 		super();
@@ -79,7 +84,8 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					ObjectMeta metadata = new ObjectMeta();
 					metadata.setName(podName);
 					Map<String, String> annotations = new HashMap<String, String>();
-					annotations.put(POD_ANNOTATION, JSON.toJSONString(vm));
+					annotations.put(KIND_ANNOTATION, KIND_ANNOTATION);
+					annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm));
 					metadata.setAnnotations(annotations );
 					pod.setMetadata(metadata );
 					
