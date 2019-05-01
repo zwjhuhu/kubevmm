@@ -13,3 +13,5 @@ spec:
     description: CentOS
     memory:
       text: 4096
+    vcpu:
+      text: 2
