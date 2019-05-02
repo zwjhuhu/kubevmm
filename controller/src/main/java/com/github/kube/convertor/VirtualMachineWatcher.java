@@ -101,7 +101,6 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					metadata.setAnnotations(annotations );
 					pod.setMetadata(metadata );
 					
-					
 					PodSpec spec = new PodSpec();
 					List<Container> containers = new ArrayList<Container>();
 					Container container = new Container();
@@ -116,6 +115,7 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					containers.add(container);
 					spec.setContainers(containers );
 					
+					spec.setPriority(0);
 					spec.setSchedulerName("kubecrd-scheduler");
 					
 					pod.setSpec(spec );
