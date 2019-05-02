@@ -53,9 +53,17 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 	
 	public final static String POD_NAMESPACE      = "default";
 	
-	public final static String KIND_ANNOTATION    = "NotPod";
+	public final static String KIND_ANNOTATION    = "crdKind";
 	
-	public final static String CONTENT_ANNOTATION = "VM";
+	public final static String NS_ANNOTATION      = "crdNamespace";
+	
+	public final static String VERSION_ANNOTATION = "crdVersion";
+	
+	public final static String GROUP_ANNOTATION   = "crdGroup";
+	
+	public final static String NAME_ANNOTATION    = "crdName";
+	
+	public final static String CONTENT_ANNOTATION = "crdYaml";
 	
 	public final static String CPU_RESOURCE       = "cpu";
 	
@@ -84,7 +92,11 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					ObjectMeta metadata = new ObjectMeta();
 					metadata.setName(podName);
 					Map<String, String> annotations = new HashMap<String, String>();
-					annotations.put(KIND_ANNOTATION, KIND_ANNOTATION);
+					annotations.put(KIND_ANNOTATION, VirtualMachineGenerator.NAME);
+					annotations.put(GROUP_ANNOTATION, VirtualMachineGenerator.GROUP);
+					annotations.put(VERSION_ANNOTATION, VirtualMachineGenerator.VERSION);
+					annotations.put(NAME_ANNOTATION, vm.getMetadata().getName());
+					annotations.put(NS_ANNOTATION, vm.getMetadata().getNamespace());
 					annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm));
 					metadata.setAnnotations(annotations );
 					pod.setMetadata(metadata );
@@ -123,7 +135,7 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 			}
 
 			public void onClose(KubernetesClientException cause) {
-
+				m_logger.log(Level.INFO, "Stop VirtualMachineWatcher");
 			}
 
 		});
@@ -137,10 +149,16 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		m_logger.log(Level.INFO, "Start VirtualMachineWatcher");
 		VirtualMachineWatcher watcher = new VirtualMachineWatcher();
 		CustomResourceDefinition crd = watcher.getCustomResourceDefinition(
 						VirtualMachineGenerator.NAME, VirtualMachine.class);
-		watcher.watch(crd, VirtualMachine.class, VirtualMachineList.class, DoneableVirtualMachine.class);
+		if (crd != null) {
+			watcher.watch(crd, VirtualMachine.class, VirtualMachineList.class, DoneableVirtualMachine.class);
+		} else {
+			m_logger.log(Level.SEVERE, "VirtualMachineWatcher does not work");
+		}
+		
 	}
 
 }

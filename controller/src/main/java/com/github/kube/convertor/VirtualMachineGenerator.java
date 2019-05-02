@@ -28,17 +28,21 @@ public class VirtualMachineGenerator {
 	/**
 	 * metadata.name in VirtualMachineCRD.yaml
 	 */
-	public final static String NAME = "virtualmachines.cloudplus.io";
+	public final static String NAME    = "virtualmachines.cloudplus.io";
+	
+	public final static String GROUP   = "cloudplus.io";
+	
+	public final static String VERSION = "v1alpha3";
 	
 	/**
 	 * spec.name.kind in VirtualMachineCRD.yaml
 	 */
-	public final static String KIND = "VirtualMachine";
+	public final static String KIND    = "VirtualMachine";
 
 	/**
 	 * 
 	 */
-	public final static String CONF = "conf/domain.json";
+	public final static String CONF    = "conf/domain.json";
 	
 	/**
 	 * 
