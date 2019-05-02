@@ -30,17 +30,6 @@ func (sched *Scheduler) scheduleOne() {
 	scheduleResult, err := sched.schedule(pod)
 	if err != nil {
 
-		//--------------------------------------
-		//          Support CRD
-		//-------------------------------------
-		if pod.GetAnnotations()["crdKind"] != "" {
-			SupportCRD(scheduleResult.SuggestedHost,
-				pod, sched.config.CoreClient, sched.config.CRDClient)
-			return
-		}
-                //--------------------------------------
-		//          Support CRD
-		//-------------------------------------
                 
 		// schedule() may have failed because the pod would not fit on any host, so we try to
 		// preempt, with the expectation that the next time the pod is tried for scheduling it
@@ -52,6 +41,20 @@ func (sched *Scheduler) scheduleOne() {
 				klog.V(3).Infof("Pod priority feature is not enabled or preemption is disabled by scheduler configuration." +
 					" No preemption is performed.")
 			} else {
+	[...]
+	} else {
+	        //--------------------------------------
+		//          Support CRD
+		//-------------------------------------
+		if pod.GetAnnotations()["crdKind"] != "" {
+			SupportCRD(scheduleResult.SuggestedHost,
+				pod, sched.config.CoreClient, sched.config.CRDClient)
+			return
+		}
+                //--------------------------------------
+		//          Support CRD
+		//-------------------------------------
+	}
 	   
 ```
 
