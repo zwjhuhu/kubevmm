@@ -116,7 +116,7 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					containers.add(container);
 					spec.setContainers(containers );
 					
-					spec.setSchedulerName("kubecrd");
+					spec.setSchedulerName("kubecrd-scheduler");
 					
 					pod.setSpec(spec );
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() == null) {
