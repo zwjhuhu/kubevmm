@@ -6,6 +6,14 @@ Kubernetes.
 
 **Note:** KubeVirt is a heavy work in progress.
 
+**Thanks**
+- wuheng@otcaix.iscas.ac.cn
+- wuyuewen@otcaix.iscas.ac.cn
+- xuyuanjia2017@otcaix.iscas.ac.cn
+- xianghao16@otcaix.iscas.ac.cn
+- shizhonghao17@otcaix.iscas.ac.cn
+- yangchen18@otcaix.iscas.ac.cn
+
 # Introduction
 
 ## Virtualization extension for Kubernetes
@@ -34,6 +42,6 @@ support VM's lifecycle.
 
 # Roadmap
 
-- **2019.5**： support VM's lifecycle
-- **2019.6**:  support snapshot's lefecycle
-- **2019.7**:  support cni, so we can reuse kubernetes's network
+- **2019.5**: support VM's lifecycle
+- **2019.6**: support snapshot's lefecycle
+- **2019.7**: support cni, so we can reuse kubernetes's network
