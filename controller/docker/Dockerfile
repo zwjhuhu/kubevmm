@@ -1,4 +1,3 @@
-#FROM mcr.microsoft.com/java/jdk:8u192-zulu-centos
 FROM openjdk:8u201-jdk-alpine3.9
 
 RUN mkdir -p /home/kubevirt-controller-manager

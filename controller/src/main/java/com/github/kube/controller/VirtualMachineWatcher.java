@@ -1,7 +1,7 @@
 /**
  * Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
  */
-package com.github.kube.convertor;
+package com.github.kube.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,9 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.alibaba.fastjson.JSON;
-import com.github.kube.convertor.crd.DoneableVirtualMachine;
-import com.github.kube.convertor.crd.VirtualMachine;
-import com.github.kube.convertor.crd.VirtualMachineList;
+import com.github.kube.controller.crd.DoneableVirtualMachine;
+import com.github.kube.controller.crd.VirtualMachine;
+import com.github.kube.controller.crd.VirtualMachineList;
 import com.github.kubesys.kubedev.CustomResourceWatcher;
 
 import io.fabric8.kubernetes.api.model.Container;

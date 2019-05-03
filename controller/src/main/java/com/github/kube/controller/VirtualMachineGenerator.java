@@ -1,7 +1,7 @@
 /**
  * Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
  */
-package com.github.kube.convertor;
+package com.github.kube.controller;
 
 import java.io.File;
 import java.io.FileInputStream;

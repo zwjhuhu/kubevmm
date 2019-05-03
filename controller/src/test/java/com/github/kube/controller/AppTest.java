@@ -1,4 +1,4 @@
-package com.github.kube.convertor;
+package com.github.kube.controller;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

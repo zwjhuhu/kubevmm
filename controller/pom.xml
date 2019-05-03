@@ -55,7 +55,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.github.kube.convertor.VirtualMachineWatcher</mainClass>
+							<mainClass>com.github.kube.controller.VirtualMachineWatcher</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Class-Path>.</Class-Path>
