@@ -24,12 +24,17 @@ func SupportCRD(suggestedHost string, pod *v1.Pod, coreClient clientset.Interfac
 		Resource: pod.GetAnnotations()["crdKind"],
 	}
 
-	// get spec.nodeName
-	host := fmt.Sprintf(`{"spec":{"nodeName":"%s"}}`, suggestedHost)
-
 	// bind resource
-	crdClient.Resource(gvr).Namespace(pod.GetAnnotations()["crdNamespace"]).
-		Patch(pod.GetAnnotations()["crdName"], types.MergePatchType, []byte(host), metav1.PatchOptions{})
+	resource, _ := crdClient.Resource(gvr).Namespace(pod.GetAnnotations()["crdNamespace"]).
+								Get(pod.GetAnnotations()["crdName"], metav1.GetOptions{})
+
+	// add nodeName
+	if resource != nil {
+		resource.Object["spec"].(map[string]interface{})["nodeName"] = suggestedHost
+		crdClient.Resource(gvr).Namespace(pod.GetAnnotations()["crdNamespace"]).
+										Update(resource, metav1.UpdateOptions{})
+	}
+
 
 	// delete this pod
 	coreClient.CoreV1().Pods("default").Delete(pod.GetName(), &metav1.DeleteOptions{})
