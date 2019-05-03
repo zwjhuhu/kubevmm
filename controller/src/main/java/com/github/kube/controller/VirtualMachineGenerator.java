@@ -37,7 +37,7 @@ public class VirtualMachineGenerator {
 	/**
 	 * spec.name.kind in VirtualMachineCRD.yaml
 	 */
-	public final static String KIND    = "VirtualMachine";
+	public final static String KIND    = "virtualmachines";
 
 	/**
 	 * 
