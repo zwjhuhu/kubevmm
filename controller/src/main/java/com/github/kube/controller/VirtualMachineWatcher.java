@@ -92,7 +92,7 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 					ObjectMeta metadata = new ObjectMeta();
 					metadata.setName(podName);
 					Map<String, String> annotations = new HashMap<String, String>();
-					annotations.put(KIND_ANNOTATION, VirtualMachineGenerator.NAME);
+					annotations.put(KIND_ANNOTATION, VirtualMachineGenerator.KIND);
 					annotations.put(GROUP_ANNOTATION, VirtualMachineGenerator.GROUP);
 					annotations.put(VERSION_ANNOTATION, VirtualMachineGenerator.VERSION);
 					annotations.put(NAME_ANNOTATION, vm.getMetadata().getName());
