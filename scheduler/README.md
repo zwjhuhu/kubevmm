@@ -17,7 +17,6 @@ Ensure you have configured GOROOT and GOPATH
 Find `$GOPATH/k8s.io/kubernetes/pkg/scheduler/scheduler.go`, namely original `scheduler.go`.
 Find `$GOPATH/k8s.io/kubernetes/pkg/scheduler/factory/factory.go`, namely original `factory.go`.
 
-##### Method1:
 Copy all the code snippets in file `<RepoPath>/diff.go` to the end of `scheduler.go`, resolve all the import and package problems, then find `func (sched *Scheduler) Run()` in original `scheduler.go`(around line 281), change it as shown below.
 
 find `func(sched *Scheduler) scheduleOne()` in original `scheduler.go`, insert several lines of code behind `suggestedHost, err := sched.schedule(pod)`
@@ -58,9 +57,6 @@ func (sched *Scheduler) scheduleOne() {
 	   
 ```
 
-##### Method2:
-Just replace the original `scheduler.go` with `<RepoPath>/kube/scheduler.go`, and 'factory.go' with `<RepoPath>/kube/factoy/factory.go`
-
 #### Step 2: Rebuild scheduler
 Move to `$GOPATH/k8s.io/kubernetes/cmd/kube-scheduler/`, and build with command `env GOOS=linux GOARCH=amd64 go build scheduler.go`, now you get a executable binary file `scheduler`.
 #### Step 3: Pack as a image
@@ -78,5 +74,9 @@ Then Create Deployment resource in Kubernetes cluster
 kubectl create -f custom-scheduler.yaml
 ```
 
-# Try it out
+# Run in Goland IDE
+
+```
+--kubeconfig=/etc/kubernetes/admin.conf --scheduler-name=kubecrd-scheduler --port=10253 --secure-port=10261 --leader-elect=true --lock-object-namespace=cloudplus
+```
 
