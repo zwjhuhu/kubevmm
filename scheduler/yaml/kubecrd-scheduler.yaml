@@ -1,37 +1,33 @@
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    component: scheduler
-    tier: control-plane
-  name: custom-scheduler
-  namespace: kube-system
+    app: kubecrd-scheduler
+  name: kubecrd-scheduler
+  namespace: cloudplus
 spec:
   selector:
     matchLabels:
-      component: scheduler
-      tier: control-plane
+      app: kubecrd-scheduler
   replicas: 1
   template:
     metadata:
-      annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ""
-      creationTimestamp: null
       labels:
-        component: scheduler
-        tier: control-plane
-      name: custom-scheduler
-      namespace: kube-system
+        app: kubecrd-scheduler
+      name: kubecrd-scheduler
+      namespace: cloudplus
     spec:
       containers:
         - command:
-          - /usr/local/bin/custom-scheduler
+          - /usr/local/bin/kubecrd-scheduler
           - --address=0.0.0.0
-          - --scheduler-name=crdscheduler
+          - --scheduler-name=kubecrd-scheduler
           - --kubeconfig=/etc/kubernetes/admin.conf
-          - --leader-elect=false
+          - --leader-elect=true
           - --port=10253
-          image: custom-scheduler:1.0
+          - --secure-port=10261
+          - --lock-object-namespace=cloudplus
+          image: github.com/kubecrd-scheduler:v1.14.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 8
@@ -41,7 +37,7 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 15
             timeoutSeconds: 15
-          name: custom-scheduler
+          name: kubecrd-scheduler
           resources:
             requests:
               cpu: 100m
@@ -50,7 +46,6 @@ spec:
               name: kubeconfig
               readOnly: true
       hostNetwork: true
-      priorityClassName: system-cluster-critical
       volumes:
         - hostPath:
             path: /etc/kubernetes/admin.conf
