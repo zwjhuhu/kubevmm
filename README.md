@@ -21,19 +21,19 @@ plan to manage VM using the pod model. Instead, we design a new virtctl to
 support VM's lifecycle.
 
 
-# To start developing KubeVirt
+# Architecture
 
-You can learn more about how KubeVirt is designed (and why it is that way),
-and learn more about the major components by taking a look at
-[our developer documentation](docs/):
-
- * [Architecture]() - High-level view on the architecture
- * [Components]() - Detailed look at all components
- * [API Reference]()
+![avatar](docs/arch.png)
 
 
-## (Reference links)
-   [k8s]: https://kubernetes.io
-   [crd]: https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/
-   [libvirt]: https://www.libvirt.org
-   [kubedev]: https://github.com/kubesys/kubedev
+- **Analyser**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/). 
+- **Controller**: extend Kubernetes to support VirtualMachine resource
+- **Scheduler**:  extend Kubernetes to schedule VirtualMachine
+- **Executor**:  manage VM's lifecycle.
+- **Parser**: converte Kubernetes's YAML to libvirt's XML.
+
+# Roadmap
+
+- **2019.5**： support VM's lifecycle
+- **2019.6**:  support snapshot's lefecycle
+- **2019.7**:  support cni, so we can reuse kubernetes's network
