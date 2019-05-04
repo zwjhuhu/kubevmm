@@ -7,8 +7,12 @@ In addition, we find that libvirt-go-xml is still not 'production ready'. So we 
 with [libvirt-python](https://github.com/libvirt/libvirt-python), which is used by [OpenStack](https://www.openstack.org)
 
 
+## Limitations
 
-## How to develop
+- please use https://github.com/syswu/libvirt-go-xml (not official sdk)
+- only support basic and List type
+
+## Run
 
 
 ```
