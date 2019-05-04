@@ -6,6 +6,14 @@ Kubernetes.
 
 **Note:** KubeVirt is a heavy work in progress.
 
+**Thanks**
+- wuheng@otcaix.iscas.ac.cn
+- wuyuewen@otcaix.iscas.ac.cn
+- xuyuanjia2017@otcaix.iscas.ac.cn
+- xianghao16@otcaix.iscas.ac.cn
+- shizhonghao17@otcaix.iscas.ac.cn
+- yangchen18@otcaix.iscas.ac.cn
+
 # Introduction
 
 ## Virtualization extension for Kubernetes
@@ -16,54 +24,24 @@ additional virtualization resource types (especially the `VM` type) through
 By using this mechanism, the Kubernetes API can be used to manage these `VM`
 resources alongside all other resources Kubernetes provides.
 
-The resources themselves are not enough to launch virtual machines.
-For this to happen the _functionality and business logic_ needs to be added to
-the cluster. The functionality is not added to Kubernetes itself, but rather
-added to a Kubernetes cluster by _running_ additional controllers and agents
-on an existing cluster.
-
-The necessary controllers and agents are provided by KubeVirt.
-
-As of today KubeVirt can be used to declaratively
-
- * Create a predefined VM
- * Schedule a VM on a Kubernetes cluster
- * Launch a VM
- * Stop a VM
- * Delete a VM
+Unlike [kubevirt/kubebirt](https://github.com/kubevirt/kubevirt), we do not
+plan to manage VM using the pod model. Instead, we design a new virtctl to
+support VM's lifecycle.
 
 
-# To start using KubeVirt
+# Architecture
 
-Try our quickstart at [kubevirt.io](http://kubevirt.io/get_kubevirt/).
-
-See our user documentation at [kubevirt.io/docs](http://kubevirt.io/user-guide).
-
-# To start developing KubeVirt
-
-To set up a development environment please read our
-[Getting Started Guide](docs/getting-started.md). To learn how to contribute, please read our [contribution guide](https://github.com/kubevirt/kubevirt/blob/master/CONTRIBUTING.md).
-
-You can learn more about how KubeVirt is designed (and why it is that way),
-and learn more about the major components by taking a look at
-[our developer documentation](docs/):
-
- * [Architecture](docs/architecture.md) - High-level view on the architecture
- * [Components](docs/components.md) - Detailed look at all components
- * [API Reference](https://www.kubevirt.io/api-reference/)
+![avatar](docs/arch.png)
 
 
-## Related resources
+- **Analyser**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/). 
+- **Controller**: extend Kubernetes to support VirtualMachine resource
+- **Scheduler**:  extend Kubernetes to schedule VirtualMachine
+- **Executor**:  manage VM's lifecycle.
+- **Parser**: converte Kubernetes's YAML to libvirt's XML.
 
- * [Kubernetes][k8s]
- * [Libvirt][libvirt]
- * [Cockpit][cockpit]
- * [Kubevirt-ansible][kubevirt-ansible]
+# Roadmap
 
-
-## (Reference links)
-   [k8s]: https://kubernetes.io
-   [crd]: https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/
-   [ovirt]: https://www.ovirt.org
-   [cockpit]: https://cockpit-project.org/
-   [libvirt]: https://www.libvirt.org
+- **2019.5**: support VM's lifecycle
+- **2019.6**: support snapshot's lefecycle
+- **2019.7**: support cni, so we can reuse kubernetes's network

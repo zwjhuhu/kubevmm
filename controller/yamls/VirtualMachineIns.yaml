@@ -1,0 +1,17 @@
+apiVersion: cloudplus.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: testvmi-nocloud
+spec:
+  domain:
+    _type: KVM
+    _id: 1
+    image: centos7
+    name: henry
+    uuid: 123-44312-344
+    title: CentOS
+    description: CentOS
+    memory:
+      text: 1024
+    vcpu:
+      text: 1

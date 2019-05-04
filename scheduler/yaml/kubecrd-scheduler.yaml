@@ -1,0 +1,53 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: kubecrd-scheduler
+  name: kubecrd-scheduler
+  namespace: cloudplus
+spec:
+  selector:
+    matchLabels:
+      app: kubecrd-scheduler
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kubecrd-scheduler
+      name: kubecrd-scheduler
+      namespace: cloudplus
+    spec:
+      containers:
+        - command:
+          - /usr/local/bin/kubecrd-scheduler
+          - --address=0.0.0.0
+          - --scheduler-name=kubecrd-scheduler
+          - --kubeconfig=/etc/kubernetes/admin.conf
+          - --leader-elect=true
+          - --port=10253
+          - --secure-port=10261
+          - --lock-object-namespace=cloudplus
+          image: github.com/kubecrd-scheduler:v1.14.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 8
+            httpGet:
+              path: /healthz
+              port: 10253
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 15
+          name: kubecrd-scheduler
+          resources:
+            requests:
+              cpu: 100m
+          volumeMounts:
+            - mountPath: /etc/kubernetes/admin.conf
+              name: kubeconfig
+              readOnly: true
+      hostNetwork: true
+      volumes:
+        - hostPath:
+            path: /etc/kubernetes/admin.conf
+            type: FileOrCreate
+          name: kubeconfig
