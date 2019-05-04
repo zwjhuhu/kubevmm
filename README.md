@@ -29,16 +29,28 @@ plan to manage VM using the pod model. Instead, we design a new virtctl to
 support VM's lifecycle.
 
 
+## Limitations
+
+- just focus on compute resource (libvirt), it cannot replace Openstack (network, storage, and so on)
+- we do not want to support VM migration
+- the size of VirtualMachine yaml shou not be great than 128K
+
+## Capacities
+
+- [xml style](convertor/docs/libvirt-xml.md)
+- [json style](convertor/docs/libvirt-json.md)
+- [yaml style](convertor/docs/libvirt-yaml.md)
+
 # Architecture
 
 ![avatar](docs/arch.png)
 
 
-- **Analyser**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/). 
-- **Controller**: extend Kubernetes to support VirtualMachine resource
+- **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/). 
+- **[Controller](controller)**: extend Kubernetes to support VirtualMachine resource
 - **Scheduler**:  extend Kubernetes to schedule VirtualMachine
 - **Executor**:  manage VM's lifecycle.
-- **Parser**: converte Kubernetes's YAML to libvirt's XML.
+- **[Convertor](convertor)**: converte Kubernetes's YAML to libvirt's XML.
 
 # Roadmap
 
