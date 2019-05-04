@@ -10,358 +10,656 @@
 ```
 <?xml version="1.0" encoding="utf-8"?>
 
-<domain id="*int">
-  <genid>value</genid>
+<domain type="string" id="string">
+  <name>string</name>
+  <uuid>string</uuid>
+  <genid>string</genid>
+  <title>string</title>
+  <description>string</description>
   <metadata/>
-  <maxMemory>value</maxMemory>
-  <memory>value</memory>
-  <currentMemory>value</currentMemory>
+  <maxMemory unit="string" slots="string">string</maxMemory>
+  <memory unit="string" dumpCore="string">string</memory>
+  <currentMemory unit="string">string</currentMemory>
   <blkiotune>
+    <weight>string</weight>
     <device>
       <path>string</path>
+      <weight>string</weight>
+      <read_iops_sec>string</read_iops_sec>
+      <write_iops_sec>string</write_iops_sec>
+      <read_bytes_sec>string</read_bytes_sec>
+      <write_bytes_sec>string</write_bytes_sec>
+    </device>
+    <device>
+      <path>string</path>
+      <weight>string</weight>
+      <read_iops_sec>string</read_iops_sec>
+      <write_iops_sec>string</write_iops_sec>
+      <read_bytes_sec>string</read_bytes_sec>
+      <write_bytes_sec>string</write_bytes_sec>
     </device>
   </blkiotune>
   <memtune>
-    <hard_limit>value</hard_limit>
-    <soft_limit>value</soft_limit>
-    <min_guarantee>value</min_guarantee>
-    <swap_hard_limit>value</swap_hard_limit>
+    <hard_limit unit="string">string</hard_limit>
+    <soft_limit unit="string">string</soft_limit>
+    <min_guarantee unit="string">string</min_guarantee>
+    <swap_hard_limit unit="string">string</swap_hard_limit>
   </memtune>
   <memoryBacking>
     <hugepages>
-      <page size="uint"/>
+      <page size="string" unit="string" nodeset="string"/>
+      <page size="string" unit="string" nodeset="string"/>
     </hugepages>
     <nosharepages/>
     <locked/>
-    <source/>
-    <access/>
-    <allocation/>
+    <source type="string"/>
+    <access mode="string"/>
+    <allocation mode="string"/>
     <discard/>
   </memoryBacking>
-  <vcpu>value</vcpu>
+  <vcpu placement="string" cpuset="string" current="string">string</vcpu>
   <vcpus>
-    <vcpu id="*uint" order="*uint"/>
+    <vcpu id="string" enabled="string" hotpluggable="string" order="string"/>
+    <vcpu id="string" enabled="string" hotpluggable="string" order="string"/>
   </vcpus>
+  <iothreads>string</iothreads>
   <iothreadids>
-    <iothread id="uint"/>
+    <iothread id="string"/>
+    <iothread id="string"/>
   </iothreadids>
   <cputune>
-    <shares>value</shares>
-    <period>value</period>
-    <quota>value</quota>
-    <global_period>value</global_period>
-    <global_quota>value</global_quota>
-    <emulator_period>value</emulator_period>
-    <emulator_quota>value</emulator_quota>
-    <iothread_period>value</iothread_period>
-    <iothread_quota>value</iothread_quota>
-    <vcpupin vcpu="uint" cpuset="string"/>
+    <shares>string</shares>
+    <period>string</period>
+    <quota>string</quota>
+    <global_period>string</global_period>
+    <global_quota>string</global_quota>
+    <emulator_period>string</emulator_period>
+    <emulator_quota>string</emulator_quota>
+    <iothread_period>string</iothread_period>
+    <iothread_quota>string</iothread_quota>
+    <vcpupin vcpu="string" cpuset="string"/>
+    <vcpupin vcpu="string" cpuset="string"/>
     <emulatorpin cpuset="string"/>
-    <iothreadpin iothread="uint" cpuset="string"/>
-    <vcpusched vcpus="string" priority="*int"/>
-    <iothreadsched iothreads="string" priority="*int"/>
-    <cachetune>
-      <cache id="uint" level="uint" type="string" size="uint" unit="string"/>
-      <monitor/>
+    <iothreadpin iothread="string" cpuset="string"/>
+    <iothreadpin iothread="string" cpuset="string"/>
+    <vcpusched vcpus="string" scheduler="string" priority="string"/>
+    <vcpusched vcpus="string" scheduler="string" priority="string"/>
+    <iothreadsched iothreads="string" scheduler="string" priority="string"/>
+    <iothreadsched iothreads="string" scheduler="string" priority="string"/>
+    <cachetune vcpus="string">
+      <cache id="string" level="string" type="string" size="string" unit="string"/>
+      <cache id="string" level="string" type="string" size="string" unit="string"/>
+      <monitor level="string" vcpus="string"/>
+      <monitor level="string" vcpus="string"/>
+    </cachetune>
+    <cachetune vcpus="string">
+      <cache id="string" level="string" type="string" size="string" unit="string"/>
+      <cache id="string" level="string" type="string" size="string" unit="string"/>
+      <monitor level="string" vcpus="string"/>
+      <monitor level="string" vcpus="string"/>
     </cachetune>
     <memorytune vcpus="string">
-      <node id="uint" bandwidth="uint"/>
+      <node id="string" bandwidth="string"/>
+      <node id="string" bandwidth="string"/>
+    </memorytune>
+    <memorytune vcpus="string">
+      <node id="string" bandwidth="string"/>
+      <node id="string" bandwidth="string"/>
     </memorytune>
   </cputune>
   <numatune>
-    <memory/>
-    <memnode cellid="uint" mode="string" nodeset="string"/>
+    <memory mode="string" nodeset="string" placement="string"/>
+    <memnode cellid="string" mode="string" nodeset="string"/>
+    <memnode cellid="string" mode="string" nodeset="string"/>
   </numatune>
-  <resource/>
+  <resource>
+    <partition>string</partition>
+  </resource>
   <sysinfo type="string">
     <bios>
-      <entry name="string">value</entry>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
     </bios>
     <system>
-      <entry name="string">value</entry>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
     </system>
     <baseBoard>
-      <entry name="string">value</entry>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
+    </baseBoard>
+    <baseBoard>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
     </baseBoard>
     <chassis>
-      <entry name="string">value</entry>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
     </chassis>
     <processor>
-      <entry name="string">value</entry>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
+    </processor>
+    <processor>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
     </processor>
     <memory>
-      <entry name="string">value</entry>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
+    </memory>
+    <memory>
+      <entry name="string">string</entry>
+      <entry name="string">string</entry>
     </memory>
     <oemStrings>
-      <entry>[]string</entry>
+      <entry>string</entry>
     </oemStrings>
   </sysinfo>
+  <bootloader>string</bootloader>
+  <bootloader_args>string</bootloader_args>
   <os>
-    <type>value</type>
-    <initarg>[]string</initarg>
-    <initenv name="string">value</initenv>
-    <loader>value</loader>
-    <nvram>value</nvram>
+    <type arch="string" machine="string">string</type>
+    <init>string</init>
+    <initarg>string</initarg>
+    <initenv name="string">string</initenv>
+    <initenv name="string">string</initenv>
+    <initdir>string</initdir>
+    <inituser>string</inituser>
+    <initgroup>string</initgroup>
+    <loader>strin readonly='string' secure='string' type='string'&gt;</loader>
+    <nvram>strin template='string'&gt;</nvram>
+    <kernel>string</kernel>
+    <initrd>string</initrd>
+    <cmdline>string</cmdline>
+    <dtb>string</dtb>
     <acpi>
-      <table type="string">value</table>
+      <table type="string">string</table>
+      <table type="string">string</table>
     </acpi>
     <boot dev="string"/>
-    <bootmenu/>
-    <bios rebootTimeout="*int"/>
+    <boot dev="string"/>
+    <bootmenu enable="string" timeout="string"/>
+    <bios useserial="string" rebootTimeout="string"/>
     <smbios mode="string"/>
   </os>
   <idmap>
-    <uid start="uint" target="uint" count="uint"/>
-    <gid start="uint" target="uint" count="uint"/>
+    <uid start="string" target="string" count="string"/>
+    <uid start="string" target="string" count="string"/>
+    <gid start="string" target="string" count="string"/>
+    <gid start="string" target="string" count="string"/>
   </idmap>
   <features>
     <pae/>
     <acpi/>
-    <apic/>
-    <hap/>
+    <apic eoi="string"/>
+    <hap state="string"/>
     <viridian/>
     <privnet/>
     <hyperv>
-      <relaxed/>
-      <vapic/>
-      <spinlocks/>
-      <vpindex/>
-      <runtime/>
-      <synic/>
-      <stimer/>
-      <reset/>
-      <vendor_id/>
-      <frequencies/>
-      <reenlightenment/>
-      <tlbflush/>
-      <ipi/>
-      <evmcs/>
+      <relaxed state="string"/>
+      <vapic state="string"/>
+      <spinlocks retries="string"/>
+      <vpindex state="string"/>
+      <runtime state="string"/>
+      <synic state="string"/>
+      <stimer state="string"/>
+      <reset state="string"/>
+      <vendor_id value="string"/>
+      <frequencies state="string"/>
+      <reenlightenment state="string"/>
+      <tlbflush state="string"/>
+      <ipi state="string"/>
+      <evmcs state="string"/>
     </hyperv>
     <kvm>
-      <hidden/>
+      <hidden state="string"/>
     </kvm>
-    <pvspinlock/>
-    <pmu/>
-    <vmport/>
-    <gic/>
-    <smm>
-      <tseg>value</tseg>
+    <pvspinlock state="string"/>
+    <pmu state="string"/>
+    <vmport state="string"/>
+    <gic version="string"/>
+    <smm state="string">
+      <tseg unit="string">string</tseg>
     </smm>
-    <ioapic/>
-    <hpt>
-      <maxpagesize>value</maxpagesize>
+    <ioapic driver="string"/>
+    <hpt resizing="string">
+      <maxpagesize unit="string">string</maxpagesize>
     </hpt>
-    <htm/>
-    <nested-hv/>
-    <capabilities>
-      <audit_control/>
-      <audit_write/>
-      <block_suspend/>
-      <chown/>
-      <dac_override/>
-      <dac_read_Search/>
-      <fowner/>
-      <fsetid/>
-      <ipc_lock/>
-      <ipc_owner/>
-      <kill/>
-      <lease/>
-      <linux_immutable/>
-      <mac_admin/>
-      <mac_override/>
-      <mknod/>
-      <net_admin/>
-      <net_bind_service/>
-      <net_broadcast/>
-      <net_raw/>
-      <setgid/>
-      <setfcap/>
-      <setpcap/>
-      <setuid/>
-      <sys_admin/>
-      <sys_boot/>
-      <sys_chroot/>
-      <sys_module/>
-      <sys_nice/>
-      <sys_pacct/>
-      <sys_ptrace/>
-      <sys_rawio/>
-      <sys_resource/>
-      <sys_time/>
-      <sys_tty_config/>
-      <syslog/>
-      <wake_alarm/>
+    <htm state="string"/>
+    <nested-hv state="string"/>
+    <capabilities policy="string">
+      <audit_control state="string"/>
+      <audit_write state="string"/>
+      <block_suspend state="string"/>
+      <chown state="string"/>
+      <dac_override state="string"/>
+      <dac_read_Search state="string"/>
+      <fowner state="string"/>
+      <fsetid state="string"/>
+      <ipc_lock state="string"/>
+      <ipc_owner state="string"/>
+      <kill state="string"/>
+      <lease state="string"/>
+      <linux_immutable state="string"/>
+      <mac_admin state="string"/>
+      <mac_override state="string"/>
+      <mknod state="string"/>
+      <net_admin state="string"/>
+      <net_bind_service state="string"/>
+      <net_broadcast state="string"/>
+      <net_raw state="string"/>
+      <setgid state="string"/>
+      <setfcap state="string"/>
+      <setpcap state="string"/>
+      <setuid state="string"/>
+      <sys_admin state="string"/>
+      <sys_boot state="string"/>
+      <sys_chroot state="string"/>
+      <sys_module state="string"/>
+      <sys_nice state="string"/>
+      <sys_pacct state="string"/>
+      <sys_ptrace state="string"/>
+      <sys_rawio state="string"/>
+      <sys_resource state="string"/>
+      <sys_time state="string"/>
+      <sys_tty_config state="string"/>
+      <syslog state="string"/>
+      <wake_alarm state="string"/>
     </capabilities>
-    <vmcoreinfo/>
+    <vmcoreinfo state="string"/>
     <msrs unknown="string"/>
   </features>
-  <cpu>
-    <model>value</model>
-    <topology/>
-    <cache mode="string"/>
-    <feature/>
+  <cpu match="string" mode="string" check="string">
+    <model fallback="string" vendor_id="string">string</model>
+    <vendor>string</vendor>
+    <topology sockets="string" cores="string" threads="string"/>
+    <cache level="string" mode="string"/>
+    <feature policy="string" name="string"/>
+    <feature policy="string" name="string"/>
     <numa>
-      <cell id="*uint" cpus="string" memory="string">
+      <cell id="string" cpus="string" memory="string" unit="string" memAccess="string" discard="string">
         <distances>
-          <sibling id="uint" value="uint"/>
+          <sibling id="string" value="string"/>
+          <sibling id="string" value="string"/>
+        </distances>
+      </cell>
+      <cell id="string" cpus="string" memory="string" unit="string" memAccess="string" discard="string">
+        <distances>
+          <sibling id="string" value="string"/>
+          <sibling id="string" value="string"/>
         </distances>
       </cell>
     </numa>
   </cpu>
-  <clock>
-    <timer name="string">
-      <catchup/>
+  <clock offset="string" basis="string" adjustment="string" timezone="string">
+    <timer name="string" track="string" tickpolicy="string" frequency="string" mode="string" present="string">
+      <catchup threshold="string" slew="string" limit="string"/>
+    </timer>
+    <timer name="string" track="string" tickpolicy="string" frequency="string" mode="string" present="string">
+      <catchup threshold="string" slew="string" limit="string"/>
     </timer>
   </clock>
+  <on_poweroff>string</on_poweroff>
+  <on_reboot>string</on_reboot>
+  <on_crash>string</on_crash>
   <pm>
     <suspend-to-mem enabled="string"/>
     <suspend-to-disk enabled="string"/>
   </pm>
   <perf>
     <event name="string" enabled="string"/>
+    <event name="string" enabled="string"/>
   </perf>
   <devices>
-    <disk>
-      <driver iothread="*uint" queues="*uint"/>
-      <auth>
-        <secret/>
+    <emulator>string</emulator>
+    <disk device="string" rawio="string" sgio="string" snapshot="string" model="string">
+      <driver name="string" type="string" cache="string" error_policy="string" rerror_policy="string" io="string" ioeventfd="string" event_idx="string" copy_on_read="string" discard="string" iothread="string" detect_zeroes="string" queues="string" iommu="string" ats="string"/>
+      <auth username="string">
+        <secret type="string" usage="string" uuid="string"/>
       </auth>
-      <source>
-        <encryption>
-          <secret/>
+      <source startupPolicy="string" index="string">
+        <encryption format="string">
+          <secret type="string" usage="string" uuid="string"/>
         </encryption>
-        <reservations>
+        <reservations enabled="string" managed="string">
           <source/>
         </reservations>
       </source>
-      <backingStore>
+      <backingStore index="string">
         <format type="string"/>
-        <source>
-          <encryption>
-            <secret/>
+        <source startupPolicy="string" index="string">
+          <encryption format="string">
+            <secret type="string" usage="string" uuid="string"/>
           </encryption>
-          <reservations>
+          <reservations enabled="string" managed="string">
             <source/>
           </reservations>
         </source>
       </backingStore>
-      <geometry cyls="uint" heads="uint" secs="uint"/>
-      <blockio/>
-      <mirror>
+      <geometry cyls="string" heads="string" secs="string" trans="string"/>
+      <blockio logical_block_size="string" physical_block_size="string"/>
+      <mirror job="string" ready="string">
         <format type="string"/>
-        <source>
-          <encryption>
-            <secret/>
+        <source startupPolicy="string" index="string">
+          <encryption format="string">
+            <secret type="string" usage="string" uuid="string"/>
           </encryption>
-          <reservations>
+          <reservations enabled="string" managed="string">
             <source/>
           </reservations>
         </source>
       </mirror>
-      <target/>
-      <iotune/>
+      <target dev="string" bus="string" tray="string" removable="string"/>
+      <iotune>
+        <total_bytes_sec>string</total_bytes_sec>
+        <read_bytes_sec>string</read_bytes_sec>
+        <write_bytes_sec>string</write_bytes_sec>
+        <total_iops_sec>string</total_iops_sec>
+        <read_iops_sec>string</read_iops_sec>
+        <write_iops_sec>string</write_iops_sec>
+        <total_bytes_sec_max>string</total_bytes_sec_max>
+        <read_bytes_sec_max>string</read_bytes_sec_max>
+        <write_bytes_sec_max>string</write_bytes_sec_max>
+        <total_iops_sec_max>string</total_iops_sec_max>
+        <read_iops_sec_max>string</read_iops_sec_max>
+        <write_iops_sec_max>string</write_iops_sec_max>
+        <total_bytes_sec_max_length>string</total_bytes_sec_max_length>
+        <read_bytes_sec_max_length>string</read_bytes_sec_max_length>
+        <write_bytes_sec_max_length>string</write_bytes_sec_max_length>
+        <total_iops_sec_max_length>string</total_iops_sec_max_length>
+        <read_iops_sec_max_length>string</read_iops_sec_max_length>
+        <write_iops_sec_max_length>string</write_iops_sec_max_length>
+        <size_iops_sec>string</size_iops_sec>
+        <group_name>string</group_name>
+      </iotune>
       <readonly/>
       <shareable/>
       <transient/>
-      <encryption>
-        <secret/>
+      <serial>string</serial>
+      <wwn>string</wwn>
+      <vendor>string</vendor>
+      <product>string</product>
+      <encryption format="string">
+        <secret type="string" usage="string" uuid="string"/>
       </encryption>
-      <boot order="uint"/>
+      <boot order="string" loadparm="string"/>
       <alias name="string"/>
       <address/>
     </disk>
-    <controller type="string" index="*uint">
-      <driver queues="*uint" cmd_per_lun="*uint" max_sectors="*uint"/>
+    <disk device="string" rawio="string" sgio="string" snapshot="string" model="string">
+      <driver name="string" type="string" cache="string" error_policy="string" rerror_policy="string" io="string" ioeventfd="string" event_idx="string" copy_on_read="string" discard="string" iothread="string" detect_zeroes="string" queues="string" iommu="string" ats="string"/>
+      <auth username="string">
+        <secret type="string" usage="string" uuid="string"/>
+      </auth>
+      <source startupPolicy="string" index="string">
+        <encryption format="string">
+          <secret type="string" usage="string" uuid="string"/>
+        </encryption>
+        <reservations enabled="string" managed="string">
+          <source/>
+        </reservations>
+      </source>
+      <backingStore index="string">
+        <format type="string"/>
+        <source startupPolicy="string" index="string">
+          <encryption format="string">
+            <secret type="string" usage="string" uuid="string"/>
+          </encryption>
+          <reservations enabled="string" managed="string">
+            <source/>
+          </reservations>
+        </source>
+      </backingStore>
+      <geometry cyls="string" heads="string" secs="string" trans="string"/>
+      <blockio logical_block_size="string" physical_block_size="string"/>
+      <mirror job="string" ready="string">
+        <format type="string"/>
+        <source startupPolicy="string" index="string">
+          <encryption format="string">
+            <secret type="string" usage="string" uuid="string"/>
+          </encryption>
+          <reservations enabled="string" managed="string">
+            <source/>
+          </reservations>
+        </source>
+      </mirror>
+      <target dev="string" bus="string" tray="string" removable="string"/>
+      <iotune>
+        <total_bytes_sec>string</total_bytes_sec>
+        <read_bytes_sec>string</read_bytes_sec>
+        <write_bytes_sec>string</write_bytes_sec>
+        <total_iops_sec>string</total_iops_sec>
+        <read_iops_sec>string</read_iops_sec>
+        <write_iops_sec>string</write_iops_sec>
+        <total_bytes_sec_max>string</total_bytes_sec_max>
+        <read_bytes_sec_max>string</read_bytes_sec_max>
+        <write_bytes_sec_max>string</write_bytes_sec_max>
+        <total_iops_sec_max>string</total_iops_sec_max>
+        <read_iops_sec_max>string</read_iops_sec_max>
+        <write_iops_sec_max>string</write_iops_sec_max>
+        <total_bytes_sec_max_length>string</total_bytes_sec_max_length>
+        <read_bytes_sec_max_length>string</read_bytes_sec_max_length>
+        <write_bytes_sec_max_length>string</write_bytes_sec_max_length>
+        <total_iops_sec_max_length>string</total_iops_sec_max_length>
+        <read_iops_sec_max_length>string</read_iops_sec_max_length>
+        <write_iops_sec_max_length>string</write_iops_sec_max_length>
+        <size_iops_sec>string</size_iops_sec>
+        <group_name>string</group_name>
+      </iotune>
+      <readonly/>
+      <shareable/>
+      <transient/>
+      <serial>string</serial>
+      <wwn>string</wwn>
+      <vendor>string</vendor>
+      <product>string</product>
+      <encryption format="string">
+        <secret type="string" usage="string" uuid="string"/>
+      </encryption>
+      <boot order="string" loadparm="string"/>
+      <alias name="string"/>
+      <address/>
+    </disk>
+    <controller type="string" index="string" model="string">
+      <driver queues="string" cmd_per_lun="string" max_sectors="string" ioeventfd="string" iothread="string" iommu="string" ats="string"/>
+      <alias name="string"/>
+      <address/>
+    </controller>
+    <controller type="string" index="string" model="string">
+      <driver queues="string" cmd_per_lun="string" max_sectors="string" ioeventfd="string" iothread="string" iommu="string" ats="string"/>
       <alias name="string"/>
       <address/>
     </controller>
     <lease>
       <lockspace>string</lockspace>
       <key>string</key>
-      <target path="string"/>
+      <target path="string" offset="string"/>
     </lease>
-    <filesystem>
-      <driver/>
+    <lease>
+      <lockspace>string</lockspace>
+      <key>string</key>
+      <target path="string" offset="string"/>
+    </lease>
+    <filesystem accessmode="string" model="string">
+      <driver type="string" format="string" name="string" wrpolicy="string" iommu="string" ats="string"/>
       <source/>
       <target dir="string"/>
       <readonly/>
-      <space_hard_limit>value</space_hard_limit>
-      <space_soft_limit>value</space_soft_limit>
+      <space_hard_limit unit="string">string</space_hard_limit>
+      <space_soft_limit unit="string">string</space_soft_limit>
       <alias name="string"/>
       <address/>
     </filesystem>
-    <interface>
+    <filesystem accessmode="string" model="string">
+      <driver type="string" format="string" name="string" wrpolicy="string" iommu="string" ats="string"/>
+      <source/>
+      <target dir="string"/>
+      <readonly/>
+      <space_hard_limit unit="string">string</space_hard_limit>
+      <space_soft_limit unit="string">string</space_soft_limit>
+      <alias name="string"/>
+      <address/>
+    </filesystem>
+    <interface managed="string" trustGuestRxFilters="string">
       <mac address="string"/>
       <source/>
-      <boot order="uint"/>
-      <vlan>
-        <tag id="uint"/>
+      <boot order="string" loadparm="string"/>
+      <vlan trunk="string">
+        <tag id="string" nativeMode="string"/>
+        <tag id="string" nativeMode="string"/>
       </vlan>
       <virtualport>
         <parameters/>
       </virtualport>
-      <ip address="string"/>
-      <route address="string" gateway="string"/>
+      <ip address="string" family="string" prefix="string" peer="string"/>
+      <ip address="string" family="string" prefix="string" peer="string"/>
+      <route family="string" address="string" netmask="string" prefix="string" gateway="string" metric="string"/>
+      <route family="string" address="string" netmask="string" prefix="string" gateway="string" metric="string"/>
       <script path="string"/>
       <target dev="string"/>
-      <guest/>
+      <guest dev="string" actual="string"/>
       <model type="string"/>
-      <driver>
-        <host/>
-        <guest/>
+      <driver name="string" txmode="string" ioeventfd="string" event_idx="string" queues="string" rx_queue_size="string" tx_queue_size="string" iommu="string" ats="string">
+        <host csum="string" gso="string" tso4="string" tso6="string" ecn="string" ufo="string" mrg_rxbuf="string"/>
+        <guest csum="string" tso4="string" tso6="string" ecn="string" ufo="string"/>
       </driver>
-      <backend/>
+      <backend tap="string" vhost="string"/>
       <filterref filter="string">
+        <parameter name="string" value="string"/>
         <parameter name="string" value="string"/>
       </filterref>
       <tune>
-        <sndbuf>uint</sndbuf>
+        <sndbuf>string</sndbuf>
       </tune>
       <link state="string"/>
-      <mtu size="uint"/>
+      <mtu size="string"/>
       <bandwidth>
-        <inbound average="*int" peak="*int" burst="*int" floor="*int"/>
-        <outbound average="*int" peak="*int" burst="*int" floor="*int"/>
+        <inbound average="string" peak="string" burst="string" floor="string"/>
+        <outbound average="string" peak="string" burst="string" floor="string"/>
       </bandwidth>
       <coalesce>
         <rx>
-          <frames max="*uint"/>
+          <frames max="string"/>
         </rx>
       </coalesce>
-      <rom/>
+      <rom bar="string" file="string" enabled="string"/>
+      <alias name="string"/>
+      <address/>
+    </interface>
+    <interface managed="string" trustGuestRxFilters="string">
+      <mac address="string"/>
+      <source/>
+      <boot order="string" loadparm="string"/>
+      <vlan trunk="string">
+        <tag id="string" nativeMode="string"/>
+        <tag id="string" nativeMode="string"/>
+      </vlan>
+      <virtualport>
+        <parameters/>
+      </virtualport>
+      <ip address="string" family="string" prefix="string" peer="string"/>
+      <ip address="string" family="string" prefix="string" peer="string"/>
+      <route family="string" address="string" netmask="string" prefix="string" gateway="string" metric="string"/>
+      <route family="string" address="string" netmask="string" prefix="string" gateway="string" metric="string"/>
+      <script path="string"/>
+      <target dev="string"/>
+      <guest dev="string" actual="string"/>
+      <model type="string"/>
+      <driver name="string" txmode="string" ioeventfd="string" event_idx="string" queues="string" rx_queue_size="string" tx_queue_size="string" iommu="string" ats="string">
+        <host csum="string" gso="string" tso4="string" tso6="string" ecn="string" ufo="string" mrg_rxbuf="string"/>
+        <guest csum="string" tso4="string" tso6="string" ecn="string" ufo="string"/>
+      </driver>
+      <backend tap="string" vhost="string"/>
+      <filterref filter="string">
+        <parameter name="string" value="string"/>
+        <parameter name="string" value="string"/>
+      </filterref>
+      <tune>
+        <sndbuf>string</sndbuf>
+      </tune>
+      <link state="string"/>
+      <mtu size="string"/>
+      <bandwidth>
+        <inbound average="string" peak="string" burst="string" floor="string"/>
+        <outbound average="string" peak="string" burst="string" floor="string"/>
+      </bandwidth>
+      <coalesce>
+        <rx>
+          <frames max="string"/>
+        </rx>
+      </coalesce>
+      <rom bar="string" file="string" enabled="string"/>
       <alias name="string"/>
       <address/>
     </interface>
     <smartcard>
       <source/>
       <protocol type="string"/>
-      <certificate>value</certificate>
+      <certificate>string</certificate>
+      <certificate>string</certificate>
+      <database>string</database>
+      <alias name="string"/>
+      <address/>
+    </smartcard>
+    <smartcard>
+      <source/>
+      <protocol type="string"/>
+      <certificate>string</certificate>
+      <certificate>string</certificate>
+      <database>string</database>
       <alias name="string"/>
       <address/>
     </smartcard>
     <serial>
       <source/>
       <protocol type="string"/>
-      <target port="*uint">
-        <model/>
+      <target type="string" port="string">
+        <model name="string"/>
       </target>
-      <log file="string"/>
+      <log file="string" append="string"/>
+      <alias name="string"/>
+      <address/>
+    </serial>
+    <serial>
+      <source/>
+      <protocol type="string"/>
+      <target type="string" port="string">
+        <model name="string"/>
+      </target>
+      <log file="string" append="string"/>
       <alias name="string"/>
       <address/>
     </serial>
     <parallel>
       <source/>
       <protocol type="string"/>
-      <target port="*uint"/>
-      <log file="string"/>
+      <target type="string" port="string"/>
+      <log file="string" append="string"/>
       <alias name="string"/>
       <address/>
     </parallel>
-    <console>
+    <parallel>
       <source/>
       <protocol type="string"/>
-      <target port="*uint"/>
-      <log file="string"/>
+      <target type="string" port="string"/>
+      <log file="string" append="string"/>
+      <alias name="string"/>
+      <address/>
+    </parallel>
+    <console tty="string">
+      <source/>
+      <protocol type="string"/>
+      <target type="string" port="string"/>
+      <log file="string" append="string"/>
+      <alias name="string"/>
+      <address/>
+    </console>
+    <console tty="string">
+      <source/>
+      <protocol type="string"/>
+      <target type="string" port="string"/>
+      <log file="string" append="string"/>
       <alias name="string"/>
       <address/>
     </console>
@@ -369,68 +667,132 @@
       <source/>
       <protocol type="string"/>
       <target/>
-      <log file="string"/>
+      <log file="string" append="string"/>
       <alias name="string"/>
       <address/>
     </channel>
-    <input type="string">
-      <driver/>
+    <channel>
+      <source/>
+      <protocol type="string"/>
+      <target/>
+      <log file="string" append="string"/>
+      <alias name="string"/>
+      <address/>
+    </channel>
+    <input type="string" bus="string" model="string">
+      <driver iommu="string" ats="string"/>
       <source evdev="string"/>
       <alias name="string"/>
       <address/>
     </input>
-    <tpm>
+    <input type="string" bus="string" model="string">
+      <driver iommu="string" ats="string"/>
+      <source evdev="string"/>
+      <alias name="string"/>
+      <address/>
+    </input>
+    <tpm model="string">
+      <backend/>
+      <alias name="string"/>
+      <address/>
+    </tpm>
+    <tpm model="string">
       <backend/>
       <alias name="string"/>
       <address/>
     </tpm>
     <graphics/>
+    <graphics/>
     <sound model="string">
+      <codec type="string"/>
+      <codec type="string"/>
+      <alias name="string"/>
+      <address/>
+    </sound>
+    <sound model="string">
+      <codec type="string"/>
       <codec type="string"/>
       <alias name="string"/>
       <address/>
     </sound>
     <video>
-      <model type="string">
-        <acceleration/>
+      <model type="string" heads="string" ram="string" vram="string" vram64="string" vgamem="string" primary="string">
+        <acceleration accel3d="string" accel2d="string"/>
       </model>
-      <driver/>
+      <driver vgaconf="string" iommu="string" ats="string"/>
       <alias name="string"/>
       <address/>
     </video>
-    <hostdev>
-      <boot order="uint"/>
-      <rom/>
+    <video>
+      <model type="string" heads="string" ram="string" vram="string" vram64="string" vgamem="string" primary="string">
+        <acceleration accel3d="string" accel2d="string"/>
+      </model>
+      <driver vgaconf="string" iommu="string" ats="string"/>
+      <alias name="string"/>
+      <address/>
+    </video>
+    <hostdev managed="string">
+      <boot order="string" loadparm="string"/>
+      <rom bar="string" file="string" enabled="string"/>
       <alias name="string"/>
       <address/>
     </hostdev>
-    <redirdev>
+    <hostdev managed="string">
+      <boot order="string" loadparm="string"/>
+      <rom bar="string" file="string" enabled="string"/>
+      <alias name="string"/>
+      <address/>
+    </hostdev>
+    <redirdev bus="string">
       <source/>
       <protocol type="string"/>
-      <boot order="uint"/>
+      <boot order="string" loadparm="string"/>
+      <alias name="string"/>
+      <address/>
+    </redirdev>
+    <redirdev bus="string">
+      <source/>
+      <protocol type="string"/>
+      <boot order="string" loadparm="string"/>
       <alias name="string"/>
       <address/>
     </redirdev>
     <redirfilter>
-      <usbdev class="*uint" vendor="*uint" product="*uint" allow="string"/>
+      <usbdev class="string" vendor="string" product="string" version="string" allow="string"/>
+      <usbdev class="string" vendor="string" product="string" version="string" allow="string"/>
+    </redirfilter>
+    <redirfilter>
+      <usbdev class="string" vendor="string" product="string" version="string" allow="string"/>
+      <usbdev class="string" vendor="string" product="string" version="string" allow="string"/>
     </redirfilter>
     <hub type="string">
       <alias name="string"/>
       <address/>
     </hub>
-    <watchdog model="string">
+    <hub type="string">
+      <alias name="string"/>
+      <address/>
+    </hub>
+    <watchdog model="string" action="string">
       <alias name="string"/>
       <address/>
     </watchdog>
-    <memballoon model="string">
-      <driver/>
-      <stats period="uint"/>
+    <memballoon model="string" autodeflate="string">
+      <driver iommu="string" ats="string"/>
+      <stats period="string"/>
       <alias name="string"/>
       <address/>
     </memballoon>
     <rng model="string">
-      <driver/>
-      <rate bytes="uint"/>
+      <driver iommu="string" ats="string"/>
+      <rate bytes="string" period="string"/>
+      <backend/>
+      <alias name="string"/>
+      <address/>
+    </rng>
+    <rng model="string">
+      <driver iommu="string" ats="string"/>
+      <rate bytes="string" period="string"/>
       <backend/>
       <alias name="string"/>
       <address/>
@@ -439,29 +801,62 @@
       <alias name="string"/>
       <address/>
     </nvram>
-    <panic>
+    <panic model="string">
+      <alias name="string"/>
+      <address/>
+    </panic>
+    <panic model="string">
       <alias name="string"/>
       <address/>
     </panic>
     <shmem name="string">
-      <size>value</size>
+      <size unit="string">string</size>
       <model type="string"/>
-      <server/>
-      <msi/>
+      <server path="string"/>
+      <msi enabled="string" vectors="string" ioeventfd="string"/>
       <alias name="string"/>
       <address/>
     </shmem>
-    <memory model="string">
+    <shmem name="string">
+      <size unit="string">string</size>
+      <model type="string"/>
+      <server path="string"/>
+      <msi enabled="string" vectors="string" ioeventfd="string"/>
+      <alias name="string"/>
+      <address/>
+    </shmem>
+    <memory model="string" access="string" discard="string">
       <source>
-        <pagesize>value</pagesize>
-        <alignsize>value</alignsize>
+        <nodemask>string</nodemask>
+        <pagesize unit="string">string</pagesize>
+        <path>string</path>
+        <alignsize unit="string">string</alignsize>
         <pmem/>
       </source>
       <target>
-        <size>value</size>
-        <node>value</node>
+        <size unit="string">string</size>
+        <node>string</node>
         <label>
-          <size>value</size>
+          <size unit="string">string</size>
+        </label>
+        <readonly/>
+      </target>
+      <alias name="string"/>
+      <address/>
+    </memory>
+    <memory model="string" access="string" discard="string">
+      <source>
+        <nodemask>string</nodemask>
+        <pagesize unit="string">string</pagesize>
+        <path>string</path>
+        <alignsize unit="string">string</alignsize>
+        <pmem/>
+      </source>
+      <target>
+        <size unit="string">string</size>
+        <node>string</node>
+        <label>
+          <size unit="string">string</size>
         </label>
         <readonly/>
       </target>
@@ -469,16 +864,26 @@
       <address/>
     </memory>
     <iommu model="string">
-      <driver/>
+      <driver intremap="string" caching_mode="string" eim="string" iotlb="string"/>
     </iommu>
-    <vsock>
-      <cid/>
+    <vsock model="string">
+      <cid auto="string" address="string"/>
       <alias name="string"/>
       <address/>
     </vsock>
   </devices>
-  <seclabel/>
+  <seclabel type="string" model="string" relabel="string">
+    <label>string</label>
+    <imagelabel>string</imagelabel>
+    <baselabel>string</baselabel>
+  </seclabel>
+  <seclabel type="string" model="string" relabel="string">
+    <label>string</label>
+    <imagelabel>string</imagelabel>
+    <baselabel>string</baselabel>
+  </seclabel>
   <keywrap>
+    <cipher name="string" state="string"/>
     <cipher name="string" state="string"/>
   </keywrap>
   <launchSecurity/>
@@ -491,52 +896,93 @@
 ```
 <?xml version="1.0" encoding="utf-8"?>
 
-<network>
+<network ipv6="string" trustGuestRxFilters="string">
+  <name>string</name>
+  <uuid>string</uuid>
   <metadata/>
-  <forward>
+  <forward mode="string" dev="string" managed="string">
     <driver name="string"/>
+    <pf dev="string"/>
     <pf dev="string"/>
     <nat>
       <address start="string" end="string"/>
-      <port start="uint" end="uint"/>
+      <address start="string" end="string"/>
+      <port start="string" end="string"/>
+      <port start="string" end="string"/>
     </nat>
-    <interface/>
+    <interface dev="string"/>
+    <interface dev="string"/>
+    <address/>
     <address/>
   </forward>
-  <bridge/>
-  <mtu size="uint"/>
-  <mac/>
-  <domain/>
-  <dns>
-    <forwarder/>
+  <bridge name="string" stp="string" delay="string" macTableManager="string" zone="string"/>
+  <mtu size="string"/>
+  <mac address="string"/>
+  <domain name="string" localOnly="string"/>
+  <dns enable="string" forwardPlainNames="string">
+    <forwarder domain="string" addr="string"/>
+    <forwarder domain="string" addr="string"/>
+    <txt name="string" value="string"/>
     <txt name="string" value="string"/>
     <host ip="string">
-      <hostname>value</hostname>
+      <hostname>string</hostname>
+      <hostname>string</hostname>
     </host>
-    <srv/>
+    <host ip="string">
+      <hostname>string</hostname>
+      <hostname>string</hostname>
+    </host>
+    <srv service="string" protocol="string" target="string" port="string" priority="string" weight="string" domain="string"/>
+    <srv service="string" protocol="string" target="string" port="string" priority="string" weight="string" domain="string"/>
   </dns>
-  <vlan>
-    <tag id="uint"/>
+  <vlan trunk="string">
+    <tag id="string" nativeMode="string"/>
+    <tag id="string" nativeMode="string"/>
   </vlan>
   <bandwidth>
-    <inbound average="*uint" peak="*uint" burst="*uint" floor="*uint"/>
-    <outbound average="*uint" peak="*uint" burst="*uint" floor="*uint"/>
+    <inbound average="string" peak="string" burst="string" floor="string"/>
+    <outbound average="string" peak="string" burst="string" floor="string"/>
   </bandwidth>
-  <ip>
+  <ip address="string" family="string" netmask="string" prefix="string" localPtr="string">
     <dhcp>
-      <range/>
-      <host/>
-      <bootp/>
+      <range start="string" end="string"/>
+      <range start="string" end="string"/>
+      <host id="string" mac="string" name="string" ip="string"/>
+      <host id="string" mac="string" name="string" ip="string"/>
+      <bootp file="string" server="string"/>
+      <bootp file="string" server="string"/>
     </dhcp>
-    <tftp/>
+    <tftp root="string"/>
   </ip>
-  <route/>
+  <ip address="string" family="string" netmask="string" prefix="string" localPtr="string">
+    <dhcp>
+      <range start="string" end="string"/>
+      <range start="string" end="string"/>
+      <host id="string" mac="string" name="string" ip="string"/>
+      <host id="string" mac="string" name="string" ip="string"/>
+      <bootp file="string" server="string"/>
+      <bootp file="string" server="string"/>
+    </dhcp>
+    <tftp root="string"/>
+  </ip>
+  <route family="string" address="string" netmask="string" prefix="string" gateway="string" metric="string"/>
+  <route family="string" address="string" netmask="string" prefix="string" gateway="string" metric="string"/>
   <virtualport>
     <parameters/>
   </virtualport>
-  <portgroup>
-    <vlan>
-      <tag id="uint"/>
+  <portgroup name="string" default="string" trustGuestRxFilters="string">
+    <vlan trunk="string">
+      <tag id="string" nativeMode="string"/>
+      <tag id="string" nativeMode="string"/>
+    </vlan>
+    <virtualport>
+      <parameters/>
+    </virtualport>
+  </portgroup>
+  <portgroup name="string" default="string" trustGuestRxFilters="string">
+    <vlan trunk="string">
+      <tag id="string" nativeMode="string"/>
+      <tag id="string" nativeMode="string"/>
     </vlan>
     <virtualport>
       <parameters/>
@@ -551,11 +997,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <pool type="string">
-  <allocation>value</allocation>
-  <capacity>value</capacity>
-  <available>value</available>
+  <name>string</name>
+  <uuid>string</uuid>
+  <allocation unit="string">string</allocation>
+  <capacity unit="string">string</capacity>
+  <available unit="string">string</available>
   <target>
-    <permissions/>
+    <path>string</path>
+    <permissions>
+      <owner>string</owner>
+      <group>string</group>
+      <mode>string</mode>
+      <label>string</label>
+    </permissions>
     <timestamps>
       <atime>string</atime>
       <mtime>string</mtime>
@@ -563,30 +1017,37 @@
     </timestamps>
     <encryption format="string">
       <secret type="string" uuid="string"/>
-      <cipher name="string" size="uint64" mode="string" hash="string"/>
+      <cipher name="string" size="string" mode="string" hash="string"/>
       <ivgen name="string" hash="string"/>
     </encryption>
   </target>
   <source>
+    <name>string</name>
     <dir path="string"/>
-    <host name="string"/>
-    <device path="string">
-      <freeExtent start="uint64" end="uint64"/>
+    <host name="string" port="string"/>
+    <host name="string" port="string"/>
+    <device path="string" part_separator="string">
+      <freeExtent start="string" end="string"/>
+      <freeExtent start="string" end="string"/>
+    </device>
+    <device path="string" part_separator="string">
+      <freeExtent start="string" end="string"/>
+      <freeExtent start="string" end="string"/>
     </device>
     <auth type="string" username="string">
-      <secret/>
+      <secret usage="string" uuid="string"/>
     </auth>
     <vendor name="string"/>
     <product name="string"/>
     <format type="string"/>
     <protocol ver="string"/>
-    <adapter>
-      <parentaddr unique_id="uint64">
-        <address domain="*uint" bus="*uint" slot="*uint" function="*uint"/>
+    <adapter type="string" name="string" parent="string" managed="string" wwnn="string" wwpn="string">
+      <parentaddr unique_id="string">
+        <address domain="string" bus="string" slot="string" function="string"/>
       </parentaddr>
     </adapter>
     <initiator>
-      <iqn/>
+      <iqn name="string"/>
     </initiator>
   </source>
   <refresh>
@@ -602,27 +1063,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <domainsnapshot>
+  <name>string</name>
+  <description>string</description>
+  <state>string</state>
+  <creationTime>string</creationTime>
   <parent>
     <name>string</name>
   </parent>
-  <memory snapshot="string"/>
+  <memory snapshot="string" file="string"/>
   <disks>
-    <disk name="string">
-      <driver/>
-      <source>
-        <encryption>
-          <secret/>
+    <disk name="string" snapshot="string">
+      <driver type="string"/>
+      <source startupPolicy="string" index="string">
+        <encryption format="string">
+          <secret type="string" usage="string" uuid="string"/>
         </encryption>
-        <reservations>
+        <reservations enabled="string" managed="string">
+          <source/>
+        </reservations>
+      </source>
+    </disk>
+    <disk name="string" snapshot="string">
+      <driver type="string"/>
+      <source startupPolicy="string" index="string">
+        <encryption format="string">
+          <secret type="string" usage="string" uuid="string"/>
+        </encryption>
+        <reservations enabled="string" managed="string">
           <source/>
         </reservations>
       </source>
     </disk>
   </disks>
-  <domain id="*int">
-    ...
+  <domain type="string" id="string">
+    // see domain.xml
   </domain>
-  <active>*uint</active>
+  <active>string</active>
 </domainsnapshot>
-
 ```
