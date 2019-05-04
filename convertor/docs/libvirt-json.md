@@ -7,7 +7,7 @@ As described in [Kubernetes](https://kubernetes.io/). The input with yaml style 
 - '$' to 'text'
 - '@' to '_'
 
-## domain.json
+## domain.json (aka VirtualMachine)
 
 ```
 {
@@ -2543,7 +2543,7 @@ As described in [Kubernetes](https://kubernetes.io/). The input with yaml style 
 }
 ```
 
-## network.json
+## network.json (aka VirtualNetwork)
 
 ```
 {
@@ -2971,7 +2971,7 @@ As described in [Kubernetes](https://kubernetes.io/). The input with yaml style 
 }
 ```
 
-## storage.json
+## storage.json (aka VirtualDisk)
 
 ```
 {
