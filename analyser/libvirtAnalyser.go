@@ -11,7 +11,8 @@ import (
 /**
  * @author wuheng(@otcaix.iscas.ac.cn)
  * @since 2019/4/14
- *
+ * 
+ * http://tool.oschina.net/codeformat/xml/
  */
 func Analyse(objType reflect.Type, xmlTag string) (string) {
 
