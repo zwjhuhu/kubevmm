@@ -18,9 +18,9 @@ Kubernetes.
 
 ## Virtualization extension for Kubernetes
 
-At its core, KubeVirt extends [Kubernetes][k8s] by adding
+At its core, KubeVirt extends [Kubernetes](https://kubernetes.io/) by adding
 additional virtualization resource types (especially the `VM` type) through
-[Kubernetes's Custom Resource Definitions API][crd].
+[Kubernetes's Custom Resource Definitions API](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/).
 By using this mechanism, the Kubernetes API can be used to manage these `VM`
 resources alongside all other resources Kubernetes provides.
 
@@ -33,14 +33,16 @@ support VM's lifecycle.
 
 - just focus on compute resource (libvirt), it cannot replace Openstack (network, storage, and so on)
 - we do not want to support VM migration
-- the size of VirtualMachine yaml shou not be great than 128K
+- the size of VirtualMachine's yaml shou not be great than 128K
+- a machine cannot run both container and VM
 
 ## Capacities
 
 - VirtualMachine
 - VirtualNetwork
 - VirtualDisk
-- Snapshot
+- VirtualMachineSnapshot
+- VirtualMachineImage
 
 see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/libvirt-json.md), or [yaml style](convertor/docs/libvirt-yaml.md)
 
@@ -52,11 +54,11 @@ see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/l
 - **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/). 
 - **[Controller](controller)**: extend Kubernetes to support VirtualMachine resource
 - **Scheduler**:  extend Kubernetes to schedule VirtualMachine
-- **Executor**:  manage VM's lifecycle.
+- **Executor(aka Virtctl)**:  manage VM's lifecycle.
 - **[Convertor](convertor)**: converte Kubernetes's YAML to libvirt's XML.
 
 # Roadmap
 
-- **2019.5**: support VM's lifecycle
-- **2019.6**: support snapshot's lefecycle
-- **2019.7**: support cni, so we can reuse kubernetes's network
+- **2019.5**: support VirtualMachine and VirtualMachineImage 
+- **2019.6**: support VirtualDisk and VirtualMachineSnapshot
+- **2019.7**: support VirtualNetwork, cni
