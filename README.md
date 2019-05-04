@@ -37,9 +37,12 @@ support VM's lifecycle.
 
 ## Capacities
 
-- [xml style](convertor/docs/libvirt-xml.md)
-- [json style](convertor/docs/libvirt-json.md)
-- [yaml style](convertor/docs/libvirt-yaml.md)
+- VirtualMachine
+- VirtualNetwork
+- VirtualDisk
+- Snapshot
+
+see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/libvirt-json.md), or [yaml style](convertor/docs/libvirt-yaml.md)
 
 # Architecture
 
