@@ -10,7 +10,7 @@ following rules
 - '@' to '_'
 
 
-## domain.yaml
+## domain.yaml (aka VirtualMachine)
 
 ```
 domain:
@@ -1567,7 +1567,7 @@ domain:
 
 ```
 
-## network.yaml
+## network.yaml (aka VirtualNetwork)
 
 ```
 network:
@@ -1824,7 +1824,7 @@ domainsnapshot:
 
 ```
 
-## storage.yaml
+## storage.yaml (aka VirtualDisk)
 
 ```
 pool:
