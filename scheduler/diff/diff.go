@@ -18,7 +18,7 @@ func NewCRDClient() (dynamic.Interface, error) {
 // we would consider some exceptions later
 func SupportCRD(suggestedHost string, pod *v1.Pod, coreClient clientset.Interface, crdClient dynamic.Interface) {
 
-	var gvr = schema.GroupVersionResource {
+	gvr := schema.GroupVersionResource {
 		Group:    pod.GetAnnotations()["crdGroup"],
 		Version:  pod.GetAnnotations()["crdVersion"],
 		Resource: pod.GetAnnotations()["crdKind"],
@@ -31,6 +31,11 @@ func SupportCRD(suggestedHost string, pod *v1.Pod, coreClient clientset.Interfac
 	// add nodeName
 	if resource != nil {
 		resource.Object["spec"].(map[string]interface{})["nodeName"] = suggestedHost
+
+		labels := make(map[string]interface{})
+		labels["host"] = suggestedHost
+		resource.Object["metadata"].(map[string]interface{})["labels"] = labels
+
 		crdClient.Resource(gvr).Namespace(pod.GetAnnotations()["crdNamespace"]).
 										Update(resource, metav1.UpdateOptions{})
 	}
