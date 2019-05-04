@@ -13,13 +13,13 @@ import (
  * @since 2019/4/14
  *
  */
-
 func Analyse(objType reflect.Type, xmlTag string) (string) {
 
 	xml := "<" + xmlTag  + ">"
 
 	/**
-	 *  take libvirtxml.domain for example, the structure is
+	 *  Take libvirtxml.domain for example, the structure is
+	 *
 	 *  type Domain struct {
 	 *  XMLName        xml.Name              `xml:"domain"`
 	 *  Type           string                `xml:"type,attr,omitempty"`
@@ -29,16 +29,20 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 	 *  GenID          *DomainGenID          `xml:"genid"`
 	 * ...}
 	 *
-	 *  the term 'field' is a row, such as 'MLName        xml.Name              `xml:"domain"`'
-	 *  the term 'attrDesc' is a substring of the third column, such as 'domain', 'type, attr, omitempty'
-	 *  the term 'attr' is a substring of the third column, such as 'domain', 'type', 'id'
+	 *
+	 *  the term 'field'       is a row,                                 such as 'MLName xml.Name `xml:"domain"`'
+	 *  the term 'attrDesc'    is a substring of the third column,       such as 'domain', 'type, attr, omitempty'
+	 *  the term 'attr'        is a substring of the third column,       such as 'domain', 'type', 'id'
+	 *
+	 *  Limitations:
+	 *     1. please use https://github.com/syswu/libvirt-go-xml
+	 *     2. only support basic and List type
 	 */
 
 	for i := 0; i < objType.NumField(); i++ {
 
 		// ignore this case
 		// I do not known why only some classes have this attr,
-		// may be we cannot use libvit-go in production
 		field := objType.Field(i)
 		if strings.EqualFold(field.Type.String(), "xml.Name") {
 			continue
@@ -46,7 +50,6 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 
 		// ignore this case
 		// I do not known why only some classes have this attr,
-		// may be we cannot use libvit-go in production
 		attrDesc := field.Tag.Get("xml")
 		if len(xmlTag) == 0 || len(attrDesc) == 0 ||
 			strings.EqualFold(attrDesc, "-") ||
@@ -55,15 +58,17 @@ func Analyse(objType reflect.Type, xmlTag string) (string) {
 			continue
 		}
 
+		// here, we use 'repeat' to describe the List type
 		repeat := 1
+
 		attr := strings.Split(attrDesc, ",")[0]
 		if len(attr) == 0 && strings.Contains(attrDesc, "chardata") {
-			xml = xml + "value"
+			xml = xml + "string"
 		} else if strings.Contains(attrDesc, "attr") {
 			xml = xml[:len(xml) - 1] + " " + attr +
-						"='" + field.Type.String() + "'>"
+						"='string'>"
 		} else if !strings.Contains(field.Type.String(), "libvirtxml") {
-			xml = xml + "<" + attr + ">" + field.Type.String() + "</" + attr + ">"
+			xml = xml + "<" + attr + ">string</" + attr + ">"
 		} else if strings.Contains(field.Type.String(), "libvirtxml")  {
 			objRef := objType
 
