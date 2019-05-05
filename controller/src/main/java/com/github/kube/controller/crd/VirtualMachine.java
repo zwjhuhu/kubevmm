@@ -9,9 +9,9 @@ import io.fabric8.kubernetes.client.CustomResource;
 /**
  * @author wuheng@otcaix.iscas.ac.cn
  * @author xuyuanjia2017@otcaix.iscas.ac.cn
- * @author shizhonghao17@otcaix.iscas.ac.cn
+ * @author xianghao16@otcaix.iscas.ac.cn
  * @author yangchen18@otcaix.iscas.ac.cn
- * @since Wed May 01 17:10:52 CST 2019
+ * @since Sat May 04 20:49:35 CST 2019
  **/
 public class VirtualMachine extends CustomResource {
 
@@ -25,3 +25,4 @@ public class VirtualMachine extends CustomResource {
 		return this.spec;
 	}
 }
+

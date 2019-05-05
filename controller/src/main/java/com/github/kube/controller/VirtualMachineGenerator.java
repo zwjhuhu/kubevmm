@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.github.kube.controller.crd.VirtualMachineSpec.Domain;
 import com.github.kubesys.kubedev.generators.DoneableGenerator;
 import com.github.kubesys.kubedev.generators.ResourceGenerator;
 import com.github.kubesys.kubedev.generators.ResourceListGenerator;
@@ -22,6 +23,8 @@ import com.github.kubesys.kubedev.generators.SpecGenerator;
  * @author shizhonghao17@otcaix.iscas.ac.cn
  * @author yangchen18@otcaix.iscas.ac.cn
  * @since Wed May 01 17:26:22 CST 2019
+ * 
+ * https://lucanuscervus-notes.readthedocs.io/en/latest/
  **/
 public class VirtualMachineGenerator {
 
@@ -37,7 +40,9 @@ public class VirtualMachineGenerator {
 	/**
 	 * spec.name.kind in VirtualMachineCRD.yaml
 	 */
-	public final static String KIND    = "virtualmachines";
+	public final static String PLURAL    = "virtualmachines";
+	
+	public final static String KIND      = "VirtualMachine";
 
 	/**
 	 * 
@@ -47,7 +52,7 @@ public class VirtualMachineGenerator {
 	/**
 	 * 
 	 */
-	public final static String PKG  = "com.github.kube.convertor.crd";
+	public final static String PKG     = "com.github.kube.controller.crd";
 	
 	public final static String AUTHOR = "\n\n/**\r\n" 
 						+ " * @author wuheng@otcaix.iscas.ac.cn\r\n"
@@ -57,20 +62,39 @@ public class VirtualMachineGenerator {
 						+ " **/\n";
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		ResourceGenerator rg = new ResourceGenerator();
-		System.out.println(rg.autoGen(PKG, KIND));
-		
-		
+//		createResourceSpec();
+//		Domain domain = new Domain();
+//		domain.set_id("222");
+//		System.out.println(JSON.toJSONString(domain));
+		String json = "{\"id\":\"222\"}";
+		Domain domain = JSON.parseObject(json, Domain.class);
+//		Domain domain = JSON.parseObject(new FileInputStream(new File("conf/domain.json")), Domain.class);
+		System.out.println(domain.get_id());
+		System.out.println(domain.get_type());
+		System.out.println(domain.getCpu().getModel().getText());
+	}
+
+	private static void createDoneableResource() {
+		DoneableGenerator dg = new DoneableGenerator(PKG);
+		System.out.println(dg.autoGen(KIND));
+	}
+
+	private static void createResourceList() {
+		ResourceListGenerator lg = new ResourceListGenerator(PKG);
+		System.out.println(lg.autoGen(KIND));
+	}
+
+	private static void createResourceSpec() throws IOException, FileNotFoundException {
 		Map map = JSON.parseObject(new FileInputStream(
 				new File("conf/domain.json")), Map.class);
 		SpecGenerator sg = new SpecGenerator(PKG);
-		System.out.println(sg.autoGen(map, KIND));
-		
-		ResourceListGenerator lg = new ResourceListGenerator();
-		System.out.println(lg.autoGen(PKG, KIND));
-		
-		DoneableGenerator dg = new DoneableGenerator();
-		System.out.println(dg.autoGen(PKG, KIND));
+		sg.setObjMap(map);
+		System.out.println(sg.autoGen(KIND));
+	}
+
+	private static void createResource() {
+		ResourceGenerator rg = new ResourceGenerator(PKG);
+		System.out.println(rg.autoGen(KIND));
 	}
 
 }

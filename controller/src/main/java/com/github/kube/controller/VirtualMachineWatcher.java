@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.kube.controller.crd.DoneableVirtualMachine;
 import com.github.kube.controller.crd.VirtualMachine;
 import com.github.kube.controller.crd.VirtualMachineList;
-import com.github.kubesys.kubedev.CustomResourceWatcher;
+import com.github.kubesys.kubedev.CustomResourceClient;
 
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Doneable;
@@ -26,6 +26,7 @@ import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceRequirements;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.WebhookClientConfig;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
@@ -41,18 +42,22 @@ import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
  * https://www.json2yaml.com/
  * http://www.bejson.com/xml2json/
  **/
-public class VirtualMachineWatcher extends CustomResourceWatcher {
+public class VirtualMachineWatcher extends CustomResourceClient {
 	
 	protected final static Logger m_logger = Logger.getLogger(VirtualMachineWatcher.class.getName());
 
+	// actions
 	public final static String ACTION_CREATE      = "ADDED";
 	
 	public final static String ACTION_REMOVE      = "DELETED";
 	
+	
+	// pod attributions
 	public final static String POD_PREFIX         = "vm2pod";
 	
 	public final static String POD_NAMESPACE      = "default";
 	
+	// annotations
 	public final static String KIND_ANNOTATION    = "crdKind";
 	
 	public final static String NS_ANNOTATION      = "crdNamespace";
@@ -65,11 +70,16 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 	
 	public final static String CONTENT_ANNOTATION = "crdYaml";
 	
+	// resources
 	public final static String CPU_RESOURCE       = "cpu";
 	
 	public final static String RAM_RESOURCE       = "memory";
 	
+	// default values
 	public final static String DEFAULT_IMAGE      = "fake";
+	
+	public final static String DEFAULT_SCHEDULER  = "kubecrd-scheduler";
+	
 	
 	public VirtualMachineWatcher() throws Exception {
 		super();
@@ -83,42 +93,12 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 								.watch(new Watcher<VirtualMachine>() {
 
 			public void eventReceived(Action action, VirtualMachine vm) {
+				
 				String podName = POD_PREFIX + "-" + vm.getMetadata().getName() 
 						+ "-" + vm.getMetadata().getNamespace();
 				
-				
 				if (action.toString().equals(ACTION_CREATE)) {
-					Pod pod = new Pod();
-					ObjectMeta metadata = new ObjectMeta();
-					metadata.setName(podName);
-					Map<String, String> annotations = new HashMap<String, String>();
-					annotations.put(KIND_ANNOTATION, VirtualMachineGenerator.KIND);
-					annotations.put(GROUP_ANNOTATION, VirtualMachineGenerator.GROUP);
-					annotations.put(VERSION_ANNOTATION, VirtualMachineGenerator.VERSION);
-					annotations.put(NAME_ANNOTATION, vm.getMetadata().getName());
-					annotations.put(NS_ANNOTATION, vm.getMetadata().getNamespace());
-					annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm));
-					metadata.setAnnotations(annotations );
-					pod.setMetadata(metadata );
-					
-					PodSpec spec = new PodSpec();
-					List<Container> containers = new ArrayList<Container>();
-					Container container = new Container();
-					container.setName(podName);
-					container.setImage(DEFAULT_IMAGE);
-					ResourceRequirements resources = new ResourceRequirements();
-					Map<String, Quantity> requests = new HashMap<String, Quantity>();
-					requests.put(CPU_RESOURCE, new Quantity(vm.getSpec().getDomain().getVcpu().getText()));
-					requests.put(RAM_RESOURCE, new Quantity(vm.getSpec().getDomain().getMemory().getText()));
-					resources.setRequests(requests );
-					container.setResources(resources);
-					containers.add(container);
-					spec.setContainers(containers );
-					
-					spec.setPriority(0);
-					spec.setSchedulerName("kubecrd-scheduler");
-					
-					pod.setSpec(spec );
+					Pod pod = createPod(vm, podName);
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() == null) {
 						client.pods().inNamespace(POD_NAMESPACE).create(pod );
 						m_logger.log(Level.INFO, "Create VM '" + vm.getMetadata().getName() 
@@ -137,6 +117,63 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 				}
 			}
 
+			private Pod createPod(VirtualMachine vm, String podName) {
+				Pod pod = new Pod();
+				// metadata and podSpec
+				pod.setMetadata(createMetadataFrom(vm, podName));
+				pod.setSpec(createPodSpecFrom(vm, podName));
+				return pod;
+			}
+
+			private PodSpec createPodSpecFrom(VirtualMachine vm, String podName) {
+				PodSpec spec = new PodSpec();
+				spec.setContainers(createContainerFrom(vm, podName));
+				spec.setSchedulerName(System.getProperty(
+							"scheduler-name", DEFAULT_SCHEDULER));
+				return spec;
+			}
+
+			private List<Container> createContainerFrom(VirtualMachine vm, String podName) {
+				List<Container> containers = new ArrayList<Container>();
+				Container container = new Container();
+				container.setName(podName);
+				container.setImage(DEFAULT_IMAGE);
+				container.setResources(
+						createResourceDemands(vm));
+				containers.add(container);
+				return containers;
+			}
+
+			private ResourceRequirements createResourceDemands(VirtualMachine vm) {
+				ResourceRequirements resources = new ResourceRequirements();
+				Map<String, Quantity> requests = new HashMap<String, Quantity>();
+				requests.put(CPU_RESOURCE, new Quantity(
+								vm.getSpec().getDomain().getVcpu().getText()));
+				requests.put(RAM_RESOURCE, new Quantity(
+								vm.getSpec().getDomain().getMemory().getText()));
+				resources.setRequests(requests );
+				return resources;
+			}
+
+			private ObjectMeta createMetadataFrom(VirtualMachine vm, String podName) {
+				ObjectMeta metadata = new ObjectMeta();
+				metadata.setName(podName);
+				metadata.setAnnotations(
+						createAnnotations(vm));
+				return metadata;
+			}
+
+			private Map<String, String> createAnnotations(VirtualMachine vm) {
+				Map<String, String> annotations = new HashMap<String, String>();
+				annotations.put(KIND_ANNOTATION, VirtualMachineGenerator.PLURAL);
+				annotations.put(GROUP_ANNOTATION, VirtualMachineGenerator.GROUP);
+				annotations.put(VERSION_ANNOTATION, VirtualMachineGenerator.VERSION);
+				annotations.put(NAME_ANNOTATION, vm.getMetadata().getName());
+				annotations.put(NS_ANNOTATION, vm.getMetadata().getNamespace());
+				annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm));
+				return annotations;
+			}
+
 			public void onClose(KubernetesClientException cause) {
 				m_logger.log(Level.INFO, "Stop VirtualMachineWatcher");
 			}
@@ -153,15 +190,17 @@ public class VirtualMachineWatcher extends CustomResourceWatcher {
 	
 	public static void main(String[] args) throws Exception {
 		m_logger.log(Level.INFO, "Start VirtualMachineWatcher");
+		
 		VirtualMachineWatcher watcher = new VirtualMachineWatcher();
 		CustomResourceDefinition crd = watcher.getCustomResourceDefinition(
 						VirtualMachineGenerator.NAME, VirtualMachine.class);
+		WebhookClientConfig webhookClientConfig;
 		if (crd != null) {
 			watcher.watch(crd, VirtualMachine.class, VirtualMachineList.class, DoneableVirtualMachine.class);
 		} else {
 			m_logger.log(Level.SEVERE, "VirtualMachineWatcher does not work");
 		}
-		
+	
 	}
 
 }

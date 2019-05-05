@@ -9,9 +9,10 @@ import io.fabric8.kubernetes.client.CustomResourceList;
 /**
  * @author wuheng@otcaix.iscas.ac.cn
  * @author xuyuanjia2017@otcaix.iscas.ac.cn
- * @author shizhonghao17@otcaix.iscas.ac.cn
+ * @author xianghao16@otcaix.iscas.ac.cn
  * @author yangchen18@otcaix.iscas.ac.cn
- * @since Wed May 01 17:21:36 CST 2019
+ * @since Sat May 04 20:49:57 CST 2019
  **/
 public class VirtualMachineList extends CustomResourceList<VirtualMachine> {
 }
+

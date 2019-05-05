@@ -10,9 +10,9 @@ import io.fabric8.kubernetes.client.CustomResourceDoneable;
 /**
  * @author wuheng@otcaix.iscas.ac.cn
  * @author xuyuanjia2017@otcaix.iscas.ac.cn
- * @author shizhonghao17@otcaix.iscas.ac.cn
+ * @author xianghao16@otcaix.iscas.ac.cn
  * @author yangchen18@otcaix.iscas.ac.cn
- * @since Wed May 01 17:26:22 CST 2019
+ * @since Sat May 04 20:50:19 CST 2019
  **/
 public class DoneableVirtualMachine extends CustomResourceDoneable<VirtualMachine> {
 
@@ -20,3 +20,4 @@ public class DoneableVirtualMachine extends CustomResourceDoneable<VirtualMachin
 		super(resource, function);
 	}
 }
+
