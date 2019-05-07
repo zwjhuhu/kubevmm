@@ -14,7 +14,6 @@ import com.alibaba.fastjson.JSON;
 import com.github.kube.controller.crd.DoneableVirtualMachine;
 import com.github.kube.controller.crd.VirtualMachine;
 import com.github.kube.controller.crd.VirtualMachineList;
-import com.github.kube.controller.crd.VirtualMachineSpec;
 import com.github.kubesys.kubedev.CustomResourceClient;
 
 import io.fabric8.kubernetes.api.model.Container;
@@ -31,6 +30,7 @@ import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
 
 /**
  * @author wuheng@otcaix.iscas.ac.cn
@@ -87,12 +87,15 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 		super();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void watch(final CustomResourceDefinition crd, final Class<? extends HasMetadata> resourceType,
 			final Class<? extends KubernetesResourceList> resourceList, final Class<? extends Doneable> doneableRespurce) {
 		
-		getWatcher(crd, resourceType, resourceList, doneableRespurce)
-								.watch(new Watcher<VirtualMachine>() {
+		
+		final MixedOperation mo = getCustomResource(crd, resourceType, resourceList, doneableRespurce);
+		MixedOperation watcher = (MixedOperation) mo.inAnyNamespace();
+		watcher.watch(new Watcher<VirtualMachine>() {
 			
 			public void eventReceived(Action action, VirtualMachine vm) {
 				
@@ -107,6 +110,8 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
 						m_logger.log(Level.INFO, "Create Pod '" + podName 
 								+ "' in namespace '" + POD_NAMESPACE + "'");
+						MixedOperation updater = (MixedOperation) mo.inNamespace(vm.getMetadata().getNamespace());
+						updater.createOrReplace(vm);
 					}
 				} else if (action.toString().equals(ACTION_REMOVE)) {
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() != null) {
@@ -187,8 +192,14 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 			CustomResourceDefinition crd, Class<? extends HasMetadata> resourceType,
 			Class<? extends KubernetesResourceList> resourceList, Class<? extends Doneable> doneableRespurce) {
 		return (FilterWatchListMultiDeletable<VirtualMachine, VirtualMachineList, Boolean, Watch, Watcher<VirtualMachine>>) 
-				client.customResources(crd, resourceType, resourceList, doneableRespurce).inAnyNamespace();
+				getCustomResource(crd, resourceType, resourceList, doneableRespurce).inAnyNamespace();
 	}
+
+	private MixedOperation getCustomResource(CustomResourceDefinition crd, Class<? extends HasMetadata> resourceType,
+			Class<? extends KubernetesResourceList> resourceList, Class<? extends Doneable> doneableRespurce) {
+		return client.customResources(crd, resourceType, resourceList, doneableRespurce);
+	}
+	
 	
 	public static void main(String[] args) throws Exception {
 		m_logger.log(Level.INFO, "Start VirtualMachineWatcher");
