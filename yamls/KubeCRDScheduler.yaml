@@ -1,3 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+   name: cloudplus
+   labels:
+     name: cloudplus
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -27,7 +34,7 @@ spec:
           - --port=10253
           - --secure-port=10261
           - --lock-object-namespace=cloudplus
-          image: github.com/kubecrd-scheduler:v1.14.1
+          image: kubesys.github.io/kubecrd-scheduler:v1.14.1
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 8
