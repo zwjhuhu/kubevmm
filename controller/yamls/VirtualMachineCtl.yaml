@@ -24,7 +24,7 @@ spec:
     spec:
       hostNetwork: true
       containers:
-      - image: github.com/kubevirt-controller-manager:v1.14.1
+      - image: kubesys.github.io/kubevirt-controller-manager:v1.14.1
         imagePullPolicy: IfNotPresent
         name: kubevirt-controller-manager
         command: [ "java", "-jar", "kubevirt-controller-2.0.0-SNAPSHOT-jar-with-dependencies.jar" ]

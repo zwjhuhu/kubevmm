@@ -14,9 +14,12 @@ spec:
     name: STATUS
     type: boolean
   - JSONPath: .metadata.creationTimestamp
-    name: Age
+    name: AGE
     type: date
-  - JSONPath: .spec.domain.image
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  - JSONPath: .spec.image
     name: IMAGE
     type: string
   group: cloudplus.io

@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.kube.controller.crd.DoneableVirtualMachine;
 import com.github.kube.controller.crd.VirtualMachine;
 import com.github.kube.controller.crd.VirtualMachineList;
+import com.github.kube.controller.crd.VirtualMachineSpec;
 import com.github.kubesys.kubedev.CustomResourceClient;
 
 import io.fabric8.kubernetes.api.model.Container;
@@ -26,7 +27,6 @@ import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceRequirements;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.api.model.apiextensions.WebhookClientConfig;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
@@ -41,6 +41,8 @@ import io.fabric8.kubernetes.client.dsl.FilterWatchListMultiDeletable;
  * 
  * https://www.json2yaml.com/
  * http://www.bejson.com/xml2json/
+ * 
+ * debug at runWatch method of io.fabric8.kubernetes.client.dsl.internal.WatchConnectionManager
  **/
 public class VirtualMachineWatcher extends CustomResourceClient {
 	
@@ -86,12 +88,12 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 	}
 
 	@Override
-	public void watch(CustomResourceDefinition crd, Class<? extends HasMetadata> resourceType,
-			Class<? extends KubernetesResourceList> resourceList, Class<? extends Doneable> doneableRespurce) {
-
+	public void watch(final CustomResourceDefinition crd, final Class<? extends HasMetadata> resourceType,
+			final Class<? extends KubernetesResourceList> resourceList, final Class<? extends Doneable> doneableRespurce) {
+		
 		getWatcher(crd, resourceType, resourceList, doneableRespurce)
 								.watch(new Watcher<VirtualMachine>() {
-
+			
 			public void eventReceived(Action action, VirtualMachine vm) {
 				
 				String podName = POD_PREFIX + "-" + vm.getMetadata().getName() 
@@ -170,7 +172,7 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 				annotations.put(VERSION_ANNOTATION, VirtualMachineGenerator.VERSION);
 				annotations.put(NAME_ANNOTATION, vm.getMetadata().getName());
 				annotations.put(NS_ANNOTATION, vm.getMetadata().getNamespace());
-				annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm));
+				annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm.getSpec()));
 				return annotations;
 			}
 
@@ -194,7 +196,6 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 		VirtualMachineWatcher watcher = new VirtualMachineWatcher();
 		CustomResourceDefinition crd = watcher.getCustomResourceDefinition(
 						VirtualMachineGenerator.NAME, VirtualMachine.class);
-		WebhookClientConfig webhookClientConfig;
 		if (crd != null) {
 			watcher.watch(crd, VirtualMachine.class, VirtualMachineList.class, DoneableVirtualMachine.class);
 		} else {

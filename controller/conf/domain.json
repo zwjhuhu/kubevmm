@@ -1,1863 +1,406 @@
 {
   "domain": {
-    "_type": "string",
-    "_id": "uint",
-    "name": "string",
-    "uuid": "string",
-    "image": "string",
-    "genid": "string",
-    "title": "string",
-    "description": "string",
-    "maxMemory": {
-      "_unit": "string",
-      "_slots": "uint",
-      "text": "string"
-    },
+    "_type": "kvm",
+    "_id": "44",
+    "name": "centos7.0",
+    "uuid": "c372523b_27a8_47ec_a142_8350bd87cbe1",
     "memory": {
-      "_unit": "string",
-      "_dumpCore": "string",
-      "text": "string"
+      "_unit": "KiB",
+      "text": "2097152"
     },
     "currentMemory": {
-      "_unit": "string",
-      "text": "string"
-    },
-    "blkiotune": {
-      "weight": "uint",
-      "device": [
-        {
-          "path": "string",
-          "weight": "uint",
-          "read_iops_sec": "uint",
-          "write_iops_sec": "uint",
-          "read_bytes_sec": "uint",
-          "write_bytes_sec": "uint"
-        },
-        {
-          "path": "string",
-          "weight": "uint",
-          "read_iops_sec": "uint",
-          "write_iops_sec": "uint",
-          "read_bytes_sec": "uint",
-          "write_bytes_sec": "uint"
-        }
-      ]
-    },
-    "memtune": {
-      "hard_limit": {
-        "_unit": "string",
-        "text": "string"
-      },
-      "soft_limit": {
-        "_unit": "string",
-        "text": "string"
-      },
-      "min_guarantee": {
-        "_unit": "string",
-        "text": "string"
-      },
-      "swap_hard_limit": {
-        "_unit": "string",
-        "text": "string"
-      }
-    },
-    "memoryBacking": {
-      "hugepages": {
-        "page": [
-          {
-            "_size": "uint",
-            "_unit": "string",
-            "_nodeset": "string"
-          },
-          {
-            "_size": "uint",
-            "_unit": "string",
-            "_nodeset": "string"
-          }
-        ]
-      },
-      "source": { "_type": "string" },
-      "access": { "_mode": "string" },
-      "allocation": { "_mode": "string" }
+      "_unit": "KiB",
+      "text": "2097152"
     },
     "vcpu": {
-      "_placement": "string",
-      "_cpuset": "string",
-      "_current": "string",
-      "text": "string"
+      "_placement": "static",
+      "text": "2"
     },
-    "vcpus": {
-      "vcpu": [
-        {
-          "_id": "uint",
-          "_enabled": "string",
-          "_hotpluggable": "string",
-          "_order": "uint"
-        },
-        {
-          "_id": "uint",
-          "_enabled": "string",
-          "_hotpluggable": "string",
-          "_order": "uint"
-        }
-      ]
-    },
-    "iothreads": "uint",
-    "iothreadids": {
-      "iothread": [
-        { "_id": "uint" },
-        { "_id": "uint" }
-      ]
-    },
-    "cputune": {
-      "shares": "string",
-      "period": "string",
-      "quota": "string",
-      "global_period": "string",
-      "global_quota": "string",
-      "emulator_period": "string",
-      "emulator_quota": "string",
-      "iothread_period": "string",
-      "iothread_quota": "string",
-      "vcpupin": [
-        {
-          "_vcpu": "uint",
-          "_cpuset": "string"
-        },
-        {
-          "_vcpu": "uint",
-          "_cpuset": "string"
-        }
-      ],
-      "emulatorpin": { "_cpuset": "string" },
-      "iothreadpin": [
-        {
-          "_iothread": "uint",
-          "_cpuset": "string"
-        },
-        {
-          "_iothread": "uint",
-          "_cpuset": "string"
-        }
-      ],
-      "vcpusched": [
-        {
-          "_vcpus": "string",
-          "_scheduler": "string",
-          "_priority": "uint"
-        },
-        {
-          "_vcpus": "string",
-          "_scheduler": "string",
-          "_priority": "uint"
-        }
-      ],
-      "iothreadsched": [
-        {
-          "_iothreads": "string",
-          "_scheduler": "string",
-          "_priority": "uint"
-        },
-        {
-          "_iothreads": "string",
-          "_scheduler": "string",
-          "_priority": "uint"
-        }
-      ],
-      "cachetune": [
-        {
-          "_vcpus": "string",
-          "cache": [
-            {
-              "_id": "uint",
-              "_level": "uint",
-              "_type": "string",
-              "_size": "uint",
-              "_unit": "string"
-            },
-            {
-              "_id": "uint",
-              "_level": "uint",
-              "_type": "string",
-              "_size": "uint",
-              "_unit": "string"
-            }
-          ],
-          "monitor": [
-            {
-              "_level": "uint",
-              "_vcpus": "string"
-            },
-            {
-              "_level": "uint",
-              "_vcpus": "string"
-            }
-          ]
-        },
-        {
-          "_vcpus": "string",
-          "cache": [
-            {
-              "_id": "uint",
-              "_level": "uint",
-              "_type": "string",
-              "_size": "uint",
-              "_unit": "string"
-            },
-            {
-              "_id": "uint",
-              "_level": "uint",
-              "_type": "string",
-              "_size": "uint",
-              "_unit": "string"
-            }
-          ],
-          "monitor": [
-            {
-              "_level": "uint",
-              "_vcpus": "string"
-            },
-            {
-              "_level": "uint",
-              "_vcpus": "string"
-            }
-          ]
-        }
-      ],
-      "memorytune": [
-        {
-          "_vcpus": "string",
-          "node": [
-            {
-              "_id": "uint",
-              "_bandwidth": "uint"
-            },
-            {
-              "_id": "uint",
-              "_bandwidth": "uint"
-            }
-          ]
-        },
-        {
-          "_vcpus": "string",
-          "node": [
-            {
-              "_id": "uint",
-              "_bandwidth": "uint"
-            },
-            {
-              "_id": "uint",
-              "_bandwidth": "uint"
-            }
-          ]
-        }
-      ]
-    },
-    "numatune": {
-      "memory": {
-        "_mode": "string",
-        "_nodeset": "string",
-        "_placement": "string"
-      },
-      "memnode": [
-        {
-          "_cellid": "uint",
-          "_mode": "string",
-          "_nodeset": "string"
-        },
-        {
-          "_cellid": "uint",
-          "_mode": "string",
-          "_nodeset": "string"
-        }
-      ]
-    },
-    "resource": { "partition": "string" },
-    "sysinfo": {
-      "_type": "string",
-      "bios": {
-        "entry": [
-          {
-            "_name": "string",
-            "text": "string"
-          },
-          {
-            "_name": "string",
-            "text": "string"
-          }
-        ]
-      },
-      "system": {
-        "entry": [
-          {
-            "_name": "string",
-            "text": "string"
-          },
-          {
-            "_name": "string",
-            "text": "string"
-          }
-        ]
-      },
-      "baseBoard": [
-        {
-          "entry": [
-            {
-              "_name": "string",
-              "text": "string"
-            },
-            {
-              "_name": "string",
-              "text": "string"
-            }
-          ]
-        },
-        {
-          "entry": [
-            {
-              "_name": "string",
-              "text": "string"
-            },
-            {
-              "_name": "string",
-              "text": "string"
-            }
-          ]
-        }
-      ],
-      "chassis": {
-        "entry": [
-          {
-            "_name": "string",
-            "text": "string"
-          },
-          {
-            "_name": "string",
-            "text": "string"
-          }
-        ]
-      },
-      "processor": [
-        {
-          "entry": [
-            {
-              "_name": "string",
-              "text": "string"
-            },
-            {
-              "_name": "string",
-              "text": "string"
-            }
-          ]
-        },
-        {
-          "entry": [
-            {
-              "_name": "string",
-              "text": "string"
-            },
-            {
-              "_name": "string",
-              "text": "string"
-            }
-          ]
-        }
-      ],
-      "memory": [
-        {
-          "entry": [
-            {
-              "_name": "string",
-              "text": "string"
-            },
-            {
-              "_name": "string",
-              "text": "string"
-            }
-          ]
-        },
-        {
-          "entry": [
-            {
-              "_name": "string",
-              "text": "string"
-            },
-            {
-              "_name": "string",
-              "text": "string"
-            }
-          ]
-        }
-      ],
-      "oemStrings": {
-        "entry": "string"
-      }
-    },
-    "bootloader": "string",
-    "bootloader_args": "string",
+    "resource": { "partition": "/machine" },
     "os": {
       "type": {
-        "_arch": "string",
-        "_machine": "string",
-        "text": "string"
-      },
-      "init": "string",
-      "initarg": "string",
-      "initenv": [
-        {
-          "_name": "string",
-          "text": "string"
-        },
-        {
-          "_name": "string",
-          "text": "string"
-        }
-      ],
-      "initdir": "string",
-      "inituser": "string",
-      "initgroup": "string",
-      "loader": "valu readonly='string' secure='string' type='string'>",
-      "nvram": "valu template='string'>",
-      "kernel": "string",
-      "initrd": "string",
-      "cmdline": "string",
-      "dtb": "string",
-      "acpi": {
-        "table": [
-          {
-            "_type": "string",
-            "text": "string"
-          },
-          {
-            "_type": "string",
-            "text": "string"
-          }
-        ]
+        "_arch": "x86_64",
+        "_machine": "pc_i440fx_rhel7.6.0",
+        "text": "hvm"
       },
       "boot": [
-        { "_dev": "string" },
-        { "_dev": "string" }
-      ],
-      "bootmenu": {
-        "_enable": "string",
-        "_timeout": "string"
-      },
-      "bios": {
-        "_useserial": "string",
-        "_rebootTimeout": "uint"
-      },
-      "smbios": { "_mode": "string" }
-    },
-    "idmap": {
-      "uid": [
-        {
-          "_start": "uint",
-          "_target": "uint",
-          "_count": "uint"
-        },
-        {
-          "_start": "uint",
-          "_target": "uint",
-          "_count": "uint"
-        }
-      ],
-      "gid": [
-        {
-          "_start": "uint",
-          "_target": "uint",
-          "_count": "uint"
-        },
-        {
-          "_start": "uint",
-          "_target": "uint",
-          "_count": "uint"
-        }
+        { "_dev": "cdrom" },
+        { "_dev": "hd" }
       ]
     },
     "features": {
-      "apic": { "_eoi": "string" },
-      "hap": { "_state": "string" },
-      "hyperv": {
-        "relaxed": { "_state": "string" },
-        "vapic": { "_state": "string" },
-        "spinlocks": { "_retries": "uint" },
-        "vpindex": { "_state": "string" },
-        "runtime": { "_state": "string" },
-        "synic": { "_state": "string" },
-        "stimer": { "_state": "string" },
-        "reset": { "_state": "string" },
-        "vendor_id": { "_string": "string" },
-        "frequencies": { "_state": "string" },
-        "reenlightenment": { "_state": "string" },
-        "tlbflush": { "_state": "string" },
-        "ipi": { "_state": "string" },
-        "evmcs": { "_state": "string" }
-      },
-      "kvm": {
-        "hidden": { "_state": "string" }
-      },
-      "pvspinlock": { "_state": "string" },
-      "pmu": { "_state": "string" },
-      "vmport": { "_state": "string" },
-      "gic": { "_version": "string" },
-      "smm": {
-        "_state": "string",
-        "tseg": {
-          "_unit": "string",
-          "text": "string"
-        }
-      },
-      "ioapic": { "_driver": "string" },
-      "hpt": {
-        "_resizing": "string",
-        "maxpagesize": {
-          "_unit": "string",
-          "text": "string"
-        }
-      },
-      "htm": { "_state": "string" },
-      "nested_hv": { "_state": "string" },
-      "capabilities": {
-        "_policy": "string",
-        "audit_control": { "_state": "string" },
-        "audit_write": { "_state": "string" },
-        "block_suspend": { "_state": "string" },
-        "chown": { "_state": "string" },
-        "dac_override": { "_state": "string" },
-        "dac_read_Search": { "_state": "string" },
-        "fowner": { "_state": "string" },
-        "fsetid": { "_state": "string" },
-        "ipc_lock": { "_state": "string" },
-        "ipc_owner": { "_state": "string" },
-        "kill": { "_state": "string" },
-        "lease": { "_state": "string" },
-        "linux_immutable": { "_state": "string" },
-        "mac_admin": { "_state": "string" },
-        "mac_override": { "_state": "string" },
-        "mknod": { "_state": "string" },
-        "net_admin": { "_state": "string" },
-        "net_bind_service": { "_state": "string" },
-        "net_broadcast": { "_state": "string" },
-        "net_raw": { "_state": "string" },
-        "setgid": { "_state": "string" },
-        "setfcap": { "_state": "string" },
-        "setpcap": { "_state": "string" },
-        "setuid": { "_state": "string" },
-        "sys_admin": { "_state": "string" },
-        "sys_boot": { "_state": "string" },
-        "sys_chroot": { "_state": "string" },
-        "sys_module": { "_state": "string" },
-        "sys_nice": { "_state": "string" },
-        "sys_pacct": { "_state": "string" },
-        "sys_ptrace": { "_state": "string" },
-        "sys_rawio": { "_state": "string" },
-        "sys_resource": { "_state": "string" },
-        "sys_time": { "_state": "string" },
-        "sys_tty_config": { "_state": "string" },
-        "syslog": { "_state": "string" },
-        "wake_alarm": { "_state": "string" }
-      },
-      "vmcoreinfo": { "_state": "string" },
-      "msrs": { "_unknown": "string" }
+      "vmport": { "_state": "off" }
     },
     "cpu": {
-      "_match": "string",
-      "_mode": "string",
-      "_check": "string",
+      "_mode": "custom",
+      "_match": "exact",
+      "_check": "full",
       "model": {
-        "_fallback": "string",
-        "_vendor_id": "string",
-        "text": "string"
-      },
-      "vendor": "string",
-      "topology": {
-        "_sockets": "int",
-        "_cores": "int",
-        "_threads": "int"
-      },
-      "cache": {
-        "_level": "uint",
-        "_mode": "string"
+        "_fallback": "forbid",
+        "text": "Broadwell_noTSX_IBRS"
       },
       "feature": [
         {
-          "_policy": "string",
-          "_name": "string"
+          "_policy": "require",
+          "_name": "vme"
         },
         {
-          "_policy": "string",
-          "_name": "string"
+          "_policy": "require",
+          "_name": "f16c"
+        },
+        {
+          "_policy": "require",
+          "_name": "rdrand"
+        },
+        {
+          "_policy": "require",
+          "_name": "hypervisor"
+        },
+        {
+          "_policy": "require",
+          "_name": "arat"
+        },
+        {
+          "_policy": "disable",
+          "_name": "erms"
+        },
+        {
+          "_policy": "require",
+          "_name": "xsaveopt"
+        },
+        {
+          "_policy": "require",
+          "_name": "abm"
         }
-      ],
-      "numa": {
-        "cell": [
-          {
-            "_id": "uint",
-            "_cpus": "string",
-            "_memory": "string",
-            "_unit": "string",
-            "_memAccess": "string",
-            "_discard": "string",
-            "distances": {
-              "sibling": [
-                {
-                  "_id": "uint",
-                  "_string": "uint"
-                },
-                {
-                  "_id": "uint",
-                  "_string": "uint"
-                }
-              ]
-            }
-          },
-          {
-            "_id": "uint",
-            "_cpus": "string",
-            "_memory": "string",
-            "_unit": "string",
-            "_memAccess": "string",
-            "_discard": "string",
-            "distances": {
-              "sibling": [
-                {
-                  "_id": "uint",
-                  "_string": "uint"
-                },
-                {
-                  "_id": "uint",
-                  "_string": "uint"
-                }
-              ]
-            }
-          }
-        ]
-      }
+      ]
     },
     "clock": {
-      "_offset": "string",
-      "_basis": "string",
-      "_adjustment": "string",
-      "_timezone": "string",
+      "_offset": "utc",
       "timer": [
         {
-          "_name": "string",
-          "_track": "string",
-          "_tickpolicy": "string",
-          "_frequency": "uint32",
-          "_mode": "string",
-          "_present": "string",
-          "catchup": {
-            "_threshold": "uint",
-            "_slew": "uint",
-            "_limit": "uint"
-          }
+          "_name": "rtc",
+          "_tickpolicy": "catchup"
         },
         {
-          "_name": "string",
-          "_track": "string",
-          "_tickpolicy": "string",
-          "_frequency": "uint32",
-          "_mode": "string",
-          "_present": "string",
-          "catchup": {
-            "_threshold": "uint",
-            "_slew": "uint",
-            "_limit": "uint"
-          }
+          "_name": "pit",
+          "_tickpolicy": "delay"
+        },
+        {
+          "_name": "hpet",
+          "_present": "no"
         }
       ]
     },
-    "on_poweroff": "string",
-    "on_reboot": "string",
-    "on_crash": "string",
+    "on_poweroff": "destroy",
+    "on_reboot": "destroy",
+    "on_crash": "destroy",
     "pm": {
-      "suspend_to_mem": { "_enabled": "string" },
-      "suspend_to_disk": { "_enabled": "string" }
-    },
-    "perf": {
-      "event": [
-        {
-          "_name": "string",
-          "_enabled": "string"
-        },
-        {
-          "_name": "string",
-          "_enabled": "string"
-        }
-      ]
+      "suspend_to_mem": { "_enabled": "no" },
+      "suspend_to_disk": { "_enabled": "no" }
     },
     "devices": {
-      "emulator": "string",
+      "emulator": "/usr/libexec/qemu_kvm",
       "disk": [
         {
-          "_device": "string",
-          "_rawio": "string",
-          "_sgio": "string",
-          "_snapshot": "string",
-          "_model": "string",
+          "_type": "file",
+          "_device": "disk",
           "driver": {
-            "_name": "string",
-            "_type": "string",
-            "_cache": "string",
-            "_error_policy": "string",
-            "_rerror_policy": "string",
-            "_io": "string",
-            "_ioeventfd": "string",
-            "_event_idx": "string",
-            "_copy_on_read": "string",
-            "_discard": "string",
-            "_iothread": "uint",
-            "_detect_zeroes": "string",
-            "_queues": "uint",
-            "_iommu": "string",
-            "_ats": "string"
+            "_name": "qemu",
+            "_type": "qcow2"
           },
-          "auth": {
-            "_username": "string",
-            "secret": {
-              "_type": "string",
-              "_usage": "string",
-              "_uuid": "string"
-            }
-          },
-          "source": {
-            "_startupPolicy": "string",
-            "_index": "uint",
-            "encryption": {
-              "_format": "string",
-              "secret": {
-                "_type": "string",
-                "_usage": "string",
-                "_uuid": "string"
-              }
-            },
-            "reservations": {
-              "_enabled": "string",
-              "_managed": "string"
-            }
-          },
-          "backingStore": {
-            "_index": "uint",
-            "format": { "_type": "string" },
-            "source": {
-              "_startupPolicy": "string",
-              "_index": "uint",
-              "encryption": {
-                "_format": "string",
-                "secret": {
-                  "_type": "string",
-                  "_usage": "string",
-                  "_uuid": "string"
-                }
-              },
-              "reservations": {
-                "_enabled": "string",
-                "_managed": "string"
-              }
-            }
-          },
-          "geometry": {
-            "_cyls": "uint",
-            "_heads": "uint",
-            "_secs": "uint",
-            "_trans": "string"
-          },
-          "blockio": {
-            "_logical_block_size": "uint",
-            "_physical_block_size": "uint"
-          },
-          "mirror": {
-            "_job": "string",
-            "_ready": "string",
-            "format": { "_type": "string" },
-            "source": {
-              "_startupPolicy": "string",
-              "_index": "uint",
-              "encryption": {
-                "_format": "string",
-                "secret": {
-                  "_type": "string",
-                  "_usage": "string",
-                  "_uuid": "string"
-                }
-              },
-              "reservations": {
-                "_enabled": "string",
-                "_managed": "string"
-              }
-            }
-          },
+          "source": { "_file": "/var/lib/libvirt/images/centos7.0.qcow2" },
           "target": {
-            "_dev": "string",
-            "_bus": "string",
-            "_tray": "string",
-            "_removable": "string"
+            "_dev": "vda",
+            "_bus": "virtio"
           },
-          "iotune": {
-            "total_bytes_sec": "uint64",
-            "read_bytes_sec": "uint64",
-            "write_bytes_sec": "uint64",
-            "total_iops_sec": "uint64",
-            "read_iops_sec": "uint64",
-            "write_iops_sec": "uint64",
-            "total_bytes_sec_max": "uint64",
-            "read_bytes_sec_max": "uint64",
-            "write_bytes_sec_max": "uint64",
-            "total_iops_sec_max": "uint64",
-            "read_iops_sec_max": "uint64",
-            "write_iops_sec_max": "uint64",
-            "total_bytes_sec_max_length": "uint64",
-            "read_bytes_sec_max_length": "uint64",
-            "write_bytes_sec_max_length": "uint64",
-            "total_iops_sec_max_length": "uint64",
-            "read_iops_sec_max_length": "uint64",
-            "write_iops_sec_max_length": "uint64",
-            "size_iops_sec": "uint64",
-            "group_name": "string"
-          },
-          "serial": "string",
-          "wwn": "string",
-          "vendor": "string",
-          "product": "string",
-          "encryption": {
-            "_format": "string",
-            "secret": {
-              "_type": "string",
-              "_usage": "string",
-              "_uuid": "string"
-            }
-          },
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "alias": { "_name": "string" }
+          "alias": { "_name": "virtio_disk0" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x07",
+            "_function": "0x0"
+          }
         },
         {
-          "_device": "string",
-          "_rawio": "string",
-          "_sgio": "string",
-          "_snapshot": "string",
-          "_model": "string",
+          "_type": "file",
+          "_device": "cdrom",
           "driver": {
-            "_name": "string",
-            "_type": "string",
-            "_cache": "string",
-            "_error_policy": "string",
-            "_rerror_policy": "string",
-            "_io": "string",
-            "_ioeventfd": "string",
-            "_event_idx": "string",
-            "_copy_on_read": "string",
-            "_discard": "string",
-            "_iothread": "uint",
-            "_detect_zeroes": "string",
-            "_queues": "uint",
-            "_iommu": "string",
-            "_ats": "string"
+            "_name": "qemu",
+            "_type": "raw"
           },
-          "auth": {
-            "_username": "string",
-            "secret": {
-              "_type": "string",
-              "_usage": "string",
-              "_uuid": "string"
-            }
-          },
-          "source": {
-            "_startupPolicy": "string",
-            "_index": "uint",
-            "encryption": {
-              "_format": "string",
-              "secret": {
-                "_type": "string",
-                "_usage": "string",
-                "_uuid": "string"
-              }
-            },
-            "reservations": {
-              "_enabled": "string",
-              "_managed": "string"
-            }
-          },
-          "backingStore": {
-            "_index": "uint",
-            "format": { "_type": "string" },
-            "source": {
-              "_startupPolicy": "string",
-              "_index": "uint",
-              "encryption": {
-                "_format": "string",
-                "secret": {
-                  "_type": "string",
-                  "_usage": "string",
-                  "_uuid": "string"
-                }
-              },
-              "reservations": {
-                "_enabled": "string",
-                "_managed": "string"
-              }
-            }
-          },
-          "geometry": {
-            "_cyls": "uint",
-            "_heads": "uint",
-            "_secs": "uint",
-            "_trans": "string"
-          },
-          "blockio": {
-            "_logical_block_size": "uint",
-            "_physical_block_size": "uint"
-          },
-          "mirror": {
-            "_job": "string",
-            "_ready": "string",
-            "format": { "_type": "string" },
-            "source": {
-              "_startupPolicy": "string",
-              "_index": "uint",
-              "encryption": {
-                "_format": "string",
-                "secret": {
-                  "_type": "string",
-                  "_usage": "string",
-                  "_uuid": "string"
-                }
-              },
-              "reservations": {
-                "_enabled": "string",
-                "_managed": "string"
-              }
-            }
-          },
+          "source": { "_file": "/home/isos/CentOS_7_x86_64_Minimal_1810.iso" },
           "target": {
-            "_dev": "string",
-            "_bus": "string",
-            "_tray": "string",
-            "_removable": "string"
+            "_dev": "hda",
+            "_bus": "ide"
           },
-          "iotune": {
-            "total_bytes_sec": "uint64",
-            "read_bytes_sec": "uint64",
-            "write_bytes_sec": "uint64",
-            "total_iops_sec": "uint64",
-            "read_iops_sec": "uint64",
-            "write_iops_sec": "uint64",
-            "total_bytes_sec_max": "uint64",
-            "read_bytes_sec_max": "uint64",
-            "write_bytes_sec_max": "uint64",
-            "total_iops_sec_max": "uint64",
-            "read_iops_sec_max": "uint64",
-            "write_iops_sec_max": "uint64",
-            "total_bytes_sec_max_length": "uint64",
-            "read_bytes_sec_max_length": "uint64",
-            "write_bytes_sec_max_length": "uint64",
-            "total_iops_sec_max_length": "uint64",
-            "read_iops_sec_max_length": "uint64",
-            "write_iops_sec_max_length": "uint64",
-            "size_iops_sec": "uint64",
-            "group_name": "string"
-          },
-          "serial": "string",
-          "wwn": "string",
-          "vendor": "string",
-          "product": "string",
-          "encryption": {
-            "_format": "string",
-            "secret": {
-              "_type": "string",
-              "_usage": "string",
-              "_uuid": "string"
-            }
-          },
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "alias": { "_name": "string" }
+          "alias": { "_name": "ide0_0_0" },
+          "address": {
+            "_type": "drive",
+            "_controller": "0",
+            "_bus": "0",
+            "_target": "0",
+            "_unit": "0"
+          }
         }
       ],
       "controller": [
         {
-          "_type": "string",
-          "_index": "uint",
-          "_model": "string",
-          "driver": {
-            "_queues": "uint",
-            "_cmd_per_lun": "uint",
-            "_max_sectors": "uint",
-            "_ioeventfd": "string",
-            "_iothread": "uint",
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "_type": "string",
-          "_index": "uint",
-          "_model": "string",
-          "driver": {
-            "_queues": "uint",
-            "_cmd_per_lun": "uint",
-            "_max_sectors": "uint",
-            "_ioeventfd": "string",
-            "_iothread": "uint",
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "lease": [
-        {
-          "lockspace": "string",
-          "key": "string",
-          "target": {
-            "_path": "string",
-            "_offset": "uint64"
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_ehci1",
+          "alias": { "_name": "usb" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x7"
           }
         },
         {
-          "lockspace": "string",
-          "key": "string",
-          "target": {
-            "_path": "string",
-            "_offset": "uint64"
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_uhci1",
+          "alias": { "_name": "usb" },
+          "master": { "_startport": "0" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x0",
+            "_multifunction": "on"
+          }
+        },
+        {
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_uhci2",
+          "alias": { "_name": "usb" },
+          "master": { "_startport": "2" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x1"
+          }
+        },
+        {
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_uhci3",
+          "alias": { "_name": "usb" },
+          "master": { "_startport": "4" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x2"
+          }
+        },
+        {
+          "_type": "pci",
+          "_index": "0",
+          "_model": "pci_root",
+          "alias": { "_name": "pci.0" }
+        },
+        {
+          "_type": "ide",
+          "_index": "0",
+          "alias": { "_name": "ide" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x01",
+            "_function": "0x1"
+          }
+        },
+        {
+          "_type": "virtio_serial",
+          "_index": "0",
+          "alias": { "_name": "virtio_serial0" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x06",
+            "_function": "0x0"
           }
         }
       ],
-      "filesystem": [
-        {
-          "_accessmode": "string",
-          "_model": "string",
-          "driver": {
-            "_type": "string",
-            "_format": "string",
-            "_name": "string",
-            "_wrpolicy": "string",
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "target": { "_dir": "string" },
-          "space_hard_limit": {
-            "_unit": "string",
-            "text": "string"
-          },
-          "space_soft_limit": {
-            "_unit": "string",
-            "text": "string"
-          },
-          "alias": { "_name": "string" }
+      "_interface": {
+        "_type": "network",
+        "mac": { "_address": "52:54:00:d9:e0:b9" },
+        "source": {
+          "_network": "default",
+          "_bridge": "virbr0"
         },
-        {
-          "_accessmode": "string",
-          "_model": "string",
-          "driver": {
-            "_type": "string",
-            "_format": "string",
-            "_name": "string",
-            "_wrpolicy": "string",
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "target": { "_dir": "string" },
-          "space_hard_limit": {
-            "_unit": "string",
-            "text": "string"
-          },
-          "space_soft_limit": {
-            "_unit": "string",
-            "text": "string"
-          },
-          "alias": { "_name": "string" }
+        "target": { "_dev": "vnet0" },
+        "model": { "_type": "virtio" },
+        "alias": { "_name": "net0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x03",
+          "_function": "0x0"
         }
-      ],
-      "_interface": [
-        {
-          "_managed": "string",
-          "_trustGuestRxFilters": "string",
-          "mac": { "_address": "string" },
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "vlan": {
-            "_trunk": "string",
-            "tag": [
-              {
-                "_id": "uint",
-                "_nativeMode": "string"
-              },
-              {
-                "_id": "uint",
-                "_nativeMode": "string"
-              }
-            ]
-          },
-          "virtualport": {
-            
-          },
-          "ip": [
-            {
-              "_address": "string",
-              "_family": "string",
-              "_prefix": "uint",
-              "_peer": "string"
-            },
-            {
-              "_address": "string",
-              "_family": "string",
-              "_prefix": "uint",
-              "_peer": "string"
-            }
-          ],
-          "route": [
-            {
-              "_family": "string",
-              "_address": "string",
-              "_netmask": "string",
-              "_prefix": "uint",
-              "_gateway": "string",
-              "_metric": "uint"
-            },
-            {
-              "_family": "string",
-              "_address": "string",
-              "_netmask": "string",
-              "_prefix": "uint",
-              "_gateway": "string",
-              "_metric": "uint"
-            }
-          ],
-          "script": { "_path": "string" },
-          "target": { "_dev": "string" },
-          "guest": {
-            "_dev": "string",
-            "_actual": "string"
-          },
-          "model": { "_type": "string" },
-          "driver": {
-            "_name": "string",
-            "_txmode": "string",
-            "_ioeventfd": "string",
-            "_event_idx": "string",
-            "_queues": "uint",
-            "_rx_queue_size": "uint",
-            "_tx_queue_size": "uint",
-            "_iommu": "string",
-            "_ats": "string",
-            "host": {
-              "_csum": "string",
-              "_gso": "string",
-              "_tso4": "string",
-              "_tso6": "string",
-              "_ecn": "string",
-              "_ufo": "string",
-              "_mrg_rxbuf": "string"
-            },
-            "guest": {
-              "_csum": "string",
-              "_tso4": "string",
-              "_tso6": "string",
-              "_ecn": "string",
-              "_ufo": "string"
-            }
-          },
-          "backend": {
-            "_tap": "string",
-            "_vhost": "string"
-          },
-          "filterref": {
-            "_filter": "string",
-            "parameter": [
-              {
-                "_name": "string",
-                "_string": "string"
-              },
-              {
-                "_name": "string",
-                "_string": "string"
-              }
-            ]
-          },
-          "tune": { "sndbuf": "uint" },
-          "link": { "_state": "string" },
-          "mtu": { "_size": "uint" },
-          "bandwidth": {
-            "inbound": {
-              "_average": "uint",
-              "_peak": "uint",
-              "_burst": "uint",
-              "_floor": "uint"
-            },
-            "outbound": {
-              "_average": "uint",
-              "_peak": "uint",
-              "_burst": "uint",
-              "_floor": "uint"
-            }
-          },
-          "coalesce": {
-            "rx": {
-              "frames": { "_max": "uint" }
-            }
-          },
-          "rom": {
-            "_bar": "string",
-            "_file": "string",
-            "_enabled": "string"
-          },
-          "alias": { "_name": "string" }
+      },
+      "serial": {
+        "_type": "pty",
+        "source": { "_path": "/dev/pts/3" },
+        "target": {
+          "_type": "isa_serial",
+          "_port": "0",
+          "model": { "_name": "isa_serial" }
         },
-        {
-          "_managed": "string",
-          "_trustGuestRxFilters": "string",
-          "mac": { "_address": "string" },
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "vlan": {
-            "_trunk": "string",
-            "tag": [
-              {
-                "_id": "uint",
-                "_nativeMode": "string"
-              },
-              {
-                "_id": "uint",
-                "_nativeMode": "string"
-              }
-            ]
-          },
-          "virtualport": {
-            
-          },
-          "ip": [
-            {
-              "_address": "string",
-              "_family": "string",
-              "_prefix": "uint",
-              "_peer": "string"
-            },
-            {
-              "_address": "string",
-              "_family": "string",
-              "_prefix": "uint",
-              "_peer": "string"
-            }
-          ],
-          "route": [
-            {
-              "_family": "string",
-              "_address": "string",
-              "_netmask": "string",
-              "_prefix": "uint",
-              "_gateway": "string",
-              "_metric": "uint"
-            },
-            {
-              "_family": "string",
-              "_address": "string",
-              "_netmask": "string",
-              "_prefix": "uint",
-              "_gateway": "string",
-              "_metric": "uint"
-            }
-          ],
-          "script": { "_path": "string" },
-          "target": { "_dev": "string" },
-          "guest": {
-            "_dev": "string",
-            "_actual": "string"
-          },
-          "model": { "_type": "string" },
-          "driver": {
-            "_name": "string",
-            "_txmode": "string",
-            "_ioeventfd": "string",
-            "_event_idx": "string",
-            "_queues": "uint",
-            "_rx_queue_size": "uint",
-            "_tx_queue_size": "uint",
-            "_iommu": "string",
-            "_ats": "string",
-            "host": {
-              "_csum": "string",
-              "_gso": "string",
-              "_tso4": "string",
-              "_tso6": "string",
-              "_ecn": "string",
-              "_ufo": "string",
-              "_mrg_rxbuf": "string"
-            },
-            "guest": {
-              "_csum": "string",
-              "_tso4": "string",
-              "_tso6": "string",
-              "_ecn": "string",
-              "_ufo": "string"
-            }
-          },
-          "backend": {
-            "_tap": "string",
-            "_vhost": "string"
-          },
-          "filterref": {
-            "_filter": "string",
-            "parameter": [
-              {
-                "_name": "string",
-                "_string": "string"
-              },
-              {
-                "_name": "string",
-                "_string": "string"
-              }
-            ]
-          },
-          "tune": { "sndbuf": "uint" },
-          "link": { "_state": "string" },
-          "mtu": { "_size": "uint" },
-          "bandwidth": {
-            "inbound": {
-              "_average": "uint",
-              "_peak": "uint",
-              "_burst": "uint",
-              "_floor": "uint"
-            },
-            "outbound": {
-              "_average": "uint",
-              "_peak": "uint",
-              "_burst": "uint",
-              "_floor": "uint"
-            }
-          },
-          "coalesce": {
-            "rx": {
-              "frames": { "_max": "uint" }
-            }
-          },
-          "rom": {
-            "_bar": "string",
-            "_file": "string",
-            "_enabled": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "smartcard": [
-        {
-          "protocol": { "_type": "string" },
-          "certificate": [
-            "string",
-            "string"
-          ],
-          "database": "string",
-          "alias": { "_name": "string" }
+        "alias": { "_name": "serial0" }
+      },
+      "console": {
+        "_type": "pty",
+        "_tty": "/dev/pts/3",
+        "source": { "_path": "/dev/pts/3" },
+        "target": {
+          "_type": "serial",
+          "_port": "0"
         },
-        {
-          "protocol": { "_type": "string" },
-          "certificate": [
-            "string",
-            "string"
-          ],
-          "database": "string",
-          "alias": { "_name": "string" }
-        }
-      ],
-      "serial": [
-        {
-          "protocol": { "_type": "string" },
-          "target": {
-            "_type": "string",
-            "_port": "uint",
-            "model": { "_name": "string" }
-          },
-          "log": {
-            "_file": "string",
-            "_append": "string"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "protocol": { "_type": "string" },
-          "target": {
-            "_type": "string",
-            "_port": "uint",
-            "model": { "_name": "string" }
-          },
-          "log": {
-            "_file": "string",
-            "_append": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "parallel": [
-        {
-          "protocol": { "_type": "string" },
-          "target": {
-            "_type": "string",
-            "_port": "uint"
-          },
-          "log": {
-            "_file": "string",
-            "_append": "string"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "protocol": { "_type": "string" },
-          "target": {
-            "_type": "string",
-            "_port": "uint"
-          },
-          "log": {
-            "_file": "string",
-            "_append": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "console": [
-        {
-          "_tty": "string",
-          "protocol": { "_type": "string" },
-          "target": {
-            "_type": "string",
-            "_port": "uint"
-          },
-          "log": {
-            "_file": "string",
-            "_append": "string"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "_tty": "string",
-          "protocol": { "_type": "string" },
-          "target": {
-            "_type": "string",
-            "_port": "uint"
-          },
-          "log": {
-            "_file": "string",
-            "_append": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
+        "alias": { "_name": "serial0" }
+      },
       "channel": [
         {
-          "protocol": { "_type": "string" },
-          "log": {
-            "_file": "string",
-            "_append": "string"
+          "_type": "unix",
+          "source": {
+            "_mode": "bind",
+            "_path": "/var/lib/libvirt/qemu/channel/target/domain_2_centos7.0/org.qemu.guest_agent.0"
           },
-          "alias": { "_name": "string" }
+          "target": {
+            "_type": "virtio",
+            "_name": "org.qemu.guest_agent.0",
+            "_state": "disconnected"
+          },
+          "alias": { "_name": "channel0" },
+          "address": {
+            "_type": "virtio_serial",
+            "_controller": "0",
+            "_bus": "0",
+            "_port": "1"
+          }
         },
         {
-          "protocol": { "_type": "string" },
-          "log": {
-            "_file": "string",
-            "_append": "string"
+          "_type": "spicevmc",
+          "target": {
+            "_type": "virtio",
+            "_name": "com.redhat.spice.0",
+            "_state": "disconnected"
           },
-          "alias": { "_name": "string" }
+          "alias": { "_name": "channel1" },
+          "address": {
+            "_type": "virtio_serial",
+            "_controller": "0",
+            "_bus": "0",
+            "_port": "2"
+          }
         }
       ],
       "input": [
         {
-          "_type": "string",
-          "_bus": "string",
-          "_model": "string",
-          "driver": {
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "source": { "_evdev": "string" },
-          "alias": { "_name": "string" }
+          "_type": "tablet",
+          "_bus": "usb",
+          "alias": { "_name": "input0" },
+          "address": {
+            "_type": "usb",
+            "_bus": "0",
+            "_port": "1"
+          }
         },
         {
-          "_type": "string",
-          "_bus": "string",
-          "_model": "string",
-          "driver": {
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "source": { "_evdev": "string" },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "tpm": [
-        {
-          "_model": "string",
-          "alias": { "_name": "string" }
+          "_type": "mouse",
+          "_bus": "ps2",
+          "alias": { "_name": "input1" }
         },
         {
-          "_model": "string",
-          "alias": { "_name": "string" }
+          "_type": "keyboard",
+          "_bus": "ps2",
+          "alias": { "_name": "input2" }
         }
       ],
-      "sound": [
-        {
-          "_model": "string",
-          "codec": [
-            { "_type": "string" },
-            { "_type": "string" }
-          ],
-          "alias": { "_name": "string" }
+      "graphics": {
+        "_type": "spice",
+        "_port": "5900",
+        "_autoport": "yes",
+        "_listen": "127.0.0.1",
+        "listen": {
+          "_type": "address",
+          "_address": "127.0.0.1"
         },
-        {
-          "_model": "string",
-          "codec": [
-            { "_type": "string" },
-            { "_type": "string" }
-          ],
-          "alias": { "_name": "string" }
+        "image": { "_compression": "off" }
+      },
+      "sound": {
+        "_model": "ich6",
+        "alias": { "_name": "sound0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x04",
+          "_function": "0x0"
         }
-      ],
-      "video": [
-        {
-          "model": {
-            "_type": "string",
-            "_heads": "uint",
-            "_ram": "uint",
-            "_vram": "uint",
-            "_vram64": "uint",
-            "_vgamem": "uint",
-            "_primary": "string",
-            "acceleration": {
-              "_accel3d": "string",
-              "_accel2d": "string"
-            }
-          },
-          "driver": {
-            "_vgaconf": "string",
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "alias": { "_name": "string" }
+      },
+      "video": {
+        "model": {
+          "_type": "qxl",
+          "_ram": "65536",
+          "_vram": "65536",
+          "_vgamem": "16384",
+          "_heads": "1",
+          "_primary": "yes"
         },
-        {
-          "model": {
-            "_type": "string",
-            "_heads": "uint",
-            "_ram": "uint",
-            "_vram": "uint",
-            "_vram64": "uint",
-            "_vgamem": "uint",
-            "_primary": "string",
-            "acceleration": {
-              "_accel3d": "string",
-              "_accel2d": "string"
-            }
-          },
-          "driver": {
-            "_vgaconf": "string",
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "alias": { "_name": "string" }
+        "alias": { "_name": "video0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x02",
+          "_function": "0x0"
         }
-      ],
-      "hostdev": [
-        {
-          "_managed": "string",
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "rom": {
-            "_bar": "string",
-            "_file": "string",
-            "_enabled": "string"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "_managed": "string",
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "rom": {
-            "_bar": "string",
-            "_file": "string",
-            "_enabled": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
+      },
       "redirdev": [
         {
-          "_bus": "string",
-          "protocol": { "_type": "string" },
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "alias": { "_name": "string" }
+          "_bus": "usb",
+          "_type": "spicevmc",
+          "alias": { "_name": "redir0" },
+          "address": {
+            "_type": "usb",
+            "_bus": "0",
+            "_port": "2"
+          }
         },
         {
-          "_bus": "string",
-          "protocol": { "_type": "string" },
-          "boot": {
-            "_order": "uint",
-            "_loadparm": "string"
-          },
-          "alias": { "_name": "string" }
+          "_bus": "usb",
+          "_type": "spicevmc",
+          "alias": { "_name": "redir1" },
+          "address": {
+            "_type": "usb",
+            "_bus": "0",
+            "_port": "3"
+          }
         }
       ],
-      "redirfilter": [
-        {
-          "usbdev": [
-            {
-              "_class": "uint",
-              "_vendor": "uint",
-              "_product": "uint",
-              "_version": "string",
-              "_allow": "string"
-            },
-            {
-              "_class": "uint",
-              "_vendor": "uint",
-              "_product": "uint",
-              "_version": "string",
-              "_allow": "string"
-            }
-          ]
-        },
-        {
-          "usbdev": [
-            {
-              "_class": "uint",
-              "_vendor": "uint",
-              "_product": "uint",
-              "_version": "string",
-              "_allow": "string"
-            },
-            {
-              "_class": "uint",
-              "_vendor": "uint",
-              "_product": "uint",
-              "_version": "string",
-              "_allow": "string"
-            }
-          ]
-        }
-      ],
-      "hub": [
-        {
-          "_type": "string",
-          "alias": { "_name": "string" }
-        },
-        {
-          "_type": "string",
-          "alias": { "_name": "string" }
-        }
-      ],
-      "watchdog": {
-        "_model": "string",
-        "_action": "string",
-        "alias": { "_name": "string" }
-      },
       "memballoon": {
-        "_model": "string",
-        "_autodeflate": "string",
-        "driver": {
-          "_iommu": "string",
-          "_ats": "string"
-        },
-        "stats": { "_period": "uint" },
-        "alias": { "_name": "string" }
-      },
-      "rng": [
-        {
-          "_model": "string",
-          "driver": {
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "rate": {
-            "_bytes": "uint",
-            "_period": "uint"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "_model": "string",
-          "driver": {
-            "_iommu": "string",
-            "_ats": "string"
-          },
-          "rate": {
-            "_bytes": "uint",
-            "_period": "uint"
-          },
-          "alias": { "_name": "string" }
+        "_model": "virtio",
+        "alias": { "_name": "balloon0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x08",
+          "_function": "0x0"
         }
-      ],
-      "nvram": {
-        "alias": { "_name": "string" }
-      },
-      "panic": [
-        {
-          "_model": "string",
-          "alias": { "_name": "string" }
-        },
-        {
-          "_model": "string",
-          "alias": { "_name": "string" }
-        }
-      ],
-      "shmem": [
-        {
-          "_name": "string",
-          "size": {
-            "_unit": "string",
-            "text": "string"
-          },
-          "model": { "_type": "string" },
-          "server": { "_path": "string" },
-          "msi": {
-            "_enabled": "string",
-            "_vectors": "uint",
-            "_ioeventfd": "string"
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "_name": "string",
-          "size": {
-            "_unit": "string",
-            "text": "string"
-          },
-          "model": { "_type": "string" },
-          "server": { "_path": "string" },
-          "msi": {
-            "_enabled": "string",
-            "_vectors": "uint",
-            "_ioeventfd": "string"
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "memory": [
-        {
-          "_model": "string",
-          "_access": "string",
-          "_discard": "string",
-          "source": {
-            "nodemask": "string",
-            "pagesize": {
-              "_unit": "string",
-              "text": "string"
-            },
-            "path": "string",
-            "alignsize": {
-              "_unit": "string",
-              "text": "string"
-            }
-          },
-          "target": {
-            "size": {
-              "_unit": "string",
-              "text": "string"
-            },
-            "node": "string",
-            "label": {
-              "size": {
-                "_unit": "string",
-                "text": "string"
-              }
-            }
-          },
-          "alias": { "_name": "string" }
-        },
-        {
-          "_model": "string",
-          "_access": "string",
-          "_discard": "string",
-          "source": {
-            "nodemask": "string",
-            "pagesize": {
-              "_unit": "string",
-              "text": "string"
-            },
-            "path": "string",
-            "alignsize": {
-              "_unit": "string",
-              "text": "string"
-            }
-          },
-          "target": {
-            "size": {
-              "_unit": "string",
-              "text": "string"
-            },
-            "node": "string",
-            "label": {
-              "size": {
-                "_unit": "string",
-                "text": "string"
-              }
-            }
-          },
-          "alias": { "_name": "string" }
-        }
-      ],
-      "iommu": {
-        "_model": "string",
-        "driver": {
-          "_intremap": "string",
-          "_caching_mode": "string",
-          "_eim": "string",
-          "_iotlb": "string"
-        }
-      },
-      "vsock": {
-        "_model": "string",
-        "cid": {
-          "_auto": "string",
-          "_address": "string"
-        },
-        "alias": { "_name": "string" }
       }
     },
-    "seclabel": [
-      {
-        "_type": "string",
-        "_model": "string",
-        "_relabel": "string",
-        "label": "string",
-        "imagelabel": "string",
-        "baselabel": "string"
-      },
-      {
-        "_type": "string",
-        "_model": "string",
-        "_relabel": "string",
-        "label": "string",
-        "imagelabel": "string",
-        "baselabel": "string"
-      }
-    ],
-    "keywrap": {
-      "cipher": [
-        {
-          "_name": "string",
-          "_state": "string"
-        },
-        {
-          "_name": "string",
-          "_state": "string"
-        }
-      ]
-    }
   }
 }

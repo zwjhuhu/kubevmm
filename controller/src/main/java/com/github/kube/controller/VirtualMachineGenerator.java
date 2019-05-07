@@ -62,7 +62,7 @@ public class VirtualMachineGenerator {
 						+ " **/\n";
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-//		createResourceSpec();
+		createResourceSpec();
 //		Domain domain = new Domain();
 //		domain.set_id("222");
 //		System.out.println(JSON.toJSONString(domain));
