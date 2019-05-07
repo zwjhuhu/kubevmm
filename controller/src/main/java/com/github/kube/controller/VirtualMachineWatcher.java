@@ -112,6 +112,8 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 								+ "' in namespace '" + POD_NAMESPACE + "'");
 						MixedOperation updater = (MixedOperation) mo.inNamespace(vm.getMetadata().getNamespace());
 						updater.createOrReplace(vm);
+						m_logger.log(Level.INFO, "Update VM '" + vm.getMetadata().getName() 
+								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
 					}
 				} else if (action.toString().equals(ACTION_REMOVE)) {
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() != null) {
