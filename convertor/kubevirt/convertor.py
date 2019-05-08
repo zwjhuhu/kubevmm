@@ -39,7 +39,7 @@ def yamlToXml(yamlstr):
 def xmlToJson(xmlStr):
     return dumps(bf.data(fromstring(xmlStr)), sort_keys=True, indent=4)
 
-def jsontoxml(jsonstr):
+def jsontoXml(jsonstr):
     json = jsonstr.replace('_interface', 'interface').replace(
         '_', '@').replace('text', '#text').replace('\'', '"')
     return unparse(loads(json))
@@ -64,15 +64,17 @@ def yamlStyle(INPUT):
         print("## " + name.replace("xml", "yaml"))
         print("\n```")
         print(xmlToYaml(readXml(name)).decode().replace(
-            '@', '_').replace('interface', '_interface').replace('#text', 'text'))
+            '@', '_').replace('interface', '_interface').replace('#text', 'text').replace('nested-hv', "nested_hv").replace(
+                    'transient', '_transient').replace('suspend-to-mem', 'suspend_to_mem').replace('suspend-to-disk', 'suspend_to_disk'))
         print("```\n")
         
 def jsonStyle(INPUT):
     for name in os.listdir(INPUT):
         print("## " + name.replace("xml", "json"))
         print("\n```")
-        print(xmlToJson(readXml(name)).replace(
-            '@', '_').replace('interface', '_interface').replace('$', 'text'))
+        print(xmlToJson(readXml(name)).replace('@', '_').replace(
+            'interface', '_interface').replace('$', 'text').replace('nested-hv', "nested_hv").replace(
+                    'transient', '_transient').replace('suspend-to-mem', 'suspend_to_mem').replace('suspend-to-disk', 'suspend_to_disk'))
         print("```\n")
 
 if __name__ == '__main__':
