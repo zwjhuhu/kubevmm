@@ -82,6 +82,17 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 	
 	public final static String DEFAULT_SCHEDULER  = "kubecrd-scheduler";
 	
+	public final static String NAME    = "virtualmachines.cloudplus.io";
+	
+	public final static String GROUP   = "cloudplus.io";
+	
+	public final static String VERSION = "v1alpha3";
+	
+	/**
+	 * spec.name.kind in VirtualMachineCRD.yaml
+	 */
+	public final static String PLURAL    = "virtualmachines";
+	
 	
 	public VirtualMachineWatcher() throws Exception {
 		super();
@@ -105,10 +116,10 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 				if (action.toString().equals(ACTION_CREATE)) {
 					Pod pod = createPod(vm, podName);
 					if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() == null) {
-						MixedOperation updater = (MixedOperation) mo.inNamespace(vm.getMetadata().getNamespace());
-						updater.createOrReplace(vm);
-						m_logger.log(Level.INFO, "Update VM '" + vm.getMetadata().getName() 
-								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
+//						MixedOperation updater = (MixedOperation) mo.inNamespace(vm.getMetadata().getNamespace());
+//						updater.createOrReplace(vm);
+//						m_logger.log(Level.INFO, "Update VM '" + vm.getMetadata().getName() 
+//								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
 						client.pods().inNamespace(POD_NAMESPACE).create(pod );
 						m_logger.log(Level.INFO, "Create VM '" + vm.getMetadata().getName() 
 								+ "' in namespace '" + vm.getMetadata().getNamespace() + "'");
@@ -174,9 +185,9 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 
 			private Map<String, String> createAnnotations(VirtualMachine vm) {
 				Map<String, String> annotations = new HashMap<String, String>();
-				annotations.put(KIND_ANNOTATION, VirtualMachineGenerator.PLURAL);
-				annotations.put(GROUP_ANNOTATION, VirtualMachineGenerator.GROUP);
-				annotations.put(VERSION_ANNOTATION, VirtualMachineGenerator.VERSION);
+				annotations.put(KIND_ANNOTATION, PLURAL);
+				annotations.put(GROUP_ANNOTATION, GROUP);
+				annotations.put(VERSION_ANNOTATION, VERSION);
 				annotations.put(NAME_ANNOTATION, vm.getMetadata().getName());
 				annotations.put(NS_ANNOTATION, vm.getMetadata().getNamespace());
 				annotations.put(CONTENT_ANNOTATION, JSON.toJSONString(vm.getSpec()));
@@ -208,7 +219,7 @@ public class VirtualMachineWatcher extends CustomResourceClient {
 		
 		VirtualMachineWatcher watcher = new VirtualMachineWatcher();
 		CustomResourceDefinition crd = watcher.getCustomResourceDefinition(
-						VirtualMachineGenerator.NAME, VirtualMachine.class);
+						NAME, VirtualMachine.class);
 		if (crd != null) {
 			watcher.watch(crd, VirtualMachine.class, VirtualMachineList.class, DoneableVirtualMachine.class);
 		} else {
