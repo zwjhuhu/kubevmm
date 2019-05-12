@@ -1,0 +1,406 @@
+{
+  "domain": {
+    "_type": "kvm",
+    "_id": "44",
+    "name": "centos7.0",
+    "uuid": "c372523b_27a8_47ec_a142_8350bd87cbe1",
+    "memory": {
+      "_unit": "KiB",
+      "text": "2097152"
+    },
+    "currentMemory": {
+      "_unit": "KiB",
+      "text": "2097152"
+    },
+    "vcpu": {
+      "_placement": "static",
+      "text": "2"
+    },
+    "resource": { "partition": "/machine" },
+    "os": {
+      "type": {
+        "_arch": "x86_64",
+        "_machine": "pc_i440fx_rhel7.6.0",
+        "text": "hvm"
+      },
+      "boot": [
+        { "_dev": "cdrom" },
+        { "_dev": "hd" }
+      ]
+    },
+    "features": {
+      "vmport": { "_state": "off" }
+    },
+    "cpu": {
+      "_mode": "custom",
+      "_match": "exact",
+      "_check": "full",
+      "model": {
+        "_fallback": "forbid",
+        "text": "Broadwell_noTSX_IBRS"
+      },
+      "feature": [
+        {
+          "_policy": "require",
+          "_name": "vme"
+        },
+        {
+          "_policy": "require",
+          "_name": "f16c"
+        },
+        {
+          "_policy": "require",
+          "_name": "rdrand"
+        },
+        {
+          "_policy": "require",
+          "_name": "hypervisor"
+        },
+        {
+          "_policy": "require",
+          "_name": "arat"
+        },
+        {
+          "_policy": "disable",
+          "_name": "erms"
+        },
+        {
+          "_policy": "require",
+          "_name": "xsaveopt"
+        },
+        {
+          "_policy": "require",
+          "_name": "abm"
+        }
+      ]
+    },
+    "clock": {
+      "_offset": "utc",
+      "timer": [
+        {
+          "_name": "rtc",
+          "_tickpolicy": "catchup"
+        },
+        {
+          "_name": "pit",
+          "_tickpolicy": "delay"
+        },
+        {
+          "_name": "hpet",
+          "_present": "no"
+        }
+      ]
+    },
+    "on_poweroff": "destroy",
+    "on_reboot": "destroy",
+    "on_crash": "destroy",
+    "pm": {
+      "suspend_to_mem": { "_enabled": "no" },
+      "suspend_to_disk": { "_enabled": "no" }
+    },
+    "devices": {
+      "emulator": "/usr/libexec/qemu_kvm",
+      "disk": [
+        {
+          "_type": "file",
+          "_device": "disk",
+          "driver": {
+            "_name": "qemu",
+            "_type": "qcow2"
+          },
+          "source": { "_file": "/var/lib/libvirt/images/centos7.0.qcow2" },
+          "target": {
+            "_dev": "vda",
+            "_bus": "virtio"
+          },
+          "alias": { "_name": "virtio_disk0" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x07",
+            "_function": "0x0"
+          }
+        },
+        {
+          "_type": "file",
+          "_device": "cdrom",
+          "driver": {
+            "_name": "qemu",
+            "_type": "raw"
+          },
+          "source": { "_file": "/home/isos/CentOS_7_x86_64_Minimal_1810.iso" },
+          "target": {
+            "_dev": "hda",
+            "_bus": "ide"
+          },
+          "alias": { "_name": "ide0_0_0" },
+          "address": {
+            "_type": "drive",
+            "_controller": "0",
+            "_bus": "0",
+            "_target": "0",
+            "_unit": "0"
+          }
+        }
+      ],
+      "controller": [
+        {
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_ehci1",
+          "alias": { "_name": "usb" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x7"
+          }
+        },
+        {
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_uhci1",
+          "alias": { "_name": "usb" },
+          "master": { "_startport": "0" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x0",
+            "_multifunction": "on"
+          }
+        },
+        {
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_uhci2",
+          "alias": { "_name": "usb" },
+          "master": { "_startport": "2" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x1"
+          }
+        },
+        {
+          "_type": "usb",
+          "_index": "0",
+          "_model": "ich9_uhci3",
+          "alias": { "_name": "usb" },
+          "master": { "_startport": "4" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x05",
+            "_function": "0x2"
+          }
+        },
+        {
+          "_type": "pci",
+          "_index": "0",
+          "_model": "pci_root",
+          "alias": { "_name": "pci.0" }
+        },
+        {
+          "_type": "ide",
+          "_index": "0",
+          "alias": { "_name": "ide" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x01",
+            "_function": "0x1"
+          }
+        },
+        {
+          "_type": "virtio_serial",
+          "_index": "0",
+          "alias": { "_name": "virtio_serial0" },
+          "address": {
+            "_type": "pci",
+            "_domain": "0x0000",
+            "_bus": "0x00",
+            "_slot": "0x06",
+            "_function": "0x0"
+          }
+        }
+      ],
+      "_interface": {
+        "_type": "network",
+        "mac": { "_address": "52:54:00:d9:e0:b9" },
+        "source": {
+          "_network": "default",
+          "_bridge": "virbr0"
+        },
+        "target": { "_dev": "vnet0" },
+        "model": { "_type": "virtio" },
+        "alias": { "_name": "net0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x03",
+          "_function": "0x0"
+        }
+      },
+      "serial": {
+        "_type": "pty",
+        "source": { "_path": "/dev/pts/3" },
+        "target": {
+          "_type": "isa_serial",
+          "_port": "0",
+          "model": { "_name": "isa_serial" }
+        },
+        "alias": { "_name": "serial0" }
+      },
+      "console": {
+        "_type": "pty",
+        "_tty": "/dev/pts/3",
+        "source": { "_path": "/dev/pts/3" },
+        "target": {
+          "_type": "serial",
+          "_port": "0"
+        },
+        "alias": { "_name": "serial0" }
+      },
+      "channel": [
+        {
+          "_type": "unix",
+          "source": {
+            "_mode": "bind",
+            "_path": "/var/lib/libvirt/qemu/channel/target/domain_2_centos7.0/org.qemu.guest_agent.0"
+          },
+          "target": {
+            "_type": "virtio",
+            "_name": "org.qemu.guest_agent.0",
+            "_state": "disconnected"
+          },
+          "alias": { "_name": "channel0" },
+          "address": {
+            "_type": "virtio_serial",
+            "_controller": "0",
+            "_bus": "0",
+            "_port": "1"
+          }
+        },
+        {
+          "_type": "spicevmc",
+          "target": {
+            "_type": "virtio",
+            "_name": "com.redhat.spice.0",
+            "_state": "disconnected"
+          },
+          "alias": { "_name": "channel1" },
+          "address": {
+            "_type": "virtio_serial",
+            "_controller": "0",
+            "_bus": "0",
+            "_port": "2"
+          }
+        }
+      ],
+      "input": [
+        {
+          "_type": "tablet",
+          "_bus": "usb",
+          "alias": { "_name": "input0" },
+          "address": {
+            "_type": "usb",
+            "_bus": "0",
+            "_port": "1"
+          }
+        },
+        {
+          "_type": "mouse",
+          "_bus": "ps2",
+          "alias": { "_name": "input1" }
+        },
+        {
+          "_type": "keyboard",
+          "_bus": "ps2",
+          "alias": { "_name": "input2" }
+        }
+      ],
+      "graphics": {
+        "_type": "spice",
+        "_port": "5900",
+        "_autoport": "yes",
+        "_listen": "127.0.0.1",
+        "listen": {
+          "_type": "address",
+          "_address": "127.0.0.1"
+        },
+        "image": { "_compression": "off" }
+      },
+      "sound": {
+        "_model": "ich6",
+        "alias": { "_name": "sound0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x04",
+          "_function": "0x0"
+        }
+      },
+      "video": {
+        "model": {
+          "_type": "qxl",
+          "_ram": "65536",
+          "_vram": "65536",
+          "_vgamem": "16384",
+          "_heads": "1",
+          "_primary": "yes"
+        },
+        "alias": { "_name": "video0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x02",
+          "_function": "0x0"
+        }
+      },
+      "redirdev": [
+        {
+          "_bus": "usb",
+          "_type": "spicevmc",
+          "alias": { "_name": "redir0" },
+          "address": {
+            "_type": "usb",
+            "_bus": "0",
+            "_port": "2"
+          }
+        },
+        {
+          "_bus": "usb",
+          "_type": "spicevmc",
+          "alias": { "_name": "redir1" },
+          "address": {
+            "_type": "usb",
+            "_bus": "0",
+            "_port": "3"
+          }
+        }
+      ],
+      "memballoon": {
+        "_model": "virtio",
+        "alias": { "_name": "balloon0" },
+        "address": {
+          "_type": "pci",
+          "_domain": "0x0000",
+          "_bus": "0x00",
+          "_slot": "0x08",
+          "_function": "0x0"
+        }
+      }
+    },
+  }
+}
