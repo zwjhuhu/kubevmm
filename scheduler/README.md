@@ -13,6 +13,10 @@ Ensure you have configured GOROOT and GOPATH
 - go get -u -v k8s.io/kubernetes
 
 # Deploy Steps
+#### Prerequisite
+
+You are on the master with installed kubernetes
+
 #### Step 1: Add code to kube-scheduler source code
 Find `$GOPATH/k8s.io/kubernetes/pkg/scheduler/scheduler.go`, namely original `scheduler.go`.
 Find `$GOPATH/k8s.io/kubernetes/pkg/scheduler/factory/factory.go`, namely original `factory.go`.
@@ -63,7 +67,9 @@ Move to `$GOPATH/k8s.io/kubernetes/cmd/kube-scheduler/`, and build with command 
 Build the image with `<RepoPath>/build/Dockerfile`, before that you need to move executable scheduler binary file to /build path, then build image with command.
 
 ```
-docker build docker/ -t github.com/kubecrd-scheduler:v1.14.1
+cp scheduler docker/
+cp /etc/kubernetes/admin.conf docker/
+docker build docker/ -t registry.cn-hangzhou.aliyuncs.com/cloudplus-lab/kubevirt-scheduler:v1.14.1
 ```
 #### Step 4: Deploy
 Created a Deployment configuration file and ran it in an existing Kubernetes cluster, using the Deployment resource rather than creating a Pod resource directly because the Deployment resource can better handle the case of a scheduler running node failure. We offered a Deployment configuration example, saved as the `custom-scheduler.yaml` in `<RepoPath>/yaml/`.
