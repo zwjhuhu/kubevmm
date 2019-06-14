@@ -196,8 +196,11 @@ func New(client clientset.Interface,
 	config.Recorder = recorder
 	config.DisablePreemption = options.disablePreemption
 	config.StopEverything = stopCh
+
+        // Added by wuheng
 	config.CoreClient = client
 	config.CRDClient, _ = NewCRDClient()
+        //
 
 	// Create the scheduler.
 	sched := NewFromConfig(config)
@@ -463,13 +466,6 @@ func (sched *Scheduler) scheduleOne() {
 	scheduleResult, err := sched.schedule(pod)
 	if err != nil {
 
-		// Support CRD
-		if pod.GetAnnotations()["crdKind"] != "" {
-			SupportCRD(scheduleResult.SuggestedHost,
-				pod, sched.config.CoreClient, sched.config.CRDClient)
-			return
-		}
-
 		// schedule() may have failed because the pod would not fit on any host, so we try to
 		// preempt, with the expectation that the next time the pod is tried for scheduling it
 		// will fit due to the preemption. It is also possible that a different pod will schedule
@@ -498,6 +494,15 @@ func (sched *Scheduler) scheduleOne() {
 		}
 		return
 	}
+
+        // added by wuheng
+        if pod.GetAnnotations()["crdKind"] != "" {
+                 SupportCRD(scheduleResult.SuggestedHost,
+                                pod, sched.config.CoreClient, sched.config.CRDClient)
+                 return
+        }
+        // 
+
 	metrics.SchedulingAlgorithmLatency.Observe(metrics.SinceInSeconds(start))
 	metrics.DeprecatedSchedulingAlgorithmLatency.Observe(metrics.SinceInMicroseconds(start))
 	// Tell the cache to assume that a pod now is running on a given node, even though it hasn't been bound yet.
