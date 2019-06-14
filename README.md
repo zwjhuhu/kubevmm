@@ -43,6 +43,7 @@ support VM's lifecycle.
 - VirtualDisk
 - VirtualMachineSnapshot
 - VirtualMachineImage
+- VirtualMachineStoragePool
 
 see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/libvirt-json.md), or [yaml style](convertor/docs/libvirt-yaml.md)
 
@@ -55,10 +56,9 @@ see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/l
 - **[Controller](controller)**: extend Kubernetes to support VirtualMachine resource (Java).
 - **[Scheduler](scheduler)**:  extend Kubernetes to schedule VirtualMachine (Go).
 - **[Executor(aka Virtctl)](executor)**:  manage VM's lifecycle (Python).
-- **[Convertor](convertor)**: converte Kubernetes's YAML to libvirt's XML.
+
 
 # Roadmap
 
-- **2019.5**: support VirtualMachine and VirtualMachineImage 
-- **2019.6**: support VirtualDisk and VirtualMachineSnapshot
-- **2019.7**: support VirtualNetwork, cni
+- **2019.6**: support VirtualMachine, VirtualMachineImage  and VirtualMachineSnapshot
+- **2019.7**: support VirtualNetwork, VirtualDisk and VirtualMachineStoragePool
