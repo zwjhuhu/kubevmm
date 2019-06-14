@@ -28,6 +28,12 @@ Unlike [kubevirt/kubebirt](https://github.com/kubevirt/kubevirt), we do not
 plan to manage VM using the pod model. Instead, we design a new virtctl to
 support VM's lifecycle.
 
+## Quick start
+
+```
+kubectl apply -f yamls/
+```
+
 
 ## Limitations
 
@@ -60,5 +66,6 @@ see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/l
 
 # Roadmap
 
-- **2019.6**: support VirtualMachine, VirtualMachineImage  and VirtualMachineSnapshot
-- **2019.7**: support VirtualNetwork, VirtualDisk and VirtualMachineStoragePool
+- **2019.7**: support VirtualMachine, VirtualMachineImage  and VirtualMachineSnapshot
+- **2019.8**: support VirtualNetwork, VirtualDisk and VirtualMachineStoragePool
+- **2019.9**: support some advanced capacities
