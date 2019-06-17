@@ -1,6 +1,8 @@
 '''
+Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 
-@author: yk
+@author: wuyuewen@otcaix.iscas.ac.cn
+@author: wuheng@otcaix.iscas.ac.cn
 '''
 
 from kubernetes import client, config
