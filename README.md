@@ -58,10 +58,10 @@ see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/l
 ![avatar](docs/arch.png)
 
 
-- **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/) (Go). 
+- **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/) (Go, Shell). 
 - **[Controller](controller)**: extend Kubernetes to support VirtualMachine resource (Java).
 - **[Scheduler](scheduler)**:  extend Kubernetes to schedule VirtualMachine (Go).
-- **[Executor(aka Virtctl)](executor)**:  manage VM's lifecycle (Python).
+- **[Executor(aka Virtctl)](executor)**:  manage VM's lifecycle (Python, Shell).
 
 
 # Roadmap
