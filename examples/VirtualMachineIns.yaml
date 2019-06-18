@@ -4,7 +4,6 @@ metadata:
   name: testvmi-nocloud
 spec:
   domain:
-    name: Server
     memory:
       text: 1024
     vcpu:
