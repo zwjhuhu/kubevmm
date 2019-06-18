@@ -38,8 +38,7 @@ kubectl apply -f yamls/
 ## Limitations
 
 - just focus on compute resource (libvirt), it cannot replace Openstack (network, storage, and so on)
-- we do not want to support VM migration
-- the size of VirtualMachine's yaml shou not be great than 128K
+- the size of VirtualMachine's yaml should not be great than 128K
 - a machine cannot run both container and VM
 
 ## Capacities
