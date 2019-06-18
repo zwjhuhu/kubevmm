@@ -6,7 +6,7 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 '''
 
 import time, datetime
-from dateutil.tz import tzutc
+from dateutil.tz import gettz
 from kubernetes import client, config
 from kubernetes.client.models.v1_node_status import V1NodeStatus
 from kubernetes.client.models.v1_node_condition import V1NodeCondition
@@ -25,7 +25,8 @@ if __name__ == '__main__':
 #     print(type(ret.items[0].status))
    
 #     now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
-    now = datetime.datetime(2019, 6, 18, 7, 4, 3, tzinfo=tzutc())
+    time_zone = gettz('Asia/Shanghai')
+    now = datetime.datetime.now(tz=time_zone)
     condition1 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient memory available", \
                         reason="KubeletHasSufficientMemory", status="False", type="MemoryPressure")
     condition2 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has no disk pressure", \
