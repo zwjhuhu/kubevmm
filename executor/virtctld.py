@@ -4,7 +4,10 @@
 # Author : wuyuewen@otcaix.iscas.ac.cn
 # Date   : 2019/06/18
  
-import atexit, os, sys, time, signal
+import atexit, os, sys, time, signal, datetime
+from kubernetes import client, config
+from kubernetes.client.models.v1_node_status import V1NodeStatus
+from kubernetes.client.models.v1_node_condition import V1NodeCondition
  
 class CDaemon:
     '''
@@ -148,13 +151,21 @@ class ClientDaemon(CDaemon):
         self.name = name
  
     def run(self, output_fn, **kwargs):
-        fd = open(output_fn, 'w')
+        config.load_kube_config(config_file='/etc/kubernetes/admin.conf')
+#         now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        now = datetime.datetime
+        condition1 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient memory available", \
+                            reason="KubeletHasSufficientMemory", status="False", type="MemoryPressure")
+        condition2 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has no disk pressure", \
+                            reason="KubeletHasNoDiskPressure", status="False", type="DiskPressure")
+        condition3 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient PID available", \
+                            reason="KubeletHasSufficientPID", status="False", type="PIDPressure")
+        condition4 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet is posting ready status", \
+                            reason="KubeletReady", status="True", type="Ready")        
+        node_status = V1NodeStatus(conditions=[condition1, condition2, condition3, condition4])
         while True:
-            line = time.ctime() + '\n'
-            fd.write(line)
-            fd.flush()
-            time.sleep(1)
-        fd.close()
+            client.CoreV1Api().patch_node_status_with_http_info(name="k8s-node1", body=node_status)
+            time.sleep(5)
  
  
 if __name__ == '__main__':

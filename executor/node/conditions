@@ -1,4 +1,4 @@
-- lastHeartbeatTime: "2019-06-17T14:19:34Z"
+  - lastHeartbeatTime: "2019-06-17T14:19:34Z"
     lastTransitionTime: "2019-06-17T13:07:05Z"
     message: kubelet has sufficient memory available
     reason: KubeletHasSufficientMemory
@@ -23,3 +23,52 @@
     status: "True"
     type: Ready
 
+'conditions': [{'last_heartbeat_time': datetime.datetime(2019, 6, 14, 7, 4, 3, tzinfo=tzutc()),
+                            'last_transition_time': datetime.datetime(2019, 6, 14, 7, 5, 5, tzinfo=tzutc()),
+                            'message': 'Kubelet never posted node status.',
+                            'reason': 'NodeStatusNeverUpdated',
+                            'status': 'Unknown',
+                            'type': 'Ready'},
+                           {'last_heartbeat_time': datetime.datetime(2019, 6, 14, 7, 4, 3, tzinfo=tzutc()),
+                            'last_transition_time': datetime.datetime(2019, 6, 14, 7, 5, 5, tzinfo=tzutc()),
+                            'message': 'Kubelet never posted node status.',
+                            'reason': 'NodeStatusNeverUpdated',
+                            'status': 'Unknown',
+                            'type': 'MemoryPressure'},
+                           {'last_heartbeat_time': datetime.datetime(2019, 6, 14, 7, 4, 3, tzinfo=tzutc()),
+                            'last_transition_time': datetime.datetime(2019, 6, 14, 7, 5, 5, tzinfo=tzutc()),
+                            'message': 'Kubelet never posted node status.',
+                            'reason': 'NodeStatusNeverUpdated',
+                            'status': 'Unknown',
+                            'type': 'DiskPressure'},
+                           {'last_heartbeat_time': datetime.datetime(2019, 6, 14, 7, 4, 3, tzinfo=tzutc()),
+                            'last_transition_time': datetime.datetime(2019, 6, 14, 7, 5, 5, tzinfo=tzutc()),
+                            'message': 'Kubelet never posted node status.',
+                            'reason': 'NodeStatusNeverUpdated',
+                            'status': 'Unknown',
+                            'type': 'PIDPressure'}],
+
+ 'conditions': [{'last_heartbeat_time': '2019-06-18T17:28:05Z',
+                 'last_transition_time': '2019-06-18T17:28:05Z',
+                 'message': 'kubelet has sufficient memory available',
+                 'reason': 'KubeletHasSufficientMemory',
+                 'status': 'False',
+                 'type': 'MemoryPressure'},
+                {'last_heartbeat_time': '2019-06-18T17:28:05Z',
+                 'last_transition_time': '2019-06-18T17:28:05Z',
+                 'message': 'kubelet has no disk pressure',
+                 'reason': 'KubeletHasNoDiskPressure',
+                 'status': 'False',
+                 'type': 'DiskPressure'},
+                {'last_heartbeat_time': '2019-06-18T17:28:05Z',
+                 'last_transition_time': '2019-06-18T17:28:05Z',
+                 'message': 'kubelet has sufficient PID available',
+                 'reason': 'KubeletHasSufficientPID',
+                 'status': 'False',
+                 'type': 'PIDPressure'},
+                {'last_heartbeat_time': '2019-06-18T17:28:05Z',
+                 'last_transition_time': '2019-06-18T17:28:05Z',
+                 'message': 'kubelet is posting ready status',
+                 'reason': 'KubeletReady',
+                 'status': 'True',
+                 'type': 'Ready'}],
