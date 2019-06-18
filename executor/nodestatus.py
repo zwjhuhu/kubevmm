@@ -10,6 +10,8 @@ from dateutil.tz import tzutc
 from kubernetes import client, config
 from kubernetes.client.models.v1_node_status import V1NodeStatus
 from kubernetes.client.models.v1_node_condition import V1NodeCondition
+from kubernetes.client.models.v1_node_daemon_endpoints import V1NodeDaemonEndpoints
+from kubernetes.client.models.v1_node_system_info import V1NodeSystemInfo
 
 if __name__ == '__main__':
     config.load_kube_config(config_file='/etc/kubernetes/admin.conf')
@@ -28,9 +30,14 @@ if __name__ == '__main__':
     condition3 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient PID available", \
                         reason="KubeletHasSufficientPID", status="False", type="PIDPressure")
     condition4 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet is posting ready status", \
-                        reason="KubeletReady", status="True", type="Ready")        
-    node_status = V1NodeStatus(conditions=[condition1, condition2, condition3, condition4])
+                        reason="KubeletReady", status="True", type="Ready")    
+    daemon_endpoints = V1NodeDaemonEndpoints(kubelet_endpoint={'port':0})
+    node_info = V1NodeSystemInfo(architecture="", boot_id="", container_runtime_version="", \
+                                 kernel_version="", kube_proxy_version="", kubelet_version="", \
+                                 machine_id="", operating_system="", os_image="", system_uuid="")    
+    node_status = V1NodeStatus(conditions=[condition1, condition2, condition3, condition4], daemon_endpoints=daemon_endpoints, \
+                               node_info=node_info)
     print node_status
-    print client.CoreV1Api().patch_node_status_with_http_info(name="k8s-node1", body=node_status)
+    print client.CoreV1Api().patch_node_status(name="node11", body=node_status, async_req=True)
     #client.CoreV1Api().patch_node_status(name="mocker", body=body)
     pass
