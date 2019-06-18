@@ -12,11 +12,14 @@ from kubernetes.client.models.v1_node_status import V1NodeStatus
 from kubernetes.client.models.v1_node_condition import V1NodeCondition
 from kubernetes.client.models.v1_node_daemon_endpoints import V1NodeDaemonEndpoints
 from kubernetes.client.models.v1_node_system_info import V1NodeSystemInfo
+from kubernetes.client.models.v1_node import V1Node
 
 if __name__ == '__main__':
     config.load_kube_config(config_file='/etc/kubernetes/admin.conf')
-#     thisLabel = 'kubernetes.io/hostname=node22'
+#     thisLabel = 'kubernetes.io/name=node11'
 #     ret = client.CoreV1Api().list_node(label_selector=thisLabel)
+    node = client.CoreV1Api().read_node_status(name="node11")
+#     print ret
 #     print(type(ret))
 #     print(type(ret.items))
 #     print(type(ret.items[0].status))
@@ -38,6 +41,8 @@ if __name__ == '__main__':
     node_status = V1NodeStatus(conditions=[condition1, condition2, condition3, condition4], daemon_endpoints=daemon_endpoints, \
                                node_info=node_info)
     print node_status
-    print client.CoreV1Api().patch_node_status(name="node11", body=node_status, async_req=True)
+    node.status = node_status
+    print client.CoreV1Api().replace_node_status(name="node11", body=node)
+#     print client.CoreV1Api().read_node_status(name="node11")
     #client.CoreV1Api().patch_node_status(name="mocker", body=body)
     pass
