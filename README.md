@@ -45,8 +45,8 @@ kubectl apply -f yamls/
 ## Capacities
 
 - VirtualMachine
-- ~~VirtualNetwork~~
-- ~~VirtualDisk~~
+- VirtualNetwork
+- VirtualDisk
 - VirtualMachineSnapshot
 - VirtualMachineImage
 - VirtualMachineStoragePool
