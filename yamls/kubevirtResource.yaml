@@ -10,9 +10,9 @@ spec:
   - JSONPath: .spec.domain.uuid
     name: UUID
     type: string
-  - JSONPath: .spec.running
+  - JSONPath: .status.phase
     name: STATUS
-    type: boolean
+    type: string
   - JSONPath: .metadata.creationTimestamp
     name: AGE
     type: date
@@ -30,5 +30,5 @@ spec:
     - vm
     - vms
     singular: virtualmachine
-  scope: Namespaced
+  scope: Cluster
   version: v1alpha3
