@@ -1,11 +1,13 @@
 apiVersion: cloudplus.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  name: testvmi-nocloud
+  name: vm
 spec:
-  domain:
-    memory:
-      text: 1024
-    vcpu:
-      text: 1
   image: rhel7
+  install:
+    __name: vm
+    __memory: 1024
+    __vcpus: 1
+    __disk: size=10,format=qcow2
+    __network: bridge
+    __graphics: vnc
