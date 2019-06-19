@@ -3,6 +3,7 @@
  */
 package com.github.kube.controller;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,8 @@ public class KubevirtScheduler {
 	
 	public KubevirtScheduler() throws Exception {
 		super();
-		client = ExtendedKubernetesClient.defaultConfig(new FileInputStream(TOKEN));
+		client = ExtendedKubernetesClient.defaultConfig(
+				new FileInputStream(new File(TOKEN)));
 	}
 	
 	public void start() {
