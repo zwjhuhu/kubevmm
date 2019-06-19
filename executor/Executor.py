@@ -8,31 +8,36 @@ https://pypi.org/project/json2xml/
 https://github.com/kubernetes/kubernetes/issues/51046
 '''
 
+import subprocess
+import random
+import ConfigParser
+import libvirt
+
 from kubernetes import client, config
 from json import loads
 from json import dumps
 from xmltodict import unparse
-import os
-import subprocess
-import libvirt
-import socket, random
 
-GROUP = 'cloudplus.io'
-VERSION = 'v1alpha3'
-PLURAL = 'virtualmachines'
+cfg = "./default.cfg"
+config_raw = ConfigParser.RawConfigParser()
+config_raw.read(cfg)
+
+TOKEN = config_raw.get('Kubernetes', 'token_file')
+PLURAL = config_raw.get('VirtualMachine', 'plural')
+VERSION = config_raw.get('VirtualMachine', 'version')
+GROUP = config_raw.get('VirtualMachine', 'group')
 
 VMs = []
 
-def listVM():
+def listVM(node):
 #     config.load_kube_config(config_file='/root/.kube/config')
 #     thisLabel = "host==" + socket.gethostname()
-    config.load_kube_config(config_file='/home/config')
-    thisLabel = "host==node22"
-    ret = client.CustomObjectsApi().list_cluster_custom_object_with_http_info(
+    config.load_kube_config(config_file=TOKEN)
+    thisLabel = "host==%s" % node
+    retv = client.CustomObjectsApi().list_cluster_custom_object(
         group=GROUP, version=VERSION, plural=PLURAL, label_selector=thisLabel)
+    return retv
     
-    print ret
-
 #     for item in ret[0]["items"]:
 # #         name = item['metadata']['name']
 #         domain = item['spec']
@@ -40,6 +45,15 @@ def listVM():
 #         image = domain['image']
 #         del domain['image']
 #         print(jsontoxml(str(domain).replace('None', "''"))) 
+
+def unpackJson(jsondict, key):
+    if jsondict:
+        spec = jsondict['items'][0].get('spec')
+        if spec:
+            domain = spec.get('domain')
+            retv = domain.get(key)
+        return retv
+    return None
 
 def jsontoxml(jsonstr):
     json = jsonstr.replace('_interface', 'interface').replace('_transient', 'transient').replace(
@@ -51,13 +65,6 @@ def jsontoxml(jsonstr):
 '''
    VM lifecycle
 '''
-
-def startVM():
-    conn = libvirt.open("qemu:///system")
-    domList = conn.listAllDomains(0)
-    for domain in domList:
-        xml = domain.XMLDesc()
-        conn.createLinux(xml)
         
 def randomUUID():
     u = [random.randint(0, 255) for ignore in range(0, 16)]
@@ -95,8 +102,10 @@ def createVM(options):
     p.stderr.close()
 
 if __name__ == '__main__':
-    listVM()
+    jsondict = listVM('node22')
+    print jsondict
+    print unpackJson(jsondict, "vcpu")
     options = {}
-    createVM(options)
+#     createVM(options)
 
     

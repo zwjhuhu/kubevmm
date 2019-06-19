@@ -1,8 +1,10 @@
-#=================================================================
-# Copyright(c) Institute of Software, Chinese Academy of Sciences
-#=================================================================
-# Author : wuyuewen@otcaix.iscas.ac.cn
-# Date   : 2019/06/18
+'''
+Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
+
+@author: wuyuewen@otcaix.iscas.ac.cn
+@author: wuheng@otcaix.iscas.ac.cn
+
+'''
  
 import atexit, os, sys, time, signal, datetime
 from dateutil.tz import gettz
