@@ -54,7 +54,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.github.kube.controller.VirtualMachineWatcher</mainClass>
+							<mainClass>com.github.kube.controller.KubevirtScheduler</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Class-Path>.</Class-Path>
