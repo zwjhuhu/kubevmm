@@ -54,7 +54,7 @@ kubectl apply -f yamls/
 
 # Architecture
 
-![avatar](docs/arch.png)
+![avatar](docs/images/arch.png)
 
 - **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/) (Go, Shell, Python). 
 - **[Controller](controller)**: extend Kubernetes to support VirtualMachine resource (Java).
