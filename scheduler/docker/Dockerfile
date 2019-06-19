@@ -2,7 +2,7 @@ FROM centos:7
 
 RUN mkdir -p /etc/kubernetes
 
-ADD ./scheduler /usr/local/bin/kubecrd-scheduler
+ADD ./scheduler /usr/local/bin/kubevirt-scheduler
 ADD ./admin.conf /etc/kubernetes/
 
 WORKDIR /usr/local/bin/
