@@ -38,8 +38,7 @@ kubectl apply -f yamls/
 ## Limitations
 
 - just focus on compute resource (libvirt), it cannot replace Openstack (network, storage, and so on)
-- we do not want to support VM migration
-- the size of VirtualMachine's yaml shou not be great than 128K
+- the size of VirtualMachine's yaml should not be great than 128K
 - a machine cannot run both container and VM
 
 ## Capacities
@@ -51,18 +50,16 @@ kubectl apply -f yamls/
 - VirtualMachineImage
 - VirtualMachineStoragePool
 
-see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/libvirt-json.md), or [yaml style](convertor/docs/libvirt-yaml.md)
+~~see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/libvirt-json.md), or [yaml style](convertor/docs/libvirt-yaml.md)~~
 
 # Architecture
 
 ![avatar](docs/arch.png)
 
-
-- **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/) (Go, Shell). 
+- **[Analyser](analyser)**: converte libvirt's XML to Kubernetes's YAML, the libvirt's XML is used by [Openstack](https://www.openstack.org/) (Go, Shell, Python). 
 - **[Controller](controller)**: extend Kubernetes to support VirtualMachine resource (Java).
 - **[Scheduler](scheduler)**:  extend Kubernetes to schedule VirtualMachine (Go).
 - **[Executor(aka Virtctl)](executor)**:  manage VM's lifecycle (Python, Shell).
-
 
 # Roadmap
 
