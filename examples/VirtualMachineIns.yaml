@@ -1,16 +1,22 @@
-apiVersion: cloudplus.io/v1alpha3
-kind: VirtualMachine
-metadata:
-  name: vm
-spec:
-  image: CentOS7
-  install:
-    __name: vm
-    __virt_type: kvm
-    __ram: 1024
-    __vcpus: 1
-    __cdrom: /root/ISO/CentOS-7-x86_64-Minimal-1511.iso
-    __disk: size=10,format=qcow2
-    __network: bridge=virbr0
-    __graphics: vnc,listen=0.0.0.0
-    __noautoconsole: null
+{
+  "apiVersion": "cloudplus.io/v1alpha3",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "vm"
+  },
+  "spec": {
+    "image": "CentOS7",
+    "lifecycle": {
+      "install": {
+        "__name": "vm",
+        "__virt_type": "kvm",
+        "__memory": 1024,
+        "__vcpus": 1,
+        "__cdrom": "/root/ISO/CentOS-7-x86_64-Minimal-1511.iso",
+        "__disk": "size=10,format=qcow2",
+        "__network": "bridge=virbr0",
+        "__graphics": "vnc,listen=0.0.0.0"
+      }
+    }
+  }
+}
