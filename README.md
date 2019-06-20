@@ -6,10 +6,12 @@ Kubernetes.
 
 **Note:** KubeVirt is a heavy work in progress.
 
-**Thanks**
+**Authors**
 - wuheng@otcaix.iscas.ac.cn
 - wuyuewen@otcaix.iscas.ac.cn
 - xuyuanjia2017@otcaix.iscas.ac.cn
+
+**Thanks**
 - xianghao16@otcaix.iscas.ac.cn
 - shizhonghao17@otcaix.iscas.ac.cn
 - yangchen18@otcaix.iscas.ac.cn
@@ -49,8 +51,6 @@ kubectl apply -f yamls/
 - VirtualMachineSnapshot
 - VirtualMachineImage
 - VirtualMachineStoragePool
-
-~~see [xml style](convertor/docs/libvirt-xml.md), or [json style](convertor/docs/libvirt-json.md), or [yaml style](convertor/docs/libvirt-yaml.md)~~
 
 # Architecture
 
