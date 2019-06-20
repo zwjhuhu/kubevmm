@@ -18,7 +18,7 @@ import ConfigParser
 import xmltodict
 import re
 from xml.dom import minidom
-import StringIO as _StringIO
+from StringIO import StringIO as _StringIO
 
 '''
 Import third party libs
@@ -34,7 +34,7 @@ try:
 except ImportError:
     HAS_LIBVIRT = False
 
-cfg = "./default.cfg"
+cfg = "%s/default.cfg" % os.path.realpath(__file__)
 config_raw = ConfigParser.RawConfigParser()
 config_raw.read(cfg)
 
