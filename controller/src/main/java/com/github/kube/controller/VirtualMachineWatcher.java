@@ -60,7 +60,12 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 		String podName = POD_PREFIX + "-" + vm.getMetadata().getName() + "-" + vm.getMetadata().getNamespace();
 
 		if (action.toString().equals(ACTION_CREATE)) {
-			Pod pod = createPod(vm, podName);
+			Pod pod = null;;
+			try {
+				pod = createPod(vm, podName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() == null) {
 
 				client.pods().inNamespace(POD_NAMESPACE).create(pod);
@@ -78,7 +83,7 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 		}
 	}
 
-	private Pod createPod(VirtualMachine vm, String podName) {
+	private Pod createPod(VirtualMachine vm, String podName) throws Exception {
 		Pod pod = new Pod();
 		// metadata and podSpec
 		pod.setMetadata(createMetadataFrom(vm, podName));
@@ -123,7 +128,7 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 		return resources;
 	}
 
-	private ObjectMeta createMetadataFrom(VirtualMachine vm, String podName) {
+	private ObjectMeta createMetadataFrom(VirtualMachine vm, String podName) throws Exception {
 		ObjectMeta metadata = new ObjectMeta();
 		metadata.setName(podName);
 		metadata.setAnnotations(createAnnotations(vm));
@@ -148,8 +153,9 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	public final static String GROUP = "cloudplus.io";
 
 	public final static String VERSION = "v1alpha3";
+	
 
-	private Map<String, String> createAnnotations(VirtualMachine vm) {
+	private Map<String, String> createAnnotations(VirtualMachine vm) throws Exception {
 		Map<String, String> annotations = new HashMap<String, String>();
 		annotations.put(KIND_ANNOTATION, PLURAL);
 		annotations.put(GROUP_ANNOTATION, GROUP);
