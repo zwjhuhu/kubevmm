@@ -33,8 +33,9 @@ try:
     HAS_LIBVIRT = True
 except ImportError:
     HAS_LIBVIRT = False
+import yaml
 
-cfg = "%s/default.cfg" % os.path.realpath(__file__)
+cfg = "%s/default.cfg" % os.path.dirname(os.path.realpath(__file__))
 config_raw = ConfigParser.RawConfigParser()
 config_raw.read(cfg)
 
@@ -42,7 +43,7 @@ TOKEN = config_raw.get('Kubernetes', 'token_file')
 PLURAL = config_raw.get('VirtualMachine', 'plural')
 VERSION = config_raw.get('VirtualMachine', 'version')
 GROUP = config_raw.get('VirtualMachine', 'group')
-SUPPORTCMDS = config_raw.items('SupportCmds')
+SUPPORTCMDS = config_raw._sections['SupportCmds']
 
 VIRT_STATE_NAME_MAP = {0: 'running',
                        1: 'running',
@@ -60,7 +61,7 @@ def listVM(node):
     retv = client.CustomObjectsApi().list_cluster_custom_object(
         group=GROUP, version=VERSION, plural=PLURAL, label_selector=thisLabel)
     return retv
-    
+
 #     for item in ret[0]["items"]:
 # #         name = item['metadata']['name']
 #         domain = item['spec']
@@ -81,7 +82,7 @@ Covert chars according to real CMD in back-end.
 '''
 def _convertCharsInJson(val, t):
     if t == 'key':
-        val.replace('_', '-') 
+        val.replace('_', '-')
     elif t == 'value':
         val.replace('null', '')
     return val
@@ -94,7 +95,7 @@ def unpackCmdFromJson(jsondict):
     cmd = None
     if jsondict:
         '''
-        Get target VM name from Json. 
+        Get target VM name from Json.
         '''
         vm_ = jsondict['items'][0].get('metadata').get('name')
         if not vm_:
@@ -107,14 +108,14 @@ def unpackCmdFromJson(jsondict):
             '''
             cmd_head = None
             the_cmd_key = None
-            keys = spec.getKeys()
+            keys = spec.keys()
             for key in keys:
                 if key in SUPPORTCMDS.keys():
                     the_cmd_key = key
                     cmd_head = SUPPORTCMDS.get(key)
                     break;
             '''
-            Get the CMD body from 'dict' structure. 
+            Get the CMD body from 'dict' structure.
             '''
             if the_cmd_key:
                 cmd_body = None
@@ -138,8 +139,8 @@ def runCmd(cmd):
         p.stderr.readlines()
     finally:
         p.stdout.close()
-        p.stderr.close() 
-    
+        p.stderr.close()
+
 '''
    VM lifecycle
 '''
@@ -159,8 +160,8 @@ def __get_conn():
             'software'
         )
     return conn
-   
-   
+
+
 def _get_dom(vm_):
     '''
     Return a domain object for the named vm
@@ -173,9 +174,9 @@ def _get_dom(vm_):
 def list_vms():
     '''
     Return a list of virtual machine names on the minion
-   
+
     CLI Example::
-   
+
         salt '*' virt.list_vms
     '''
     vms = []
@@ -186,9 +187,9 @@ def list_vms():
 def list_active_vms():
     '''
     Return a list of names for active virtual machine on the minion
-   
+
     CLI Example::
-   
+
         salt '*' virt.list_active_vms
     '''
     conn = __get_conn()
@@ -196,14 +197,14 @@ def list_active_vms():
     for id_ in conn.listDomainsID():
         vms.append(conn.lookupByID(id_).name())
     return vms
-   
-   
+
+
 def list_inactive_vms():
     '''
     Return a list of names for inactive virtual machine on the minion
-   
+
     CLI Example::
-   
+
         salt '*' virt.list_inactive_vms
     '''
     conn = __get_conn()
@@ -216,7 +217,7 @@ def vm_info(vm_=None):
     '''
     Return detailed information about the vms on this hyper in a
     list of dicts::
-   
+
         [
             'your-vm': {
                 'cpu': <int>,
@@ -227,12 +228,12 @@ def vm_info(vm_=None):
                 },
             ...
             ]
-   
+
     If you pass a VM name in as an argument then it will return info
     for just the named VM, otherwise it will return all VMs.
-   
+
     CLI Example::
-   
+
         salt '*' virt.vm_info
     '''
     def _info(vm_):
@@ -253,17 +254,17 @@ def vm_info(vm_=None):
         for vm_ in list_vms():
             info[vm_] = _info(vm_)
     return info
-   
-   
+
+
 def vm_state(vm_=None):
     '''
     Return list of all the vms and their state.
-   
+
     If you pass a VM name in as an argument then it will return info
     for just the named VM, otherwise it will return all VMs.
-   
+
     CLI Example::
-   
+
         salt '*' virt.vm_state <vm name>
     '''
     def _info(vm_):
@@ -279,14 +280,14 @@ def vm_state(vm_=None):
         for vm_ in list_vms():
             info[vm_] = _info(vm_)
     return info
-   
-   
+
+
 def node_info():
     '''
     Return a dict with information about this node
-   
+
     CLI Example::
-   
+
         salt '*' virt.node_info
     '''
     conn = __get_conn()
@@ -304,9 +305,9 @@ def node_info():
 def get_nics(vm_):
     '''
     Return info about the network interfaces of a named vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.get_nics <vm name>
     '''
     nics = {}
@@ -341,14 +342,14 @@ def get_nics(vm_):
                 continue
             nics[nic['mac']] = nic
     return nics
-   
-   
+
+
 def get_macs(vm_):
     '''
     Return a list off MAC addresses from the named vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.get_macs <vm name>
     '''
     macs = []
@@ -359,14 +360,14 @@ def get_macs(vm_):
             for v_node in i_node.getElementsByTagName('mac'):
                 macs.append(v_node.getAttribute('address'))
     return macs
-   
-   
+
+
 def get_graphics(vm_):
     '''
     Returns the information on vnc for a given vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.get_graphics <vm name>
     '''
     out = {'autoport': 'None',
@@ -383,14 +384,14 @@ def get_graphics(vm_):
             for key in g_node.attributes.keys():
                 out[key] = g_node.getAttribute(key)
     return out
-   
-   
+
+
 def get_disks(vm_):
     '''
     Return the disks of a named vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.get_disks <vm name>
     '''
     disks = {}
@@ -423,7 +424,7 @@ def get_disks(vm_):
     for dev in disks:
         try:
             output = []
-            qemu_output = subprocess.Popen(['qemu-img', 'info',
+            qemu_output = subprocess.Popen(['qemu-img', 'info', '-U',
                 disks[dev]['file']],
                 shell=False,
                 stdout=subprocess.PIPE).communicate()[0]
@@ -455,78 +456,78 @@ def get_disks(vm_):
                     continue
                 output.append(line)
             output = '\n'.join(output)
-            disks[dev].update(output)
+            disks[dev].update(yaml.safe_load(output))
         except TypeError:
-            disks[dev].update('image: Does not exist')
+            disks[dev].update(yaml.safe_load('image: Does not exist'))
     return disks
-   
-   
+
+
 def setmem(vm_, memory, config=False):
     '''
     Changes the amount of memory allocated to VM. The VM must be shutdown
     for this to work.
-   
+
     memory is to be specified in MB
     If config is True then we ask libvirt to modify the config as well
-   
+
     CLI Example::
-   
+
         salt '*' virt.setmem myvm 768
     '''
     if vm_state(vm_) != 'shutdown':
         return False
-   
+
     dom = _get_dom(vm_)
-   
+
     # libvirt has a funny bitwise system for the flags in that the flag
     # to affect the "current" setting is 0, which means that to set the
     # current setting we have to call it a second time with just 0 set
     flags = libvirt.VIR_DOMAIN_MEM_MAXIMUM
     if config:
         flags = flags | libvirt.VIR_DOMAIN_AFFECT_CONFIG
-   
+
     ret1 = dom.setMemoryFlags(memory * 1024, flags)
     ret2 = dom.setMemoryFlags(memory * 1024, libvirt.VIR_DOMAIN_AFFECT_CURRENT)
-   
+
     # return True if both calls succeeded
     return ret1 == ret2 == 0
-   
-   
+
+
 def setvcpus(vm_, vcpus, config=False):
     '''
     Changes the amount of vcpus allocated to VM. The VM must be shutdown
     for this to work.
-   
+
     vcpus is an int representing the number to be assigned
     If config is True then we ask libvirt to modify the config as well
-   
+
     CLI Example::
-   
+
         salt '*' virt.setvcpus myvm 2
     '''
     if vm_state(vm_) != 'shutdown':
         return False
-   
+
     dom = _get_dom(vm_)
-   
+
     # see notes in setmem
     flags = libvirt.VIR_DOMAIN_VCPU_MAXIMUM
     if config:
         flags = flags | libvirt.VIR_DOMAIN_AFFECT_CONFIG
-   
+
     ret1 = dom.setVcpusFlags(vcpus, flags)
     ret2 = dom.setVcpusFlags(vcpus, libvirt.VIR_DOMAIN_AFFECT_CURRENT)
-   
+
     return ret1 == ret2 == 0
-   
-   
+
+
 def freemem():
     '''
     Return an int representing the amount of memory that has not been given
     to virtual machines on this node
-   
+
     CLI Example::
-   
+
         salt '*' virt.freemem
     '''
     conn = __get_conn()
@@ -538,15 +539,15 @@ def freemem():
         if dom.ID() > 0:
             mem -= dom.info()[2] / 1024
     return mem
-   
-   
+
+
 def freecpu():
     '''
     Return an int representing the number of unallocated cpus on this
     hypervisor
-   
+
     CLI Example::
-   
+
         salt '*' virt.freecpu
     '''
     conn = __get_conn()
@@ -556,149 +557,149 @@ def freecpu():
         if dom.ID() > 0:
             cpus -= dom.info()[3]
     return cpus
-   
-   
+
+
 def full_info():
     '''
     Return the node_info, vm_info and freemem
-   
+
     CLI Example::
-   
+
         salt '*' virt.full_info
     '''
     return {'freecpu': freecpu(),
             'freemem': freemem(),
             'node_info': node_info(),
             'vm_info': vm_info()}
-   
-   
+
+
 def get_xml(vm_):
     '''
     Returns the xml for a given vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.get_xml <vm name>
     '''
     dom = _get_dom(vm_)
     return dom.XMLDesc(0)
-   
-   
+
+
 def shutdown(vm_):
     '''
     Send a soft shutdown signal to the named vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.shutdown <vm name>
     '''
     dom = _get_dom(vm_)
     return dom.shutdown() == 0
-   
-   
+
+
 def pause(vm_):
     '''
     Pause the named vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.pause <vm name>
     '''
     dom = _get_dom(vm_)
     return dom.suspend() == 0
-   
-   
+
+
 def resume(vm_):
     '''
     Resume the named vm
-   
+
     CLI Example::
-   
+
         salt '*' virt.resume <vm name>
     '''
     dom = _get_dom(vm_)
     return dom.resume() == 0
-   
-   
+
+
 def create(vm_):
     '''
     Start a defined domain
-   
+
     CLI Example::
-   
+
         salt '*' virt.create <vm name>
     '''
     dom = _get_dom(vm_)
     return dom.create() == 0
-   
-   
+
+
 def start(vm_):
     '''
     Alias for the obscurely named 'create' function
-   
+
     CLI Example::
-   
+
         salt '*' virt.start <vm name>
     '''
     return create(vm_)
-   
-   
+
+
 def reboot(vm_):
     '''
     Reboot a domain via ACPI request
-   
+
     CLI Example::
-   
+
         salt '*' virt.reboot <vm name>
     '''
     dom = _get_dom(vm_)
-   
+
     # reboot has a few modes of operation, passing 0 in means the
     # hypervisor will pick the best method for rebooting
     return dom.reboot(0) == 0
-   
-   
+
+
 def reset(vm_):
     '''
     Reset a VM by emulating the reset button on a physical machine
-   
+
     CLI Example::
-   
+
         salt '*' virt.reset <vm name>
     '''
     dom = _get_dom(vm_)
-   
+
     # reset takes a flag, like reboot, but it is not yet used
     # so we just pass in 0
     # see: http://libvirt.org/html/libvirt-libvirt.html#virDomainReset
     return dom.reset(0) == 0
-   
-   
+
+
 def ctrl_alt_del(vm_):
     '''
     Sends CTRL+ALT+DEL to a VM
-   
+
     CLI Example::
-   
+
         salt '*' virt.ctrl_alt_del <vm name>
     '''
     dom = _get_dom(vm_)
     return dom.sendKey(0, 0, [29, 56, 111], 3, 0) == 0
-        
+
 # def randomUUID():
 #     u = [random.randint(0, 255) for ignore in range(0, 16)]
 #     u[6] = (u[6] & 0x0F) | (4 << 4)
 #     u[8] = (u[8] & 0x3F) | (2 << 6)
 #     return "-".join(["%02x" * 4, "%02x" * 2, "%02x" * 2, "%02x" * 2,
 #                      "%02x" * 6]) % tuple(u)
-# 
+#
 # def randomMAC():
 #     mac = [ 0x52, 0x54, 0x00,
 #         random.randint(0x00, 0x7f),
 #         random.randint(0x00, 0xff),
 #         random.randint(0x00, 0xff) ]
-#     return ':'.join(map(lambda x: "%02x" % x, mac))   
-        
+#     return ':'.join(map(lambda x: "%02x" % x, mac))
+
 # def createVM(options):
 #     vm_uuid = randomUUID() if not options.get("uuid") else options.get("uuid")
 #     vm_mac = randomMAC() if not options.get("mac") else options.get("mac")
@@ -728,5 +729,3 @@ if __name__ == '__main__':
     cmd = unpackCmdFromJson(jsondict)
 #     runCmd(cmd)
 #     createVM(options)
-
-    
