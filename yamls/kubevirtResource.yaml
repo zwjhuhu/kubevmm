@@ -7,7 +7,7 @@ metadata:
   name: virtualmachines.cloudplus.io
 spec:
   additionalPrinterColumns:
-  - JSONPath: .spec.domain.uuid
+  - JSONPath: .spec.domain.uuid.text
     name: UUID
     type: string
   - JSONPath: .status.phase
