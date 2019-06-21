@@ -17,8 +17,10 @@ import random
 import ConfigParser
 import xmltodict
 import re
+import json
 from xml.dom import minidom
 from StringIO import StringIO as _StringIO
+from xml.etree.ElementTree import fromstring
 
 '''
 Import third party libs
@@ -27,6 +29,7 @@ from kubernetes import client, config
 from json import loads
 from json import dumps
 from xmltodict import unparse
+from xmljson import badgerfish as bf
 
 try:
     import libvirt
@@ -62,6 +65,11 @@ def listVM(node):
         group=GROUP, version=VERSION, plural=PLURAL, label_selector=thisLabel)
     return retv
 
+def updateVM(name, body):
+    retv = client.CustomObjectsApi().replace_namespaced_custom_object(
+        group=GROUP, version=VERSION, namespace='default', plural=PLURAL, name=name, body=body)
+    return retv
+
 #     for item in ret[0]["items"]:
 # #         name = item['metadata']['name']
 #         domain = item['spec']
@@ -77,14 +85,41 @@ def jsontoxml(jsonstr):
             'nested_hv', "nested-hv").replace('_', '@').replace('text', '#text').replace('\'', '"')
     return unparse(loads(json))
 
+def xmlToJson(xmlStr):
+    return dumps(bf.data(fromstring(xmlStr)), sort_keys=True, indent=4)
+
+def toKubeJson(json):
+    return json.replace('@', '_').replace('$', 'text').replace(
+            'interface', '_interface').replace('transient', '_transient').replace(
+                    'nested-hv', 'nested_hv').replace('suspend-to-mem', 'suspend_to_mem').replace('suspend-to-disk', 'suspend_to_disk')
+
+def updateDomainStructureInJson(jsondict, body):
+    if jsondict:
+        '''
+        Get target VM name from Json.
+        '''
+        vm_ = jsondict['items'][0].get('metadata').get('name')
+        if not vm_:
+            raise Exception('No target VM in Json')
+        spec = jsondict['items'][0].get('spec')
+        if spec:
+            lifecycle = spec.get('lifecycle')
+            if lifecycle:
+                del spec['lifecycle']
+            spec.update(json.loads(body))
+    return jsondict['items'][0]
+
 '''
 Covert chars according to real CMD in back-end.
 '''
 def _convertCharsInJson(val, t):
+#     if val[0:1] == '_':
+#         val = '_' + val
+    val = str(val)
     if t == 'key':
-        val.replace('_', '-')
+        val = val.replace('_', '-')
     elif t == 'value':
-        val.replace('null', '')
+        val = val.replace('null', '')
     return val
 
 '''
@@ -106,9 +141,12 @@ def unpackCmdFromJson(jsondict):
             Iterate keys in 'spec' structure and map them to real CMDs in back-end.
             Note that only the first CMD will be executed.
             '''
-            cmd_head = None
+            cmd_head = ''
             the_cmd_key = None
-            keys = spec.keys()
+            lifecycle = spec.get('lifecycle')
+            if not lifecycle:
+                return
+            keys = lifecycle.keys()
             for key in keys:
                 if key in SUPPORTCMDS.keys():
                     the_cmd_key = key
@@ -118,14 +156,15 @@ def unpackCmdFromJson(jsondict):
             Get the CMD body from 'dict' structure.
             '''
             if the_cmd_key:
-                cmd_body = None
-                contents = spec.get(the_cmd_key)
+                cmd_body = ''
+                contents = lifecycle.get(the_cmd_key)
                 for k, v in contents.items():
                     k = _convertCharsInJson(k, 'key')
                     v = _convertCharsInJson(v, 'value')
-                    cmd_body += k,v
-                cmd = cmd_head, cmd_body
-            print cmd
+#                     print k, v
+                    cmd_body = '%s %s %s' % (cmd_body, k, v)
+                cmd = '%s %s' % (cmd_head, cmd_body)
+#             print cmd
         return cmd
     return cmd
 
@@ -722,10 +761,16 @@ def ctrl_alt_del(vm_):
 #     p.stderr.close()
 
 if __name__ == '__main__':
-    print get_xml('Server')
-    print vm_info('Server')
+#     print get_xml('Server')
+#     print vm_info('Server')
     jsondict = listVM('node22')
     print jsondict
     cmd = unpackCmdFromJson(jsondict)
+    vm = get_xml('vm')
+    body = toKubeJson(xmlToJson(vm))
+#     print body
+    vm = updateDomainStructureInJson(jsondict, body)
+    print vm
+    updateVM('vm', vm)
 #     runCmd(cmd)
 #     createVM(options)
