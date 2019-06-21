@@ -16,17 +16,21 @@ import subprocess
 import random
 import ConfigParser
 import xmltodict
+import socket
 import re
+import json
 from xml.dom import minidom
 from StringIO import StringIO as _StringIO
+from xml.etree.ElementTree import fromstring
 
 '''
 Import third party libs
 '''
-from kubernetes import client, config
+from kubernetes import client, config, watch, stream
 from json import loads
 from json import dumps
 from xmltodict import unparse
+from xmljson import badgerfish as bf
 
 try:
     import libvirt
@@ -45,6 +49,8 @@ VERSION = config_raw.get('VirtualMachine', 'version')
 GROUP = config_raw.get('VirtualMachine', 'group')
 SUPPORTCMDS = config_raw._sections['SupportCmds']
 
+LABEL = 'host=%s' % (socket.gethostname())
+
 VIRT_STATE_NAME_MAP = {0: 'running',
                        1: 'running',
                        2: 'running',
@@ -53,13 +59,70 @@ VIRT_STATE_NAME_MAP = {0: 'running',
                        5: 'shutdown',
                        6: 'crashed'}
 
-def listVM(node):
-#     config.load_kube_config(config_file='/root/.kube/config')
-#     thisLabel = "host==" + socket.gethostname()
+def main():
     config.load_kube_config(config_file=TOKEN)
-    thisLabel = "host==%s" % node
-    retv = client.CustomObjectsApi().list_cluster_custom_object(
-        group=GROUP, version=VERSION, plural=PLURAL, label_selector=thisLabel)
+#     crd = client.ApiextensionsV1beta1Api().read_custom_resource_definition(NAME)
+#     client.CustomObjectsApi().list_cluster_custom_object_with_http_info(group=GROUP, version=VERSION, plural=PLURAL, labelSelector='host=a', watch=True);
+    w = watch.Watch()
+    kwargs = {}
+    kwargs['label_selector'] = LABEL
+    kwargs['watch'] = True
+    for jsondict in w.stream(client.CustomObjectsApi().list_cluster_custom_object,
+                                group=GROUP, version=VERSION, plural=PLURAL, **kwargs):
+#         jsondict = json.loads(vm)
+        operation_type = jsondict.get('type')
+        print operation_type
+        name = getVMName(jsondict)
+        if operation_type == 'ADDED':
+            cmd = unpackCmdFromJson(jsondict)
+            runCmd(cmd)
+            vm_xml = get_xml(name)
+            vm_json = toKubeJson(xmlToJson(vm_xml))
+        #     print body
+            body = updateDomainStructureInJson(jsondict, vm_json)
+            createVM(name, body)
+        elif operation_type == 'MODIFYED':
+            cmd = unpackCmdFromJson(jsondict)
+            runCmd(cmd)
+            vm_xml = get_xml(name)
+            vm_json = toKubeJson(xmlToJson(vm_xml))
+        #     print body
+            body = updateDomainStructureInJson(jsondict, vm_json)
+            updateVM(name, body)
+        elif operation_type == 'DELETED':
+            destroy(name)
+            undefine(name)
+#             body = jsondict['raw_object']
+#             deleteVM(name, body)
+            
+'''
+Get target VM name from Json.
+'''
+def getVMName(jsondict):
+    spec = jsondict['raw_object']['spec']
+    domain = spec.get('domain')
+    if domain:
+        return domain['name']['text']
+    lifecycle = spec.get('lifecycle')
+    if lifecycle:
+        install = lifecycle.get('install')
+        if install:
+            return install['__name']
+    return None
+        
+def createVM(name, body):
+    retv = client.CustomObjectsApi().replace_namespaced_custom_object(
+        group=GROUP, version=VERSION, namespace='default', plural=PLURAL, name=name, body=body)
+    return retv
+
+def updateVM(name, body):
+    retv = client.CustomObjectsApi().patch_namespaced_custom_object(
+        group=GROUP, version=VERSION, namespace='default', plural=PLURAL, name=name, body=body)
+    return retv
+
+def deleteVM(name, body):
+    retv = client.CustomObjectsApi().delete_namespaced_custom_object(
+        group=GROUP, version=VERSION, namespace='default', plural=PLURAL, name=name, body=body)
     return retv
 
 #     for item in ret[0]["items"]:
@@ -77,20 +140,103 @@ def jsontoxml(jsonstr):
             'nested_hv', "nested-hv").replace('_', '@').replace('text', '#text').replace('\'', '"')
     return unparse(loads(json))
 
+def xmlToJson(xmlStr):
+    return dumps(bf.data(fromstring(xmlStr)), sort_keys=True, indent=4)
+
+def toKubeJson(json):
+    return json.replace('@', '_').replace('$', 'text').replace(
+            'interface', '_interface').replace('transient', '_transient').replace(
+                    'nested-hv', 'nested_hv').replace('suspend-to-mem', 'suspend_to_mem').replace('suspend-to-disk', 'suspend_to_disk')
+
+def updateDomainStructureInJson(jsondict, body):
+    if jsondict:
+        '''
+        Get target VM name from Json.
+        '''
+        spec = jsondict['raw_object']['spec']
+        if spec:
+            lifecycle = spec.get('lifecycle')
+            if lifecycle:
+                del spec['lifecycle']
+            spec.update(json.loads(body))
+    return jsondict['raw_object']
+
+def updateDomainStructureInJsonBackup(jsondict, body):
+    if jsondict:
+        '''
+        Get target VM name from Json.
+        '''
+        vm_ = jsondict['items'][0].get('metadata').get('name')
+        if not vm_:
+            raise Exception('No target VM in Json')
+        spec = jsondict['items'][0].get('spec')
+        if spec:
+            lifecycle = spec.get('lifecycle')
+            if lifecycle:
+                del spec['lifecycle']
+            spec.update(json.loads(body))
+    return jsondict['items'][0]
+
 '''
 Covert chars according to real CMD in back-end.
 '''
 def _convertCharsInJson(val, t):
+#     if val[0:1] == '_':
+#         val = '_' + val
+    val = str(val)
     if t == 'key':
-        val.replace('_', '-')
+        val = val.replace('_', '-')
     elif t == 'value':
-        val.replace('null', '')
+        val = val.replace('null', '')
     return val
 
 '''
 Unpack the CMD that will be executed in Json format.
 '''
 def unpackCmdFromJson(jsondict):
+    vm_ = None
+    cmd = None
+    if jsondict:
+        '''
+        Get target VM name from Json.
+        '''
+        spec = jsondict['raw_object'].get('spec')
+        if spec:
+            '''
+            Iterate keys in 'spec' structure and map them to real CMDs in back-end.
+            Note that only the first CMD will be executed.
+            '''
+            cmd_head = ''
+            the_cmd_key = None
+            lifecycle = spec.get('lifecycle')
+            if not lifecycle:
+                return
+            keys = lifecycle.keys()
+            for key in keys:
+                if key in SUPPORTCMDS.keys():
+                    the_cmd_key = key
+                    cmd_head = SUPPORTCMDS.get(key)
+                    break;
+            '''
+            Get the CMD body from 'dict' structure.
+            '''
+            if the_cmd_key:
+                cmd_body = ''
+                contents = lifecycle.get(the_cmd_key)
+                for k, v in contents.items():
+                    k = _convertCharsInJson(k, 'key')
+                    v = _convertCharsInJson(v, 'value')
+#                     print k, v
+                    cmd_body = '%s %s %s' % (cmd_body, k, v)
+                cmd = '%s %s' % (cmd_head, cmd_body)
+#             print cmd
+        return cmd
+    return cmd
+
+'''
+Unpack the CMD that will be executed in Json format.
+'''
+def unpackCmdFromJsonBackup(jsondict):
     vm_ = None
     cmd = None
     if jsondict:
@@ -106,9 +252,12 @@ def unpackCmdFromJson(jsondict):
             Iterate keys in 'spec' structure and map them to real CMDs in back-end.
             Note that only the first CMD will be executed.
             '''
-            cmd_head = None
+            cmd_head = ''
             the_cmd_key = None
-            keys = spec.keys()
+            lifecycle = spec.get('lifecycle')
+            if not lifecycle:
+                return
+            keys = lifecycle.keys()
             for key in keys:
                 if key in SUPPORTCMDS.keys():
                     the_cmd_key = key
@@ -118,14 +267,15 @@ def unpackCmdFromJson(jsondict):
             Get the CMD body from 'dict' structure.
             '''
             if the_cmd_key:
-                cmd_body = None
-                contents = spec.get(the_cmd_key)
+                cmd_body = ''
+                contents = lifecycle.get(the_cmd_key)
                 for k, v in contents.items():
                     k = _convertCharsInJson(k, 'key')
                     v = _convertCharsInJson(v, 'value')
-                    cmd_body += k,v
-                cmd = cmd_head, cmd_body
-            print cmd
+#                     print k, v
+                    cmd_body = '%s %s %s' % (cmd_body, k, v)
+                cmd = '%s %s' % (cmd_head, cmd_body)
+#             print cmd
         return cmd
     return cmd
 
@@ -686,6 +836,32 @@ def ctrl_alt_del(vm_):
     dom = _get_dom(vm_)
     return dom.sendKey(0, 0, [29, 56, 111], 3, 0) == 0
 
+def destroy(vm_):
+    '''
+    Hard power down the virtual machine, this is equivalent to pulling the
+    power
+   
+    CLI Example::
+   
+        salt '*' virt.destroy <vm name>
+    '''
+    dom = _get_dom(vm_)
+    return dom.destroy() == 0
+   
+   
+def undefine(vm_):
+    '''
+    Remove a defined vm, this does not purge the virtual machine image, and
+    this only works if the vm is powered down
+   
+    CLI Example::
+   
+        salt '*' virt.undefine <vm name>
+    '''
+    dom = _get_dom(vm_)
+    return dom.undefine() == 0
+   
+
 # def randomUUID():
 #     u = [random.randint(0, 255) for ignore in range(0, 16)]
 #     u[6] = (u[6] & 0x0F) | (4 << 4)
@@ -722,10 +898,5 @@ def ctrl_alt_del(vm_):
 #     p.stderr.close()
 
 if __name__ == '__main__':
-    print get_xml('Server')
-    print vm_info('Server')
-    jsondict = listVM('node22')
-    print jsondict
-    cmd = unpackCmdFromJson(jsondict)
-#     runCmd(cmd)
+    main()
 #     createVM(options)

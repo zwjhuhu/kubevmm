@@ -7,6 +7,7 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 '''
 
 import ConfigParser
+import socket
 from kubernetes import client, config, watch, stream
 
 cfg = "./default.cfg"
@@ -18,8 +19,8 @@ PLURAL = config_raw.get('VirtualMachine', 'plural')
 VERSION = config_raw.get('VirtualMachine', 'version')
 GROUP = config_raw.get('VirtualMachine', 'group')
 
-LABEL = 'host=node22'
-CMD = 'http://127.0.0.1:9090/apis/[GROUP]/[VERSION]/[PLURAL]?labelSelector=host%3Dlocalhost.localdomain2&watch=true'
+LABEL = 'host=%s' % (socket.gethostname())
+# CMD = 'http://127.0.0.1:9090/apis/[GROUP]/[VERSION]/[PLURAL]?labelSelector=host%3Dlocalhost.localdomain2&watch=true'
 
 if __name__ == '__main__':
     config.load_kube_config(config_file=TOKEN)
