@@ -186,7 +186,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print help_msg
         sys.exit(1)
-    p_name = 'virtctl'
+    p_name = 'example1'
     pid_fn = '/tmp/virtctl_daemon.pid'
     log_fn = '/tmp/virtctl_daemon.log'
     err_fn = '/tmp/virtctl_error.log'
