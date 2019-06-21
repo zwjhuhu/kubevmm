@@ -1,443 +1,187 @@
-virsh attach-device
-error: command 'attach-device' requires <domain> option
-error: command 'attach-device' requires <file> option
-virsh attach-disk
-error: command 'attach-disk' requires <domain> option
-error: command 'attach-disk' requires <source> option
-error: command 'attach-disk' requires <target> option
-virsh attach-interface
-error: command 'attach-interface' requires <domain> option
-error: command 'attach-interface' requires <type> option
-error: command 'attach-interface' requires <source> option
-virsh autostart
-error: command 'autostart' requires <domain> option
-virsh blkdeviotune
-error: command 'blkdeviotune' requires <domain> option
-error: command 'blkdeviotune' requires <device> option
-virsh blkiotune
-error: command 'blkiotune' requires <domain> option
-virsh blockcommit
-error: command 'blockcommit' requires <domain> option
-error: command 'blockcommit' requires <path> option
-virsh blockcopy
-error: command 'blockcopy' requires <domain> option
-error: command 'blockcopy' requires <path> option
-virsh blockjob
-error: command 'blockjob' requires <domain> option
-error: command 'blockjob' requires <path> option
-virsh blockpull
-error: command 'blockpull' requires <domain> option
-error: command 'blockpull' requires <path> option
-virsh blockresize
-error: command 'blockresize' requires <domain> option
-error: command 'blockresize' requires <path> option
-error: command 'blockresize' requires --size option
-virsh change-media
-error: command 'change-media' requires <domain> option
-error: command 'change-media' requires <path> option
-virsh cpu-stats
-error: command 'cpu-stats' requires <domain> option
-virsh create
-error: command 'create' requires <file> option
-virsh define
-error: command 'define' requires <file> option
-virsh desc
-error: command 'desc' requires <domain> option
-virsh destroy
-error: command 'destroy' requires <domain> option
-virsh detach-device
-error: command 'detach-device' requires <domain> option
-error: command 'detach-device' requires <file> option
-virsh detach-device-alias
-error: command 'detach-device-alias' requires <domain> option
-error: command 'detach-device-alias' requires <alias> option
-virsh detach-disk
-error: command 'detach-disk' requires <domain> option
-error: command 'detach-disk' requires <target> option
-virsh detach-interface
-error: command 'detach-interface' requires <domain> option
-error: command 'detach-interface' requires <type> option
-virsh domfsfreeze
-error: command 'domfsfreeze' requires <domain> option
-virsh domfsthaw
-error: command 'domfsthaw' requires <domain> option
-virsh domfsinfo
-error: command 'domfsinfo' requires <domain> option
-virsh domfstrim
-error: command 'domfstrim' requires <domain> option
-virsh domid
-error: command 'domid' requires <domain> option
-virsh domif-setlink
-error: command 'domif-setlink' requires <domain> option
-error: command 'domif-setlink' requires <interface> option
-error: command 'domif-setlink' requires <state> option
-virsh domiftune
-error: command 'domiftune' requires <domain> option
-error: command 'domiftune' requires <interface> option
-virsh domjobabort
-error: command 'domjobabort' requires <domain> option
-virsh domjobinfo
-error: command 'domjobinfo' requires <domain> option
-virsh domname
-error: command 'domname' requires <domain> option
-virsh domrename
-error: command 'domrename' requires <domain> option
-error: command 'domrename' requires <new-name> option
-virsh dompmsuspend
-error: command 'dompmsuspend' requires <domain> option
-error: command 'dompmsuspend' requires <target> option
-virsh dompmwakeup
-error: command 'dompmwakeup' requires <domain> option
-virsh domuuid
-error: command 'domuuid' requires <domain> option
-virsh domxml-from-native
-error: command 'domxml-from-native' requires <format> option
-error: command 'domxml-from-native' requires <config> option
-virsh domxml-to-native
-error: command 'domxml-to-native' requires <format> option
-virsh dump
-error: command 'dump' requires <domain> option
-error: command 'dump' requires <file> option
-virsh dumpxml
-error: command 'dumpxml' requires <domain> option
-virsh edit
-error: command 'edit' requires <domain> option
-virsh inject-nmi
-error: command 'inject-nmi' requires <domain> option
-virsh iothreadinfo
-error: command 'iothreadinfo' requires <domain> option
-virsh iothreadpin
-error: command 'iothreadpin' requires <domain> option
-error: command 'iothreadpin' requires --iothread option
-error: command 'iothreadpin' requires <cpulist> option
-virsh iothreadadd
-error: command 'iothreadadd' requires <domain> option
-error: command 'iothreadadd' requires --id option
-virsh iothreaddel
-error: command 'iothreaddel' requires <domain> option
-error: command 'iothreaddel' requires --id option
-virsh send-key
-error: command 'send-key' requires <domain> option
-error: command 'send-key' requires <keycode> option
-virsh send-process-signal
-error: command 'send-process-signal' requires <domain> option
-error: command 'send-process-signal' requires <pid> option
-error: command 'send-process-signal' requires <signame> option
-virsh lxc-enter-namespace
-error: command 'lxc-enter-namespace' requires <domain> option
-error: command 'lxc-enter-namespace' requires <cmd> option
-virsh managedsave
-error: command 'managedsave' requires <domain> option
-virsh managedsave-remove
-error: command 'managedsave-remove' requires <domain> option
-virsh managedsave-edit
-error: command 'managedsave-edit' requires <domain> option
-virsh managedsave-dumpxml
-error: command 'managedsave-dumpxml' requires <domain> option
-virsh managedsave-define
-error: command 'managedsave-define' requires <domain> option
-error: command 'managedsave-define' requires <xml> option
-virsh memtune
-error: command 'memtune' requires <domain> option
-virsh metadata
-error: command 'metadata' requires <domain> option
-error: command 'metadata' requires <uri> option
-virsh migrate
-error: command 'migrate' requires <domain> option
-error: command 'migrate' requires <desturi> option
-virsh migrate-setmaxdowntime
-error: command 'migrate-setmaxdowntime' requires <domain> option
-error: command 'migrate-setmaxdowntime' requires --downtime option
-virsh migrate-getmaxdowntime
-error: command 'migrate-getmaxdowntime' requires <domain> option
-virsh migrate-compcache
-error: command 'migrate-compcache' requires <domain> option
-virsh migrate-setspeed
-error: command 'migrate-setspeed' requires <domain> option
-error: command 'migrate-setspeed' requires --bandwidth option
-virsh migrate-getspeed
-error: command 'migrate-getspeed' requires <domain> option
-virsh migrate-postcopy
-error: command 'migrate-postcopy' requires <domain> option
-virsh numatune
-error: command 'numatune' requires <domain> option
-virsh qemu-attach
-error: command 'qemu-attach' requires <pid> option
-virsh qemu-monitor-command
-error: command 'qemu-monitor-command' requires <domain> option
-error: command 'qemu-monitor-command' requires <cmd> option
-virsh qemu-agent-command
-error: command 'qemu-agent-command' requires <domain> option
-error: command 'qemu-agent-command' requires <cmd> option
-virsh reboot
-error: command 'reboot' requires <domain> option
-virsh reset
-error: command 'reset' requires <domain> option
-virsh restore
-error: command 'restore' requires <file> option
-virsh resume
-error: command 'resume' requires <domain> option
-virsh save
-error: command 'save' requires <domain> option
-error: command 'save' requires <file> option
-virsh save-image-define
-error: command 'save-image-define' requires <file> option
-error: command 'save-image-define' requires <xml> option
-virsh save-image-dumpxml
-error: command 'save-image-dumpxml' requires <file> option
-virsh save-image-edit
-error: command 'save-image-edit' requires <file> option
-virsh schedinfo
-error: command 'schedinfo' requires <domain> option
-virsh screenshot
-error: command 'screenshot' requires <domain> option
-virsh set-lifecycle-action
-error: command 'set-lifecycle-action' requires <domain> option
-error: command 'set-lifecycle-action' requires <type> option
-error: command 'set-lifecycle-action' requires <action> option
-virsh set-user-password
-error: command 'set-user-password' requires <domain> option
-error: command 'set-user-password' requires <user> option
-error: command 'set-user-password' requires <password> option
-virsh setmaxmem
-error: command 'setmaxmem' requires <domain> option
-error: command 'setmaxmem' requires --size option
-virsh setmem
-error: command 'setmem' requires <domain> option
-error: command 'setmem' requires --size option
-virsh setvcpus
-error: command 'setvcpus' requires <domain> option
-error: command 'setvcpus' requires --count option
-virsh shutdown
-error: command 'shutdown' requires <domain> option
-virsh start
-error: command 'start' requires <domain> option
-virsh suspend
-error: command 'suspend' requires <domain> option
-virsh ttyconsole
-error: command 'ttyconsole' requires <domain> option
-virsh undefine
-error: command 'undefine' requires <domain> option
-virsh update-device
-error: command 'update-device' requires <domain> option
-error: command 'update-device' requires <file> option
-virsh vcpucount
-error: command 'vcpucount' requires <domain> option
-virsh vcpuinfo
-error: command 'vcpuinfo' requires <domain> option
-virsh vcpupin
-error: command 'vcpupin' requires <domain> option
-virsh emulatorpin
-error: command 'emulatorpin' requires <domain> option
-virsh guestvcpus
-error: command 'guestvcpus' requires <domain> option
-virsh setvcpu
-error: command 'setvcpu' requires <domain> option
-error: command 'setvcpu' requires <vcpulist> option
-virsh domblkerror
-error: command 'domblkerror' requires <domain> option
-virsh domblkinfo
-error: command 'domblkinfo' requires <domain> option
-virsh domblkstat
-error: command 'domblkstat' requires <domain> option
-virsh domcontrol
-error: command 'domcontrol' requires <domain> option
-virsh domif-getlink
-error: command 'domif-getlink' requires <domain> option
-error: command 'domif-getlink' requires <interface> option
-virsh domifaddr
-error: command 'domifaddr' requires <domain> option
-virsh domifstat
-error: command 'domifstat' requires <domain> option
-error: command 'domifstat' requires <interface> option
-virsh dominfo
-error: command 'dominfo' requires <domain> option
-virsh dommemstat
-error: command 'dommemstat' requires <domain> option
-virsh domstate
-error: command 'domstate' requires <domain> option
-virsh domtime
-error: command 'domtime' requires <domain> option
-virsh iface-bridge
-error: command 'iface-bridge' requires <interface> option
-error: command 'iface-bridge' requires <bridge> option
-virsh iface-define
-error: command 'iface-define' requires <file> option
-virsh iface-destroy
-error: command 'iface-destroy' requires <interface> option
-virsh iface-dumpxml
-error: command 'iface-dumpxml' requires <interface> option
-virsh iface-edit
-error: command 'iface-edit' requires <interface> option
-virsh iface-mac
-error: command 'iface-mac' requires <interface> option
-virsh iface-name
-error: command 'iface-name' requires <interface> option
-virsh iface-start
-error: command 'iface-start' requires <interface> option
-virsh iface-unbridge
-error: command 'iface-unbridge' requires <bridge> option
-virsh iface-undefine
-error: command 'iface-undefine' requires <interface> option
-virsh nwfilter-define
-error: command 'nwfilter-define' requires <file> option
-virsh nwfilter-dumpxml
-error: command 'nwfilter-dumpxml' requires <nwfilter> option
-virsh nwfilter-edit
-error: command 'nwfilter-edit' requires <nwfilter> option
-virsh nwfilter-undefine
-error: command 'nwfilter-undefine' requires <nwfilter> option
-virsh nwfilter-binding-create
-error: command 'nwfilter-binding-create' requires <file> option
-virsh nwfilter-binding-delete
-error: command 'nwfilter-binding-delete' requires <binding> option
-virsh nwfilter-binding-dumpxml
-error: command 'nwfilter-binding-dumpxml' requires <binding> option
-virsh net-autostart
-error: command 'net-autostart' requires <network> option
-virsh net-create
-error: command 'net-create' requires <file> option
-virsh net-define
-error: command 'net-define' requires <file> option
-virsh net-destroy
-error: command 'net-destroy' requires <network> option
-virsh net-dhcp-leases
-error: command 'net-dhcp-leases' requires <network> option
-virsh net-dumpxml
-error: command 'net-dumpxml' requires <network> option
-virsh net-edit
-error: command 'net-edit' requires <network> option
-virsh net-info
-error: command 'net-info' requires <network> option
-virsh net-name
-error: command 'net-name' requires <network> option
-virsh net-start
-error: command 'net-start' requires <network> option
-virsh net-undefine
-error: command 'net-undefine' requires <network> option
-virsh net-update
-error: command 'net-update' requires <network> option
-error: command 'net-update' requires <command> option
-error: command 'net-update' requires <section> option
-error: command 'net-update' requires <xml> option
-virsh net-uuid
-error: command 'net-uuid' requires <network> option
-virsh nodedev-create
-error: command 'nodedev-create' requires <file> option
-virsh nodedev-destroy
-error: command 'nodedev-destroy' requires <device> option
-virsh nodedev-detach
-error: command 'nodedev-detach' requires <device> option
-virsh nodedev-dumpxml
-error: command 'nodedev-dumpxml' requires <device> option
-virsh nodedev-reattach
-error: command 'nodedev-reattach' requires <device> option
-virsh nodedev-reset
-error: command 'nodedev-reset' requires <device> option
-virsh secret-define
-error: command 'secret-define' requires <file> option
-virsh secret-dumpxml
-error: command 'secret-dumpxml' requires <secret> option
-virsh secret-get-value
-error: command 'secret-get-value' requires <secret> option
-virsh secret-set-value
-error: command 'secret-set-value' requires <secret> option
-error: command 'secret-set-value' requires <base64> option
-virsh secret-undefine
-error: command 'secret-undefine' requires <secret> option
-virsh snapshot-create
-error: command 'snapshot-create' requires <domain> option
-virsh snapshot-create-as
-error: command 'snapshot-create-as' requires <domain> option
-virsh snapshot-current
-error: command 'snapshot-current' requires <domain> option
-virsh snapshot-delete
-error: command 'snapshot-delete' requires <domain> option
-virsh snapshot-dumpxml
-error: command 'snapshot-dumpxml' requires <domain> option
-error: command 'snapshot-dumpxml' requires <snapshotname> option
-virsh snapshot-edit
-error: command 'snapshot-edit' requires <domain> option
-virsh snapshot-info
-error: command 'snapshot-info' requires <domain> option
-virsh snapshot-parent
-error: command 'snapshot-parent' requires <domain> option
-virsh snapshot-revert
-error: command 'snapshot-revert' requires <domain> option
-virsh find-storage-pool-sources-as
-error: command 'find-storage-pool-sources-as' requires <type> option
-virsh find-storage-pool-sources
-error: command 'find-storage-pool-sources' requires <type> option
-virsh pool-autostart
-error: command 'pool-autostart' requires <pool> option
-virsh pool-build
-error: command 'pool-build' requires <pool> option
-virsh pool-create-as
-error: command 'pool-create-as' requires <name> option
-error: command 'pool-create-as' requires <type> option
-virsh pool-create
-error: command 'pool-create' requires <file> option
-virsh pool-define-as
-error: command 'pool-define-as' requires <name> option
-error: command 'pool-define-as' requires <type> option
-virsh pool-define
-error: command 'pool-define' requires <file> option
-virsh pool-delete
-error: command 'pool-delete' requires <pool> option
-virsh pool-destroy
-error: command 'pool-destroy' requires <pool> option
-virsh pool-dumpxml
-error: command 'pool-dumpxml' requires <pool> option
-virsh pool-edit
-error: command 'pool-edit' requires <pool> option
-virsh pool-info
-error: command 'pool-info' requires <pool> option
-virsh pool-name
-error: command 'pool-name' requires <pool> option
-virsh pool-refresh
-error: command 'pool-refresh' requires <pool> option
-virsh pool-start
-error: command 'pool-start' requires <pool> option
-virsh pool-undefine
-error: command 'pool-undefine' requires <pool> option
-virsh pool-uuid
-error: command 'pool-uuid' requires <pool> option
-virsh vol-clone
-error: command 'vol-clone' requires <vol> option
-error: command 'vol-clone' requires <newname> option
-virsh vol-create-as
-error: command 'vol-create-as' requires <pool> option
-error: command 'vol-create-as' requires <name> option
-error: command 'vol-create-as' requires <capacity> option
-virsh vol-create
-error: command 'vol-create' requires <pool> option
-error: command 'vol-create' requires <file> option
-virsh vol-create-from
-error: command 'vol-create-from' requires <pool> option
-error: command 'vol-create-from' requires <file> option
-error: command 'vol-create-from' requires <vol> option
-virsh vol-delete
-error: command 'vol-delete' requires <vol> option
-virsh vol-download
-error: command 'vol-download' requires <vol> option
-error: command 'vol-download' requires <file> option
-virsh vol-dumpxml
-error: command 'vol-dumpxml' requires <vol> option
-virsh vol-info
-error: command 'vol-info' requires <vol> option
-virsh vol-key
-error: command 'vol-key' requires <vol> option
-virsh vol-name
-error: command 'vol-name' requires <vol> option
-virsh vol-path
-error: command 'vol-path' requires <vol> option
-virsh vol-pool
-error: command 'vol-pool' requires <vol> option
-virsh vol-resize
-error: command 'vol-resize' requires <vol> option
-error: command 'vol-resize' requires <capacity> option
-virsh vol-upload
-error: command 'vol-upload' requires <vol> option
-error: command 'vol-upload' requires <file> option
-virsh vol-wipe
-error: command 'vol-wipe' requires <vol> option
+attach-device <domain> <file> [--persistent] [--config] [--live] [--current]
+attach-disk <domain> <source> <target> [--targetbus <string>] [--driver <string>] [--subdriver <string>] [--iothread <string>] [--cache <string>] [--io <string>] [--type <string>] [--mode <string>] [--sourcetype <string>] [--serial <string>] [--wwn <string>] [--rawio] [--address <string>] [--multifunction] [--print-xml] [--persistent] [--config] [--live] [--current]
+attach-interface <domain> <type> <source> [--target <string>] [--mac <string>] [--script <string>] [--model <string>] [--inbound <string>] [--outbound <string>] [--persistent] [--config] [--live] [--current] [--print-xml] [--managed]
+autostart <domain> [--disable]
+blkdeviotune <domain> <device> [--total-bytes-sec <number>] [--read-bytes-sec <number>] [--write-bytes-sec <number>] [--total-iops-sec <number>] [--read-iops-sec <number>] [--write-iops-sec <number>] [--total-bytes-sec-max <number>] [--read-bytes-sec-max <number>] [--write-bytes-sec-max <number>] [--total-iops-sec-max <number>] [--read-iops-sec-max <number>] [--write-iops-sec-max <number>] [--size-iops-sec <number>] [--group-name <string>] [--total-bytes-sec-max-length <number>] [--read-bytes-sec-max-length <number>] [--write-bytes-sec-max-length <number>] [--total-iops-sec-max-length <number>] [--read-iops-sec-max-length <number>] [--write-iops-sec-max-length <number>] [--config] [--live] [--current]
+blkiotune <domain> [--weight <number>] [--device-weights <string>] [--device-read-iops-sec <string>] [--device-write-iops-sec <string>] [--device-read-bytes-sec <string>] [--device-write-bytes-sec <string>] [--config] [--live] [--current]
+blockcommit <domain> <path> [--bandwidth <number>] [--base <string>] [--shallow] [--top <string>] [--active] [--delete] [--wait] [--verbose] [--timeout <number>] [--pivot] [--keep-overlay] [--async] [--keep-relative] [--bytes]
+blockcopy <domain> <path> [--dest <string>] [--bandwidth <number>] [--shallow] [--reuse-external] [--blockdev] [--wait] [--verbose] [--timeout <number>] [--pivot] [--finish] [--async] [--xml <string>] [--format <string>] [--granularity <number>] [--buf-size <number>] [--bytes] [--transient-job]
+blockjob <domain> <path> [--abort] [--async] [--pivot] [--info] [--bytes] [--raw] [--bandwidth <number>]
+blockpull <domain> <path> [--bandwidth <number>] [--base <string>] [--wait] [--verbose] [--timeout <number>] [--async] [--keep-relative] [--bytes]
+blockresize <domain> <path> <size>
+change-media <domain> <path> [--source <string>] [--eject] [--insert] [--update] [--current] [--live] [--config] [--force] [--print-xml] [--block]
+cpu-stats <domain> [--total] [--start <number>] [--count <number>]
+create <file> [--console] [--paused] [--autodestroy] [--pass-fds <string>] [--validate]
+define <file> [--validate]
+desc <domain> [--live] [--config] [--current] [--title] [--edit] [[--new-desc] <string>]...
+destroy <domain> [--graceful]
+detach-device <domain> <file> [--persistent] [--config] [--live] [--current]
+detach-device-alias <domain> <alias> [--config] [--live] [--current]
+detach-disk <domain> <target> [--persistent] [--config] [--live] [--current] [--print-xml]
+detach-interface <domain> <type> [--mac <string>] [--persistent] [--config] [--live] [--current]
+domfsfreeze <domain> [[--mountpoint] <string>]...
+domfsthaw <domain> [[--mountpoint] <string>]...
+domfsinfo <domain>
+domfstrim <domain> [--minimum <number>] [--mountpoint <string>]
+domid <domain>
+domif-setlink <domain> <interface> <state> [--config]
+domiftune <domain> <interface> [--inbound <string>] [--outbound <string>] [--config] [--live] [--current]
+domjobabort <domain>
+domjobinfo <domain> [--completed]
+domname <domain>
+domrename <domain> <new-name>
+dompmsuspend <domain> <target> [--duration <number>]
+dompmwakeup <domain>
+domuuid <domain>
+domxml-from-native <format> <config>
+domxml-to-native <format> [--domain <string>] [--xml <string>]
+dump <domain> <file> [--live] [--crash] [--bypass-cache] [--reset] [--verbose] [--memory-only] [--format <string>]
+dumpxml <domain> [--inactive] [--security-info] [--update-cpu] [--migratable]
+edit <domain> [--skip-validate]
+inject-nmi <domain>
+iothreadinfo <domain> [--config] [--live] [--current]
+iothreadpin <domain> <iothread> <cpulist> [--config] [--live] [--current]
+iothreadadd <domain> <id> [--config] [--live] [--current]
+iothreaddel <domain> <id> [--config] [--live] [--current]
+send-key <domain> [--codeset <string>] [--holdtime <number>] {[--keycode] <string>}...
+send-process-signal <domain> <pid> <signame>
+lxc-enter-namespace <domain> [--noseclabel] {[--cmd] <string>}...
+managedsave <domain> [--bypass-cache] [--running] [--paused] [--verbose]
+managedsave-remove <domain>
+managedsave-edit <domain> [--running] [--paused]
+managedsave-dumpxml <domain> [--security-info]
+managedsave-define <domain> <xml> [--running] [--paused]
+memtune <domain> [--hard-limit <number>] [--soft-limit <number>] [--swap-hard-limit <number>] [--min-guarantee <number>] [--config] [--live] [--current]
+metadata <domain> <uri> [--live] [--config] [--current] [--edit] [--key <string>] [--set <string>] [--remove]
+migrate <domain> <desturi> [--live] [--offline] [--p2p] [--direct] [--tunnelled] [--persistent] [--undefinesource] [--suspend] [--copy-storage-all] [--copy-storage-inc] [--change-protection] [--unsafe] [--verbose] [--compressed] [--auto-converge] [--rdma-pin-all] [--abort-on-error] [--postcopy] [--postcopy-after-precopy] [--migrateuri <string>] [--graphicsuri <string>] [--listen-address <string>] [--dname <string>] [--timeout <number>] [--timeout-suspend] [--timeout-postcopy] [--xml <string>] [--migrate-disks <string>] [--disks-port <number>] [--comp-methods <string>] [--comp-mt-level <number>] [--comp-mt-threads <number>] [--comp-mt-dthreads <number>] [--comp-xbzrle-cache <number>] [--auto-converge-initial <number>] [--auto-converge-increment <number>] [--persistent-xml <string>] [--tls]
+migrate-setmaxdowntime <domain> <downtime>
+migrate-getmaxdowntime <domain>
+migrate-compcache <domain> [--size <number>]
+migrate-setspeed <domain> <bandwidth>
+migrate-getspeed <domain>
+migrate-postcopy <domain>
+numatune <domain> [--mode <string>] [--nodeset <string>] [--config] [--live] [--current]
+qemu-attach <pid>
+qemu-monitor-command <domain> [--hmp] [--pretty] {[--cmd] <string>}...
+qemu-agent-command <domain> [--timeout <number>] [--async] [--block] [--pretty] {[--cmd] <string>}...
+reboot <domain> [--mode <string>]
+reset <domain>
+restore <file> [--bypass-cache] [--xml <string>] [--running] [--paused]
+resume <domain>
+save <domain> <file> [--bypass-cache] [--xml <string>] [--running] [--paused] [--verbose]
+save-image-define <file> <xml> [--running] [--paused]
+save-image-dumpxml <file> [--security-info]
+save-image-edit <file> [--running] [--paused]
+schedinfo <domain> [--weight <number>] [--cap <number>] [--current] [--config] [--live] [[--set] <string>]...
+screenshot <domain> [--file <string>] [--screen <number>]
+set-lifecycle-action <domain> <type> <action> [--config] [--live] [--current]
+set-user-password <domain> <user> <password> [--encrypted]
+setmaxmem <domain> <size> [--config] [--live] [--current]
+setmem <domain> <size> [--config] [--live] [--current]
+setvcpus <domain> <count> [--maximum] [--config] [--live] [--current] [--guest] [--hotpluggable]
+shutdown <domain> [--mode <string>]
+start <domain> [--console] [--paused] [--autodestroy] [--bypass-cache] [--force-boot] [--pass-fds <string>]
+suspend <domain>
+ttyconsole <domain>
+undefine <domain> [--managed-save] [--storage <string>] [--remove-all-storage] [--delete-snapshots] [--wipe-storage] [--snapshots-metadata] [--nvram] [--keep-nvram]
+update-device <domain> <file> [--persistent] [--config] [--live] [--current] [--force]
+vcpucount <domain> [--maximum] [--active] [--live] [--config] [--current] [--guest]
+vcpuinfo <domain> [--pretty]
+vcpupin <domain> [--vcpu <number>] [--cpulist <string>] [--config] [--live] [--current]
+emulatorpin <domain> [--cpulist <string>] [--config] [--live] [--current]
+guestvcpus <domain> [--cpulist <string>] [--enable] [--disable]
+setvcpu <domain> <vcpulist> [--enable] [--disable] [--config] [--live] [--current]
+domblkerror <domain>
+domblkinfo <domain> [--device <string>] [--human] [--all]
+domblkstat <domain> [--device <string>] [--human]
+domcontrol <domain>
+domif-getlink <domain> <interface> [--config]
+domifaddr <domain> [--interface <string>] [--full] [--source <string>]
+domifstat <domain> <interface>
+dominfo <domain>
+dommemstat <domain> [--period <number>] [--config] [--live] [--current]
+domstate <domain> [--reason]
+domtime <domain> [--now] [--pretty] [--sync] [--time <number>]
+iface-bridge <interface> <bridge> [--no-stp] [--delay <number>] [--no-start]
+iface-define <file>
+iface-destroy <interface>
+iface-dumpxml <interface> [--inactive]
+iface-edit <interface>
+iface-mac <interface>
+iface-name <interface>
+iface-start <interface>
+iface-unbridge <bridge> [--no-start]
+iface-undefine <interface>
+nwfilter-define <file>
+nwfilter-dumpxml <nwfilter>
+nwfilter-edit <nwfilter>
+nwfilter-undefine <nwfilter>
+nwfilter-binding-create <file>
+nwfilter-binding-delete <binding>
+nwfilter-binding-dumpxml <binding>
+net-autostart <network> [--disable]
+net-create <file>
+net-define <file>
+net-destroy <network>
+net-dhcp-leases <network> [--mac <string>]
+net-dumpxml <network> [--inactive]
+net-edit <network>
+net-info <network>
+net-name <network>
+net-start <network>
+net-undefine <network>
+net-update <network> <command> <section> <xml> [--parent-index <number>] [--config] [--live] [--current]
+net-uuid <network>
+nodedev-create <file>
+nodedev-destroy <device>
+nodedev-detach <device> [--driver <string>]
+nodedev-dumpxml <device>
+nodedev-reattach <device>
+nodedev-reset <device>
+secret-define <file>
+secret-dumpxml <secret>
+secret-get-value <secret>
+secret-set-value <secret> <base64>
+secret-undefine <secret>
+snapshot-create <domain> [--xmlfile <string>] [--redefine] [--current] [--no-metadata] [--halt] [--disk-only] [--reuse-external] [--quiesce] [--atomic] [--live]
+snapshot-create-as <domain> [--name <string>] [--description <string>] [--print-xml] [--no-metadata] [--halt] [--disk-only] [--reuse-external] [--quiesce] [--atomic] [--live] [--memspec <string>] [[--diskspec] <string>]...
+snapshot-current <domain> [--name] [--security-info] [--snapshotname <string>]
+snapshot-delete <domain> [--snapshotname <string>] [--current] [--children] [--children-only] [--metadata]
+snapshot-dumpxml <domain> <snapshotname> [--security-info]
+snapshot-edit <domain> [--snapshotname <string>] [--current] [--rename] [--clone]
+snapshot-info <domain> [--snapshotname <string>] [--current]
+snapshot-parent <domain> [--snapshotname <string>] [--current]
+snapshot-revert <domain> [--snapshotname <string>] [--current] [--running] [--paused] [--force]
+find-storage-pool-sources-as <type> [--host <string>] [--port <string>] [--initiator <string>]
+find-storage-pool-sources <type> [--srcSpec <string>]
+pool-autostart <pool> [--disable]
+pool-build <pool> [--no-overwrite] [--overwrite]
+pool-create-as <name> <type> [--print-xml] [--source-host <string>] [--source-path <string>] [--source-dev <string>] [--source-name <string>] [--target <string>] [--source-format <string>] [--auth-type <string>] [--auth-username <string>] [--secret-usage <string>] [--secret-uuid <string>] [--adapter-name <string>] [--adapter-wwnn <string>] [--adapter-wwpn <string>] [--adapter-parent <string>] [--adapter-parent-wwnn <string>] [--adapter-parent-wwpn <string>] [--adapter-parent-fabric-wwn <string>] [--build] [--no-overwrite] [--overwrite]
+pool-create <file> [--build] [--no-overwrite] [--overwrite]
+pool-define-as <name> <type> [--print-xml] [--source-host <string>] [--source-path <string>] [--source-dev <string>] [--source-name <string>] [--target <string>] [--source-format <string>] [--auth-type <string>] [--auth-username <string>] [--secret-usage <string>] [--secret-uuid <string>] [--adapter-name <string>] [--adapter-wwnn <string>] [--adapter-wwpn <string>] [--adapter-parent <string>] [--adapter-parent-wwnn <string>] [--adapter-parent-wwpn <string>] [--adapter-parent-fabric-wwn <string>]
+pool-define <file>
+pool-delete <pool>
+pool-destroy <pool>
+pool-dumpxml <pool> [--inactive]
+pool-edit <pool>
+pool-info <pool> [--bytes]
+pool-name <pool>
+pool-refresh <pool>
+pool-start <pool> [--build] [--no-overwrite] [--overwrite]
+pool-undefine <pool>
+pool-uuid <pool>
+vol-clone <vol> <newname> [--pool <string>] [--prealloc-metadata] [--reflink]
+vol-create-as <pool> <name> <capacity> [--allocation <string>] [--format <string>] [--backing-vol <string>] [--backing-vol-format <string>] [--prealloc-metadata] [--print-xml]
+vol-create <pool> <file> [--prealloc-metadata]
+vol-create-from <pool> <file> <vol> [--inputpool <string>] [--prealloc-metadata] [--reflink]
+vol-delete <vol> [--pool <string>] [--delete-snapshots]
+vol-download <vol> <file> [--pool <string>] [--offset <number>] [--length <number>] [--sparse]
+vol-dumpxml <vol> [--pool <string>]
+vol-info <vol> [--pool <string>] [--bytes] [--physical]
+vol-key <vol> [--pool <string>]
+vol-name <vol>
+vol-path <vol> [--pool <string>]
+vol-pool <vol> [--uuid]
+vol-resize <vol> <capacity> [--pool <string>] [--allocate] [--delta] [--shrink]
+vol-upload <vol> <file> [--pool <string>] [--offset <number>] [--length <number>] [--sparse]
+vol-wipe <vol> [--pool <string>] [--algorithm <string>]
