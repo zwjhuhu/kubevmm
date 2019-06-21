@@ -8,7 +8,7 @@
     "image": "CentOS7",
     "lifecycle": {
       "install": {
-        "__name": "vm",
+        "__name": "Centos",
         "__virt_type": "kvm",
         "__memory": 1024,
         "__vcpus": 1,
