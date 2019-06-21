@@ -10,6 +10,15 @@ spec:
   - JSONPath: .spec.domain.uuid.text
     name: UUID
     type: string
+  - JSONPath: .spec.domain._type
+    name: TYPE
+    type: string
+  - JSONPath: .spec.domain.vcpu.text
+    name: CPU
+    type: string
+  - JSONPath: .spec.domain.memory.text
+    name: RAM(KB)
+    type: string
   - JSONPath: .status.phase
     name: STATUS
     type: string
