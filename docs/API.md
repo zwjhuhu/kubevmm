@@ -10,10 +10,13 @@
 1.  暂时不支持细粒度网络管理
 2.  VirtualMachine的Domain对象是只读的，对虚拟机的修改：（1）标签修改：可修改VirtualMachine的Metadata；（2）对虚拟机在线操作可根据VirtualMachine的Lifecycle对象
 3.  可以执行virsh命令获取更多帮助
+4.  JSON中的noneName，请根据VM当前部署的物理机信息进行修改
 
 # API列表
 
-## createAndStartVM
+
+
+## API: createAndStartVM
 
 **Desc**:create and start a Virtual Machine
 
@@ -240,7 +243,7 @@ vmi.create(vm );
 ```
 
 
-## createVM
+## API: createVM
 
 **Desc**:create a domain from an XML file
 
@@ -310,7 +313,7 @@ vmi.update(vm );
 ```
 
 
-## startVM
+## API: startVM
 
 **Desc**:start a (previously defined) inactive domain
 
@@ -383,7 +386,7 @@ vmi.update(vm );
 ```
 
 
-## stopVM
+## API: stopVM
 
 **Desc**:gracefully shutdown a domain
 
@@ -441,7 +444,7 @@ vmi.update(vm );
 ```
 
 
-## stopVMForce
+## API: stopVMForce
 
 **Desc**:destroy (stop) a domain
 
@@ -499,7 +502,7 @@ vmi.update(vm );
 ```
 
 
-## deleteVM
+## API: deleteVM
 
 **Desc**:undefine a domain
 
@@ -578,7 +581,7 @@ vmi.update(vm );
 ```
 
 
-## rebootVM
+## API: rebootVM
 
 **Desc**:reboot a domain
 
@@ -636,7 +639,7 @@ vmi.update(vm );
 ```
 
 
-## resetVM
+## API: resetVM
 
 **Desc**:reset a domain
 
@@ -691,7 +694,7 @@ vmi.update(vm );
 ```
 
 
-## resumeVM
+## API: resumeVM
 
 **Desc**:resume a domain
 
@@ -746,7 +749,7 @@ vmi.update(vm );
 ```
 
 
-## suspendVM
+## API: suspendVM
 
 **Desc**:suspend a domain
 
@@ -801,7 +804,7 @@ vmi.update(vm );
 ```
 
 
-## saveVM
+## API: saveVM
 
 **Desc**:save a domain state to a file
 
@@ -874,7 +877,7 @@ vmi.update(vm );
 ```
 
 
-## restoreVM
+## API: restoreVM
 
 **Desc**:restore a domain from a saved state in a file
 
@@ -941,7 +944,7 @@ vmi.update(vm );
 ```
 
 
-## migrateVM
+## API: migrateVM
 
 **Desc**:migrate domain to another host
 
@@ -1053,7 +1056,7 @@ vmi.update(vm );
 ```
 
 
-## plugDevice
+## API: plugDevice
 
 **Desc**:attach device from an XML file
 
@@ -1123,7 +1126,7 @@ vmi.update(vm );
 ```
 
 
-## unplugDevice
+## API: unplugDevice
 
 **Desc**:detach device from an XML file
 
@@ -1193,7 +1196,7 @@ vmi.update(vm );
 ```
 
 
-## plugDisk
+## API: plugDisk
 
 **Desc**:attach disk device
 
@@ -1305,7 +1308,7 @@ vmi.update(vm );
 ```
 
 
-## unplugDisk
+## API: unplugDisk
 
 **Desc**:detach disk device
 
@@ -1378,7 +1381,7 @@ vmi.update(vm );
 ```
 
 
-## plugNIC
+## API: plugNIC
 
 **Desc**:attach network interface
 
@@ -1475,7 +1478,7 @@ vmi.update(vm );
 ```
 
 
-## unplugNIC
+## API: unplugNIC
 
 **Desc**:detach network interface
 
@@ -1548,7 +1551,7 @@ vmi.update(vm );
 ```
 
 
-## createSnapshot
+## API: createSnapshot
 
 **Desc**:Create a snapshot from a set of args
 
@@ -1639,7 +1642,7 @@ vmi.update(vm );
 ```
 
 
-## deleteSnapshot
+## API: deleteSnapshot
 
 **Desc**:Delete a domain snapshot
 
@@ -1709,7 +1712,7 @@ vmi.update(vm );
 ```
 
 
-## createDisk
+## API: createDisk
 
 **Desc**:create a volume from a set of args
 
@@ -1788,7 +1791,7 @@ vmi.update(vm );
 ```
 
 
-## resizeDisk
+## API: resizeDisk
 
 **Desc**:resize a vol
 
@@ -1858,7 +1861,7 @@ vmi.update(vm );
 ```
 
 
-## cloneDisk
+## API: cloneDisk
 
 **Desc**:clone a volume.
 
@@ -1925,7 +1928,7 @@ vmi.update(vm );
 ```
 
 
-## deleteDisk
+## API: deleteDisk
 
 **Desc**:delete a vol
 
@@ -1986,7 +1989,7 @@ vmi.update(vm );
 ```
 
 
-## changeNumberOfCPU
+## API: changeNumberOfCPU
 
 **Desc**:change number of virtual CPUs
 
@@ -2062,7 +2065,7 @@ vmi.update(vm );
 ```
 
 
-## resizeRAM
+## API: resizeRAM
 
 **Desc**:change memory allocation
 
@@ -2127,3 +2130,4 @@ vmi.update(vm );
     }
 }
 ```
+
