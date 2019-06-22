@@ -1,16 +1,15 @@
-[attach-device]
-[--domain] <string>  domain name, id or uuid
-[--file] <string>  XML file
+attach-device
+--domain <string>  domain name, id or uuid
+--file <string>  XML file
 --persistent     make live change persistent
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
-
-[attach-disk]
-[--domain] <string>  domain name, id or uuid
-[--source] <string>  source of disk device
-[--target] <string>  target of disk device
+attach-disk
+--domain <string>  domain name, id or uuid
+--source <string>  source of disk device
+--target <string>  target of disk device
 --targetbus <string>  target bus of disk device
 --driver <string>  driver of disk device
 --subdriver <string>  subdriver of disk device
@@ -28,10 +27,10 @@
 --print-xml      print XML document rather than attach the disk
 --persistent     make live change persistent
 --config         affect next boot
-[attach-interface]
-[--domain] <string>  domain name, id or uuid
-[--type] <string>  network interface type
-[--source] <string>  source of network interface
+attach-interface
+--domain <string>  domain name, id or uuid
+--type <string>  network interface type
+--source <string>  source of network interface
 --target <string>  target network name
 --mac <string>   MAC address
 --script <string>  script used to bridge network interface
@@ -46,14 +45,14 @@
 --managed        libvirt will automatically detach/attach the device from/to host
 
 
-[autostart]
-[--domain] <string>  domain name, id or uuid
+autostart
+--domain <string>  domain name, id or uuid
 --disable        disable autostarting
 
 
-[blkdeviotune]
-[--domain] <string>  domain name, id or uuid
-[--device] <string>  block device
+blkdeviotune
+--domain <string>  domain name, id or uuid
+--device <string>  block device
 --total-bytes-sec <number>  total throughput limit, as scaled integer (default bytes)
 --read-bytes-sec <number>  read throughput limit, as scaled integer (default bytes)
 --write-bytes-sec <number>  write throughput limit, as scaled integer (default bytes)
@@ -72,8 +71,8 @@
 --read-bytes-sec-max-length <number>  duration in seconds to allow read max bytes
 --write-bytes-sec-max-length <number>  duration in seconds to allow write max bytes
 --total-iops-sec-max-length <number>  duration in seconds to allow total I/O operations max
-[blkiotune]
-[--domain] <string>  domain name, id or uuid
+blkiotune
+--domain <string>  domain name, id or uuid
 --weight <number>  IO Weight
 --device-weights <string>  per-device IO Weights, in the form of /path/to/device,weight,...
 --device-read-iops-sec <string>  per-device read I/O limit per second, in the form of /path/to/device,read_iops_sec,...
@@ -85,9 +84,9 @@
 --current        affect current domain
 
 
-[blockcommit]
-[--domain] <string>  domain name, id or uuid
-[--path] <string>  fully-qualified path of disk
+blockcommit
+--domain <string>  domain name, id or uuid
+--path <string>  fully-qualified path of disk
 --bandwidth <number>  bandwidth limit in MiB/s
 --base <string>  path of base file to commit into (default bottom of chain)
 --shallow        use backing file of top as base
@@ -104,9 +103,9 @@
 --bytes          the bandwidth limit is in bytes/s rather than MiB/s
 
 
-[blockcopy]
-[--domain] <string>  domain name, id or uuid
-[--path] <string>  fully-qualified path of source disk
+blockcopy
+--domain <string>  domain name, id or uuid
+--path <string>  fully-qualified path of source disk
 --dest <string>  path of the copy to create
 --bandwidth <number>  bandwidth limit in MiB/s
 --shallow        make the copy share a backing chain
@@ -125,9 +124,9 @@
 --bytes          the bandwidth limit is in bytes/s rather than MiB/s
 --transient-job  the copy job is not persisted if VM is turned off
 
-[blockjob]
-[--domain] <string>  domain name, id or uuid
-[--path] <string>  fully-qualified path of disk
+blockjob
+--domain <string>  domain name, id or uuid
+--path <string>  fully-qualified path of disk
 --abort          abort the active job on the specified disk
 --async          implies --abort; request but don't wait for job end
 --pivot          implies --abort; conclude and pivot a copy or commit job
@@ -137,9 +136,9 @@
 --bandwidth <number>  set the bandwidth limit in MiB/s
 
 
-[blockpull]
-[--domain] <string>  domain name, id or uuid
-[--path] <string>  fully-qualified path of disk
+blockpull
+--domain <string>  domain name, id or uuid
+--path <string>  fully-qualified path of disk
 --bandwidth <number>  bandwidth limit in MiB/s
 --base <string>  path of backing file in chain for a partial pull
 --wait           wait for job to finish
@@ -150,15 +149,15 @@
 --bytes          the bandwidth limit is in bytes/s rather than MiB/s
 
 
-[blockresize]
-[--domain] <string>  domain name, id or uuid
-[--path] <string>  Fully-qualified path of block device
-[--size] <number>  New size of the block device, as scaled integer (default KiB)
+blockresize
+--domain <string>  domain name, id or uuid
+--path <string>  Fully-qualified path of block device
+--size <number>  New size of the block device, as scaled integer (default KiB)
 
 
-[change-media]
-[--domain] <string>  domain name, id or uuid
-[--path] <string>  Fully-qualified path or target of disk device
+change-media
+--domain <string>  domain name, id or uuid
+--path <string>  Fully-qualified path or target of disk device
 --source <string>  source of the media
 --eject          Eject the media
 --insert         Insert the media
@@ -171,15 +170,15 @@
 --block          source media is a block device
 
 
-[cpu-stats]
-[--domain] <string>  domain name, id or uuid
+cpu-stats
+--domain <string>  domain name, id or uuid
 --total          Show total statistics only
 --start <number>  Show statistics from this CPU
 --count <number>  Number of shown CPUs at most
 
 
-[create]
-[--file] <string>  file containing an XML domain description
+create
+--file <string>  file containing an XML domain description
 --console        attach to console after creation
 --paused         leave the guest paused after creation
 --autodestroy    automatically destroy the guest when virsh disconnects
@@ -187,46 +186,46 @@
 --validate       validate the XML against the schema
 
 
-[define]
-[--file] <string>  file containing an XML domain description
+define
+--file <string>  file containing an XML domain description
 --validate       validate the XML against the schema
 
 
-[desc]
-[--domain] <string>  domain name, id or uuid
+desc
+--domain <string>  domain name, id or uuid
 --live           modify/get running state
 --config         modify/get persistent configuration
 --current        modify/get current state configuration
 --title          modify/get the title instead of description
 --edit           open an editor to modify the description
-[--new-desc] <string>  message
+--new-desc <string>  message
 
 
-[destroy]
-[--domain] <string>  domain name, id or uuid
+destroy
+--domain <string>  domain name, id or uuid
 --graceful       terminate gracefully
 
 
-[detach-device]
-[--domain] <string>  domain name, id or uuid
-[--file] <string>  XML file
+detach-device
+--domain <string>  domain name, id or uuid
+--file <string>  XML file
 --persistent     make live change persistent
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[detach-device-alias]
-[--domain] <string>  domain name, id or uuid
-[--alias] <string>  device alias
+detach-device-alias
+--domain <string>  domain name, id or uuid
+--alias <string>  device alias
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[detach-disk]
-[--domain] <string>  domain name, id or uuid
-[--target] <string>  target of disk device
+detach-disk
+--domain <string>  domain name, id or uuid
+--target <string>  target of disk device
 --persistent     make live change persistent
 --config         affect next boot
 --live           affect running domain
@@ -234,9 +233,9 @@
 --print-xml      print XML document rather than detach the disk
 
 
-[detach-interface]
-[--domain] <string>  domain name, id or uuid
-[--type] <string>  network interface type
+detach-interface
+--domain <string>  domain name, id or uuid
+--type <string>  network interface type
 --mac <string>   MAC address
 --persistent     make live change persistent
 --config         affect next boot
@@ -244,40 +243,40 @@
 --current        affect current domain
 
 
-[domfsfreeze]
-[--domain] <string>  domain name, id or uuid
-[--mountpoint] <string>  mountpoint path to be frozen
+domfsfreeze
+--domain <string>  domain name, id or uuid
+--mountpoint <string>  mountpoint path to be frozen
 
 
-[domfsthaw]
-[--domain] <string>  domain name, id or uuid
-[--mountpoint] <string>  mountpoint path to be thawed
+domfsthaw
+--domain <string>  domain name, id or uuid
+--mountpoint <string>  mountpoint path to be thawed
 
 
-[domfsinfo]
-[--domain] <string>  domain name, id or uuid
+domfsinfo
+--domain <string>  domain name, id or uuid
 
 
-[domfstrim]
-[--domain] <string>  domain name, id or uuid
+domfstrim
+--domain <string>  domain name, id or uuid
 --minimum <number>  Just a hint to ignore contiguous free ranges smaller than this (Bytes)
 --mountpoint <string>  which mount point to trim
 
 
-[domid]
-[--domain] <string>  domain name or uuid
+domid
+--domain <string>  domain name or uuid
 
 
-[domif-setlink]
-[--domain] <string>  domain name, id or uuid
-[--interface] <string>  interface device (MAC Address)
-[--state] <string>  new state of the device
+domif-setlink
+--domain <string>  domain name, id or uuid
+--interface <string>  interface device (MAC Address)
+--state <string>  new state of the device
 --config         affect next boot
 
 
-[domiftune]
-[--domain] <string>  domain name, id or uuid
-[--interface] <string>  interface device (MAC Address)
+domiftune
+--domain <string>  domain name, id or uuid
+--interface <string>  interface device (MAC Address)
 --inbound <string>  control domain's incoming traffics
 --outbound <string>  control domain's outgoing traffics
 --config         affect next boot
@@ -285,52 +284,52 @@
 --current        affect current domain
 
 
-[domjobabort]
-[--domain] <string>  domain name, id or uuid
+domjobabort
+--domain <string>  domain name, id or uuid
 
 
-[domjobinfo]
-[--domain] <string>  domain name, id or uuid
+domjobinfo
+--domain <string>  domain name, id or uuid
 --completed      return statistics of a recently completed job
 
 
-[domname]
-[--domain] <string>  domain id or uuid
+domname
+--domain <string>  domain id or uuid
 
 
-[domrename]
-[--domain] <string>  domain name or uuid
-[--new-name] <string>  new domain name
+domrename
+--domain <string>  domain name or uuid
+--new-name <string>  new domain name
 
 
-[dompmsuspend]
-[--domain] <string>  domain name, id or uuid
-[--target] <string>  mem(Suspend-to-RAM), disk(Suspend-to-Disk), hybrid(Hybrid-Suspend)
+dompmsuspend
+--domain <string>  domain name, id or uuid
+--target <string>  mem(Suspend-to-RAM), disk(Suspend-to-Disk), hybrid(Hybrid-Suspend)
 --duration <number>  duration in seconds
 
 
-[dompmwakeup]
-[--domain] <string>  domain name, id or uuid
+dompmwakeup
+--domain <string>  domain name, id or uuid
 
 
-[domuuid]
-[--domain] <string>  domain id or name
+domuuid
+--domain <string>  domain id or name
 
 
-[domxml-from-native]
-[--format] <string>  source config data format
-[--config] <string>  config data file to import from
+domxml-from-native
+--format <string>  source config data format
+--config <string>  config data file to import from
 
 
-[domxml-to-native]
-[--format] <string>  target config data type format
+domxml-to-native
+--format <string>  target config data type format
 --domain <string>  domain name, id or uuid
 --xml <string>   xml data file to export from
 
 
-[dump]
-[--domain] <string>  domain name, id or uuid
-[--file] <string>  where to dump the core
+dump
+--domain <string>  domain name, id or uuid
+--file <string>  where to dump the core
 --live           perform a live core dump if supported
 --crash          crash the domain after core dump
 --bypass-cache   avoid file system cache when dumping
@@ -340,106 +339,106 @@
 --format <string>  specify the format of memory-only dump
 
 
-[dumpxml]
-[--domain] <string>  domain name, id or uuid
+dumpxml
+--domain <string>  domain name, id or uuid
 --inactive       show inactive defined XML
 --security-info  include security sensitive information in XML dump
 --update-cpu     update guest CPU according to host CPU
 --migratable     provide XML suitable for migrations
 
 
-[edit]
-[--domain] <string>  domain name, id or uuid
+edit
+--domain <string>  domain name, id or uuid
 --skip-validate  skip validation of the XML against the schema
 
 
-[inject-nmi]
-[--domain] <string>  domain name, id or uuid
+inject-nmi
+--domain <string>  domain name, id or uuid
 
 
-[iothreadinfo]
-[--domain] <string>  domain name, id or uuid
+iothreadinfo
+--domain <string>  domain name, id or uuid
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[iothreadpin]
-[--domain] <string>  domain name, id or uuid
-[--iothread] <number>  IOThread ID number
-[--cpulist] <string>  host cpu number(s) to set
+iothreadpin
+--domain <string>  domain name, id or uuid
+--iothread <number>  IOThread ID number
+--cpulist <string>  host cpu number(s) to set
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[iothreadadd]
-[--domain] <string>  domain name, id or uuid
-[--id] <number>  iothread for the new IOThread
+iothreadadd
+--domain <string>  domain name, id or uuid
+--id <number>  iothread for the new IOThread
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[iothreaddel]
-[--domain] <string>  domain name, id or uuid
-[--id] <number>  iothread_id for the IOThread to delete
+iothreaddel
+--domain <string>  domain name, id or uuid
+--id <number>  iothread_id for the IOThread to delete
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[send-key]
-[--domain] <string>  domain name, id or uuid
+send-key
+--domain <string>  domain name, id or uuid
 --codeset <string>  the codeset of keycodes, default:linux
 --holdtime <number>  the time (in milliseconds) how long the keys will be held
-[--keycode] <string>  the key code
+--keycode <string>  the key code
 
 
-[send-process-signal]
-[--domain] <string>  domain name, id or uuid
-[--pid] <string>  the process ID
-[--signame] <string>  the signal number or name
+send-process-signal
+--domain <string>  domain name, id or uuid
+--pid <string>  the process ID
+--signame <string>  the signal number or name
 
 
-[lxc-enter-namespace]
-[--domain] <string>  domain name, id or uuid
+lxc-enter-namespace
+--domain <string>  domain name, id or uuid
 --noseclabel     Do not change process security label
-[--cmd] <string>  command to run
+--cmd <string>  command to run
 
 
-[managedsave]
-[--domain] <string>  domain name, id or uuid
+managedsave
+--domain <string>  domain name, id or uuid
 --bypass-cache   avoid file system cache when saving
 --running        set domain to be running on next start
 --paused         set domain to be paused on next start
 --verbose        display the progress of save
 
 
-[managedsave-remove]
-[--domain] <string>  domain name, id or uuid
+managedsave-remove
+--domain <string>  domain name, id or uuid
 
 
-[managedsave-edit]
-[--domain] <string>  domain name, id or uuid
+managedsave-edit
+--domain <string>  domain name, id or uuid
 --running        set domain to be running on start
 --paused         set domain to be paused on start
 
 
-[managedsave-dumpxml]
-[--domain] <string>  domain name, id or uuid
+managedsave-dumpxml
+--domain <string>  domain name, id or uuid
 --security-info  include security sensitive information in XML dump
 
 
-[managedsave-define]
-[--domain] <string>  domain name, id or uuid
-[--xml] <string>  filename containing updated XML for the target
+managedsave-define
+--domain <string>  domain name, id or uuid
+--xml <string>  filename containing updated XML for the target
 --running        set domain to be running on start
 --paused         set domain to be paused on start
 
 
-[memtune]
-[--domain] <string>  domain name, id or uuid
+memtune
+--domain <string>  domain name, id or uuid
 --hard-limit <number>  Max memory, as scaled integer (default KiB)
 --soft-limit <number>  Memory during contention, as scaled integer (default KiB)
 --swap-hard-limit <number>  Max memory plus swap, as scaled integer (default KiB)
@@ -449,9 +448,9 @@
 --current        affect current domain
 
 
-[metadata]
-[--domain] <string>  domain name, id or uuid
-[--uri] <string>  URI of the namespace
+metadata
+--domain <string>  domain name, id or uuid
+--uri <string>  URI of the namespace
 --live           modify/get running state
 --config         modify/get persistent configuration
 --current        modify/get current state configuration
@@ -461,9 +460,9 @@
 --remove         remove the metadata corresponding to an uri
 
 
-[migrate]
-[--domain] <string>  domain name, id or uuid
-[--desturi] <string>  connection URI of the destination host as seen from the client(normal migration) or source(p2p migration)
+migrate
+--domain <string>  domain name, id or uuid
+--desturi <string>  connection URI of the destination host as seen from the client(normal migration) or source(p2p migration)
 --live           live migration
 --offline        offline migration
 --p2p            peer-2-peer migration
@@ -482,35 +481,35 @@
 --rdma-pin-all   pin all memory before starting RDMA live migration
 --abort-on-error  abort on soft errors during migration
 --postcopy       enable post-copy migration; switch to it using migrate-postcopy command
-[migrate-setmaxdowntime]
-[--domain] <string>  domain name, id or uuid
-[--downtime] <number>  maximum tolerable downtime (in milliseconds) for migration
+migrate-setmaxdowntime
+--domain <string>  domain name, id or uuid
+--downtime <number>  maximum tolerable downtime (in milliseconds) for migration
 
 
-[migrate-getmaxdowntime]
-[--domain] <string>  domain name, id or uuid
+migrate-getmaxdowntime
+--domain <string>  domain name, id or uuid
 
 
-[migrate-compcache]
-[--domain] <string>  domain name, id or uuid
+migrate-compcache
+--domain <string>  domain name, id or uuid
 --size <number>  requested size of the cache (in bytes) used for compression
 
 
-[migrate-setspeed]
-[--domain] <string>  domain name, id or uuid
-[--bandwidth] <number>  migration bandwidth limit in MiB/s
+migrate-setspeed
+--domain <string>  domain name, id or uuid
+--bandwidth <number>  migration bandwidth limit in MiB/s
 
 
-[migrate-getspeed]
-[--domain] <string>  domain name, id or uuid
+migrate-getspeed
+--domain <string>  domain name, id or uuid
 
 
-[migrate-postcopy]
-[--domain] <string>  domain name, id or uuid
+migrate-postcopy
+--domain <string>  domain name, id or uuid
 
 
-[numatune]
-[--domain] <string>  domain name, id or uuid
+numatune
+--domain <string>  domain name, id or uuid
 --mode <string>  NUMA mode, one of strict, preferred and interleave
 or a number from the virDomainNumatuneMemMode enum
 --nodeset <string>  NUMA node selections to set
@@ -519,50 +518,50 @@ or a number from the virDomainNumatuneMemMode enum
 --current        affect current domain
 
 
-[qemu-attach]
-[--pid] <string>  pid
+qemu-attach
+--pid <string>  pid
 
 
-[qemu-monitor-command]
-[--domain] <string>  domain name, id or uuid
+qemu-monitor-command
+--domain <string>  domain name, id or uuid
 --hmp            command is in human monitor protocol
 --pretty         pretty-print any qemu monitor protocol output
-[--cmd] <string>  command
+--cmd <string>  command
 
 
-[qemu-agent-command]
-[--domain] <string>  domain name, id or uuid
+qemu-agent-command
+--domain <string>  domain name, id or uuid
 --timeout <number>  timeout seconds. must be positive.
 --async          execute command without waiting for timeout
 --block          execute command without timeout
 --pretty         pretty-print the output
-[--cmd] <string>  command
+--cmd <string>  command
 
 
-[reboot]
-[--domain] <string>  domain name, id or uuid
+reboot
+--domain <string>  domain name, id or uuid
 --mode <string>  shutdown mode: acpi|agent|initctl|signal|paravirt
 
 
-[reset]
-[--domain] <string>  domain name, id or uuid
+reset
+--domain <string>  domain name, id or uuid
 
 
-[restore]
-[--file] <string>  the state to restore
+restore
+--file <string>  the state to restore
 --bypass-cache   avoid file system cache when restoring
 --xml <string>   filename containing updated XML for the target
 --running        restore domain into running state
 --paused         restore domain into paused state
 
 
-[resume]
-[--domain] <string>  domain name, id or uuid
+resume
+--domain <string>  domain name, id or uuid
 
 
-[save]
-[--domain] <string>  domain name, id or uuid
-[--file] <string>  where to save the data
+save
+--domain <string>  domain name, id or uuid
+--file <string>  where to save the data
 --bypass-cache   avoid file system cache when saving
 --xml <string>   filename containing updated XML for the target
 --running        set domain to be running on restore
@@ -570,75 +569,75 @@ or a number from the virDomainNumatuneMemMode enum
 --verbose        display the progress of save
 
 
-[save-image-define]
-[--file] <string>  saved state file to modify
-[--xml] <string>  filename containing updated XML for the target
+save-image-define
+--file <string>  saved state file to modify
+--xml <string>  filename containing updated XML for the target
 --running        set domain to be running on restore
 --paused         set domain to be paused on restore
 
 
-[save-image-dumpxml]
-[--file] <string>  saved state file to read
+save-image-dumpxml
+--file <string>  saved state file to read
 --security-info  include security sensitive information in XML dump
 
 
-[save-image-edit]
-[--file] <string>  saved state file to edit
+save-image-edit
+--file <string>  saved state file to edit
 --running        set domain to be running on restore
 --paused         set domain to be paused on restore
 
 
-[schedinfo]
-[--domain] <string>  domain name, id or uuid
+schedinfo
+--domain <string>  domain name, id or uuid
 --weight <number>  weight for XEN_CREDIT
 --cap <number>   cap for XEN_CREDIT
 --current        get/set current scheduler info
 --config         get/set value to be used on next boot
 --live           get/set value from running domain
-[--set] <string>  parameter=value
+--set <string>  parameter=value
 
 
-[screenshot]
-[--domain] <string>  domain name, id or uuid
+screenshot
+--domain <string>  domain name, id or uuid
 --file <string>  where to store the screenshot
 --screen <number>  ID of a screen to take screenshot of
 
 
-[set-lifecycle-action]
-[--domain] <string>  domain name, id or uuid
-[--type] <string>  lifecycle type to modify
-[--action] <string>  lifecycle action to set
+set-lifecycle-action
+--domain <string>  domain name, id or uuid
+--type <string>  lifecycle type to modify
+--action <string>  lifecycle action to set
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[set-user-password]
-[--domain] <string>  domain name, id or uuid
-[--user] <string>  the username
-[--password] <string>  the new password
+set-user-password
+--domain <string>  domain name, id or uuid
+--user <string>  the username
+--password <string>  the new password
 --encrypted      the password is already encrypted
 
 
-[setmaxmem]
-[--domain] <string>  domain name, id or uuid
-[--size] <number>  new maximum memory size, as scaled integer (default KiB)
+setmaxmem
+--domain <string>  domain name, id or uuid
+--size <number>  new maximum memory size, as scaled integer (default KiB)
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[setmem]
-[--domain] <string>  domain name, id or uuid
-[--size] <number>  new memory size, as scaled integer (default KiB)
+setmem
+--domain <string>  domain name, id or uuid
+--size <number>  new memory size, as scaled integer (default KiB)
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[setvcpus]
-[--domain] <string>  domain name, id or uuid
-[--count] <number>  number of virtual CPUs
+setvcpus
+--domain <string>  domain name, id or uuid
+--count <number>  number of virtual CPUs
 --maximum        set maximum limit on next boot
 --config         affect next boot
 --live           affect running domain
@@ -647,13 +646,13 @@ or a number from the virDomainNumatuneMemMode enum
 --hotpluggable   make added vcpus hot(un)pluggable
 
 
-[shutdown]
-[--domain] <string>  domain name, id or uuid
+shutdown
+--domain <string>  domain name, id or uuid
 --mode <string>  shutdown mode: acpi|agent|initctl|signal|paravirt
 
 
-[start]
-[--domain] <string>  name of the inactive domain
+start
+--domain <string>  name of the inactive domain
 --console        attach to console after creation
 --paused         leave the guest paused after creation
 --autodestroy    automatically destroy the guest when virsh disconnects
@@ -662,16 +661,16 @@ or a number from the virDomainNumatuneMemMode enum
 --pass-fds <string>  pass file descriptors N,M,... to the guest
 
 
-[suspend]
-[--domain] <string>  domain name, id or uuid
+suspend
+--domain <string>  domain name, id or uuid
 
 
-[ttyconsole]
-[--domain] <string>  domain name, id or uuid
+ttyconsole
+--domain <string>  domain name, id or uuid
 
 
-[undefine]
-[--domain] <string>  domain name, id or uuid
+undefine
+--domain <string>  domain name, id or uuid
 --managed-save   remove domain managed state file
 --storage <string>  remove associated storage volumes (comma separated list of targets or source paths) (see domblklist)
 --remove-all-storage  remove all associated storage volumes (use with caution)
@@ -682,9 +681,9 @@ or a number from the virDomainNumatuneMemMode enum
 --keep-nvram     keep nvram file, if inactive
 
 
-[update-device]
-[--domain] <string>  domain name, id or uuid
-[--file] <string>  XML file
+update-device
+--domain <string>  domain name, id or uuid
+--file <string>  XML file
 --persistent     make live change persistent
 --config         affect next boot
 --live           affect running domain
@@ -692,8 +691,8 @@ or a number from the virDomainNumatuneMemMode enum
 --force          force device update
 
 
-[vcpucount]
-[--domain] <string>  domain name, id or uuid
+vcpucount
+--domain <string>  domain name, id or uuid
 --maximum        get maximum count of vcpus
 --active         get number of currently active vcpus
 --live           get value from running domain
@@ -702,13 +701,13 @@ or a number from the virDomainNumatuneMemMode enum
 --guest          retrieve vcpu count from the guest instead of the hypervisor
 
 
-[vcpuinfo]
-[--domain] <string>  domain name, id or uuid
+vcpuinfo
+--domain <string>  domain name, id or uuid
 --pretty         return human readable output
 
 
-[vcpupin]
-[--domain] <string>  domain name, id or uuid
+vcpupin
+--domain <string>  domain name, id or uuid
 --vcpu <number>  vcpu number
 --cpulist <string>  host cpu number(s) to set, or omit option to query
 --config         affect next boot
@@ -716,24 +715,24 @@ or a number from the virDomainNumatuneMemMode enum
 --current        affect current domain
 
 
-[emulatorpin]
-[--domain] <string>  domain name, id or uuid
+emulatorpin
+--domain <string>  domain name, id or uuid
 --cpulist <string>  host cpu number(s) to set, or omit option to query
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[guestvcpus]
-[--domain] <string>  domain name, id or uuid
+guestvcpus
+--domain <string>  domain name, id or uuid
 --cpulist <string>  list of cpus to enable or disable
 --enable         enable cpus specified by cpulist
 --disable        disable cpus specified by cpulist
 
 
-[setvcpu]
-[--domain] <string>  domain name, id or uuid
-[--vcpulist] <string>  ids of vcpus to manipulate
+setvcpu
+--domain <string>  domain name, id or uuid
+--vcpulist <string>  ids of vcpus to manipulate
 --enable         enable cpus specified by cpumap
 --disable        disable cpus specified by cpumap
 --config         affect next boot
@@ -741,254 +740,254 @@ or a number from the virDomainNumatuneMemMode enum
 --current        affect current domain
 
 
-[domblkerror]
-[--domain] <string>  domain name, id or uuid
+domblkerror
+--domain <string>  domain name, id or uuid
 
 
-[domblkinfo]
-[--domain] <string>  domain name, id or uuid
+domblkinfo
+--domain <string>  domain name, id or uuid
 --device <string>  block device
 --human          Human readable output
 --all            display all block devices info
 
 
-[domblkstat]
-[--domain] <string>  domain name, id or uuid
+domblkstat
+--domain <string>  domain name, id or uuid
 --device <string>  block device
 --human          print a more human readable output
 
 
-[domcontrol]
-[--domain] <string>  domain name, id or uuid
+domcontrol
+--domain <string>  domain name, id or uuid
 
 
-[domif-getlink]
-[--domain] <string>  domain name, id or uuid
-[--interface] <string>  interface device (MAC Address)
+domif-getlink
+--domain <string>  domain name, id or uuid
+--interface <string>  interface device (MAC Address)
 --config         Get persistent interface state
 
 
-[domifaddr]
-[--domain] <string>  domain name, id or uuid
+domifaddr
+--domain <string>  domain name, id or uuid
 --interface <string>  network interface name
 --full           always display names and MACs of interfaces
 --source <string>  address source: 'lease', 'agent', or 'arp'
 
 
-[domifstat]
-[--domain] <string>  domain name, id or uuid
-[--interface] <string>  interface device specified by name or MAC Address
+domifstat
+--domain <string>  domain name, id or uuid
+--interface <string>  interface device specified by name or MAC Address
 
 
-[dominfo]
-[--domain] <string>  domain name, id or uuid
+dominfo
+--domain <string>  domain name, id or uuid
 
 
-[dommemstat]
-[--domain] <string>  domain name, id or uuid
+dommemstat
+--domain <string>  domain name, id or uuid
 --period <number>  period in seconds to set collection
 --config         affect next boot
 --live           affect running domain
 --current        affect current domain
 
 
-[domstate]
-[--domain] <string>  domain name, id or uuid
+domstate
+--domain <string>  domain name, id or uuid
 --reason         also print reason for the state
 
 
-[domtime]
-[--domain] <string>  domain name, id or uuid
+domtime
+--domain <string>  domain name, id or uuid
 --now            set to the time of the host running virsh
 --pretty         print domain's time in human readable form
 --sync           instead of setting given time, synchronize from domain's RTC
 --time <number>  time to set
 
 
-[iface-bridge]
-[--interface] <string>  existing interface name
-[--bridge] <string>  new bridge device name
+iface-bridge
+--interface <string>  existing interface name
+--bridge <string>  new bridge device name
 --no-stp         do not enable STP for this bridge
 --delay <number>  number of seconds to squelch traffic on newly connected ports
 --no-start       don't start the bridge immediately
 
 
-[iface-define]
-[--file] <string>  file containing an XML interface description
+iface-define
+--file <string>  file containing an XML interface description
 
 
-[iface-destroy]
-[--interface] <string>  interface name or MAC address
+iface-destroy
+--interface <string>  interface name or MAC address
 
 
-[iface-dumpxml]
-[--interface] <string>  interface name or MAC address
+iface-dumpxml
+--interface <string>  interface name or MAC address
 --inactive       show inactive defined XML
 
 
-[iface-edit]
-[--interface] <string>  interface name or MAC address
+iface-edit
+--interface <string>  interface name or MAC address
 
 
-[iface-mac]
-[--interface] <string>  interface name
+iface-mac
+--interface <string>  interface name
 
 
-[iface-name]
-[--interface] <string>  interface mac
+iface-name
+--interface <string>  interface mac
 
 
-[iface-start]
-[--interface] <string>  interface name or MAC address
+iface-start
+--interface <string>  interface name or MAC address
 
 
-[iface-unbridge]
-[--bridge] <string>  current bridge device name
+iface-unbridge
+--bridge <string>  current bridge device name
 --no-start       don't start the un-slaved interface immediately (not recommended)
 
 
-[iface-undefine]
-[--interface] <string>  interface name or MAC address
+iface-undefine
+--interface <string>  interface name or MAC address
 
 
-[nwfilter-define]
-[--file] <string>  file containing an XML network filter description
+nwfilter-define
+--file <string>  file containing an XML network filter description
 
 
-[nwfilter-dumpxml]
-[--nwfilter] <string>  network filter name or uuid
+nwfilter-dumpxml
+--nwfilter <string>  network filter name or uuid
 
 
-[nwfilter-edit]
-[--nwfilter] <string>  network filter name or uuid
+nwfilter-edit
+--nwfilter <string>  network filter name or uuid
 
 
-[nwfilter-undefine]
-[--nwfilter] <string>  network filter name or uuid
+nwfilter-undefine
+--nwfilter <string>  network filter name or uuid
 
 
-[nwfilter-binding-create]
-[--file] <string>  file containing an XML network filter binding description
+nwfilter-binding-create
+--file <string>  file containing an XML network filter binding description
 
 
-[nwfilter-binding-delete]
-[--binding] <string>  network filter binding port dev
+nwfilter-binding-delete
+--binding <string>  network filter binding port dev
 
 
-[nwfilter-binding-dumpxml]
-[--binding] <string>  network filter binding portdev
+nwfilter-binding-dumpxml
+--binding <string>  network filter binding portdev
 
 
-[net-autostart]
-[--network] <string>  network name or uuid
+net-autostart
+--network <string>  network name or uuid
 --disable        disable autostarting
 
 
-[net-create]
-[--file] <string>  file containing an XML network description
+net-create
+--file <string>  file containing an XML network description
 
 
-[net-define]
-[--file] <string>  file containing an XML network description
+net-define
+--file <string>  file containing an XML network description
 
 
-[net-destroy]
-[--network] <string>  network name or uuid
+net-destroy
+--network <string>  network name or uuid
 
 
-[net-dhcp-leases]
-[--network] <string>  network name or uuid
+net-dhcp-leases
+--network <string>  network name or uuid
 --mac <string>   MAC address
 
 
-[net-dumpxml]
-[--network] <string>  network name or uuid
+net-dumpxml
+--network <string>  network name or uuid
 --inactive       show inactive defined XML
 
 
-[net-edit]
-[--network] <string>  network name or uuid
+net-edit
+--network <string>  network name or uuid
 
 
-[net-info]
-[--network] <string>  network name or uuid
+net-info
+--network <string>  network name or uuid
 
 
-[net-name]
-[--network] <string>  network uuid
+net-name
+--network <string>  network uuid
 
 
-[net-start]
-[--network] <string>  network name or uuid
+net-start
+--network <string>  network name or uuid
 
 
-[net-undefine]
-[--network] <string>  network name or uuid
+net-undefine
+--network <string>  network name or uuid
 
 
-[net-update]
-[--network] <string>  network name or uuid
-[--command] <string>  type of update (add-first, add-last (add), delete, or modify)
-[--section] <string>  which section of network configuration to update
-[--xml] <string>  name of file containing xml (or, if it starts with '<', the complete xml element itself) to add/modify, or to be matched for search
+net-update
+--network <string>  network name or uuid
+--command <string>  type of update (add-first, add-last (add), delete, or modify)
+--section <string>  which section of network configuration to update
+--xml <string>  name of file containing xml (or, if it starts with '<', the complete xml element itself) to add/modify, or to be matched for search
 --parent-index <number>  which parent object to search through
 --config         affect next network startup
 --live           affect running network
 --current        affect current state of network
 
 
-[net-uuid]
-[--network] <string>  network name
+net-uuid
+--network <string>  network name
 
 
-[nodedev-create]
-[--file] <string>  file containing an XML description of the device
+nodedev-create
+--file <string>  file containing an XML description of the device
 
 
-[nodedev-destroy]
-[--device] <string>  device name or wwn pair in 'wwnn,wwpn' format
+nodedev-destroy
+--device <string>  device name or wwn pair in 'wwnn,wwpn' format
 
 
-[nodedev-detach]
-[--device] <string>  device key
+nodedev-detach
+--device <string>  device key
 --driver <string>  pci device assignment backend driver (e.g. 'vfio' or 'kvm')
 
 
-[nodedev-dumpxml]
-[--device] <string>  device name or wwn pair in 'wwnn,wwpn' format
+nodedev-dumpxml
+--device <string>  device name or wwn pair in 'wwnn,wwpn' format
 
 
-[nodedev-reattach]
-[--device] <string>  device key
+nodedev-reattach
+--device <string>  device key
 
 
-[nodedev-reset]
-[--device] <string>  device key
+nodedev-reset
+--device <string>  device key
 
 
-[secret-define]
-[--file] <string>  file containing secret attributes in XML
+secret-define
+--file <string>  file containing secret attributes in XML
 
 
-[secret-dumpxml]
-[--secret] <string>  secret UUID
+secret-dumpxml
+--secret <string>  secret UUID
 
 
-[secret-get-value]
-[--secret] <string>  secret UUID
+secret-get-value
+--secret <string>  secret UUID
 
 
-[secret-set-value]
-[--secret] <string>  secret UUID
-[--base64] <string>  base64-encoded secret value
+secret-set-value
+--secret <string>  secret UUID
+--base64 <string>  base64-encoded secret value
 
 
-[secret-undefine]
-[--secret] <string>  secret UUID
+secret-undefine
+--secret <string>  secret UUID
 
 
-[snapshot-create]
-[--domain] <string>  domain name, id or uuid
+snapshot-create
+--domain <string>  domain name, id or uuid
 --xmlfile <string>  domain snapshot XML
 --redefine       redefine metadata for existing snapshot
 --current        with redefine, set current snapshot
@@ -1001,8 +1000,8 @@ or a number from the virDomainNumatuneMemMode enum
 --live           take a live snapshot
 
 
-[snapshot-create-as]
-[--domain] <string>  domain name, id or uuid
+snapshot-create-as
+--domain <string>  domain name, id or uuid
 --name <string>  name of snapshot
 --description <string>  description of snapshot
 --print-xml      print XML document rather than create
@@ -1013,19 +1012,19 @@ or a number from the virDomainNumatuneMemMode enum
 --quiesce        quiesce guest's file systems
 --atomic         require atomic operation
 --live           take a live snapshot
---memspec <string>  memory attributes: [file=]name[,snapshot=type]
-[--diskspec] <string>  disk attributes: disk[,snapshot=type][,driver=type][,file=name]
+--memspec <string>  memory attributes: file=name,snapshot=type
+--diskspec <string>  disk attributes: disk,snapshot=type,driver=type,file=name
 
 
-[snapshot-current]
-[--domain] <string>  domain name, id or uuid
+snapshot-current
+--domain <string>  domain name, id or uuid
 --name           list the name, rather than the full xml
 --security-info  include security sensitive information in XML dump
 --snapshotname <string>  name of existing snapshot to make current
 
 
-[snapshot-delete]
-[--domain] <string>  domain name, id or uuid
+snapshot-delete
+--domain <string>  domain name, id or uuid
 --snapshotname <string>  snapshot name
 --current        delete current snapshot
 --children       delete snapshot and all children
@@ -1033,34 +1032,34 @@ or a number from the virDomainNumatuneMemMode enum
 --metadata       delete only libvirt metadata, leaving snapshot contents behind
 
 
-[snapshot-dumpxml]
-[--domain] <string>  domain name, id or uuid
-[--snapshotname] <string>  snapshot name
+snapshot-dumpxml
+--domain <string>  domain name, id or uuid
+--snapshotname <string>  snapshot name
 --security-info  include security sensitive information in XML dump
 
 
-[snapshot-edit]
-[--domain] <string>  domain name, id or uuid
+snapshot-edit
+--domain <string>  domain name, id or uuid
 --snapshotname <string>  snapshot name
 --current        also set edited snapshot as current
 --rename         allow renaming an existing snapshot
 --clone          allow cloning to new name
 
 
-[snapshot-info]
-[--domain] <string>  domain name, id or uuid
+snapshot-info
+--domain <string>  domain name, id or uuid
 --snapshotname <string>  snapshot name
 --current        info on current snapshot
 
 
-[snapshot-parent]
-[--domain] <string>  domain name, id or uuid
+snapshot-parent
+--domain <string>  domain name, id or uuid
 --snapshotname <string>  find parent of snapshot name
 --current        find parent of current snapshot
 
 
-[snapshot-revert]
-[--domain] <string>  domain name, id or uuid
+snapshot-revert
+--domain <string>  domain name, id or uuid
 --snapshotname <string>  snapshot name
 --current        revert to current snapshot
 --running        after reverting, change state to running
@@ -1068,32 +1067,32 @@ or a number from the virDomainNumatuneMemMode enum
 --force          try harder on risky reverts
 
 
-[find-storage-pool-sources-as]
-[--type] <string>  type of storage pool sources to find
+find-storage-pool-sources-as
+--type <string>  type of storage pool sources to find
 --host <string>  optional host to query
 --port <string>  optional port to query
 --initiator <string>  optional initiator IQN to use for query
 
 
-[find-storage-pool-sources]
-[--type] <string>  type of storage pool sources to discover
+find-storage-pool-sources
+--type <string>  type of storage pool sources to discover
 --srcSpec <string>  optional file of source xml to query for pools
 
 
-[pool-autostart]
-[--pool] <string>  pool name or uuid
+pool-autostart
+--pool <string>  pool name or uuid
 --disable        disable autostarting
 
 
-[pool-build]
-[--pool] <string>  pool name or uuid
+pool-build
+--pool <string>  pool name or uuid
 --no-overwrite   do not overwrite any existing data
 --overwrite      overwrite any existing data
 
 
-[pool-create-as]
-[--name] <string>  name of the pool
-[--type] <string>  type of the pool
+pool-create-as
+--name <string>  name of the pool
+--type <string>  type of the pool
 --print-xml      print XML document, but don't define/create
 --source-host <string>  source-host for underlying storage
 --source-path <string>  source path for underlying storage
@@ -1112,16 +1111,16 @@ or a number from the virDomainNumatuneMemMode enum
 --adapter-parent-wwnn <string>  adapter parent scsi_hostN wwnn to be used for underlying vHBA storage
 --adapter-parent-wwpn <string>  adapter parent scsi_hostN wwpn to be used for underlying vHBA storage
 --adapter-parent-fabric-wwn <string>  adapter parent scsi_hostN fabric_wwn to be used for underlying vHBA storage
-[pool-create]
-[--file] <string>  file containing an XML pool description
+pool-create
+--file <string>  file containing an XML pool description
 --build          build the pool as normal
 --no-overwrite   do not overwrite any existing data
 --overwrite      overwrite any existing data
 
 
-[pool-define-as]
-[--name] <string>  name of the pool
-[--type] <string>  type of the pool
+pool-define-as
+--name <string>  name of the pool
+--type <string>  type of the pool
 --print-xml      print XML document, but don't define/create
 --source-host <string>  source-host for underlying storage
 --source-path <string>  source path for underlying storage
@@ -1140,67 +1139,67 @@ or a number from the virDomainNumatuneMemMode enum
 --adapter-parent-wwnn <string>  adapter parent scsi_hostN wwnn to be used for underlying vHBA storage
 --adapter-parent-wwpn <string>  adapter parent scsi_hostN wwpn to be used for underlying vHBA storage
 --adapter-parent-fabric-wwn <string>  adapter parent scsi_hostN fabric_wwn to be used for underlying vHBA storage
-[pool-define]
-[--file] <string>  file containing an XML pool description
+pool-define
+--file <string>  file containing an XML pool description
 
 
-[pool-delete]
-[--pool] <string>  pool name or uuid
+pool-delete
+--pool <string>  pool name or uuid
 
 
-[pool-destroy]
-[--pool] <string>  pool name or uuid
+pool-destroy
+--pool <string>  pool name or uuid
 
 
-[pool-dumpxml]
-[--pool] <string>  pool name or uuid
+pool-dumpxml
+--pool <string>  pool name or uuid
 --inactive       show inactive defined XML
 
 
-[pool-edit]
-[--pool] <string>  pool name or uuid
+pool-edit
+--pool <string>  pool name or uuid
 
 
-[pool-info]
-[--pool] <string>  pool name or uuid
+pool-info
+--pool <string>  pool name or uuid
 --bytes          Reture pool info in bytes
 
 
-[pool-name]
-[--pool] <string>  pool name or uuid
+pool-name
+--pool <string>  pool name or uuid
 
 
-[pool-refresh]
-[--pool] <string>  pool name or uuid
+pool-refresh
+--pool <string>  pool name or uuid
 
 
-[pool-start]
-[--pool] <string>  pool name or uuid
+pool-start
+--pool <string>  pool name or uuid
 --build          build the pool as normal
 --no-overwrite   do not overwrite any existing data
 --overwrite      overwrite any existing data
 
 
-[pool-undefine]
-[--pool] <string>  pool name or uuid
+pool-undefine
+--pool <string>  pool name or uuid
 
 
-[pool-uuid]
-[--pool] <string>  pool name or uuid
+pool-uuid
+--pool <string>  pool name or uuid
 
 
-[vol-clone]
-[--vol] <string>  vol name, key or path
-[--newname] <string>  clone name
+vol-clone
+--vol <string>  vol name, key or path
+--newname <string>  clone name
 --pool <string>  pool name or uuid
 --prealloc-metadata  preallocate metadata (for qcow2 instead of full allocation)
 --reflink        use btrfs COW lightweight copy
 
 
-[vol-create-as]
-[--pool] <string>  pool name
-[--name] <string>  name of the volume
-[--capacity] <string>  size of the vol, as scaled integer (default bytes)
+vol-create-as
+--pool <string>  pool name
+--name <string>  name of the volume
+--capacity <string>  size of the vol, as scaled integer (default bytes)
 --allocation <string>  initial allocation size, as scaled integer (default bytes)
 --format <string>  file format type raw,bochs,qcow,qcow2,qed,vmdk
 --backing-vol <string>  the backing volume if taking a snapshot
@@ -1209,87 +1208,87 @@ or a number from the virDomainNumatuneMemMode enum
 --print-xml      print XML document, but don't define/create
 
 
-[vol-create]
-[--pool] <string>  pool name
-[--file] <string>  file containing an XML vol description
+vol-create
+--pool <string>  pool name
+--file <string>  file containing an XML vol description
 --prealloc-metadata  preallocate metadata (for qcow2 instead of full allocation)
 
 
-[vol-create-from]
-[--pool] <string>  pool name or uuid
-[--file] <string>  file containing an XML vol description
-[--vol] <string>  vol name, key or path
+vol-create-from
+--pool <string>  pool name or uuid
+--file <string>  file containing an XML vol description
+--vol <string>  vol name, key or path
 --inputpool <string>  pool name or uuid of the input volume's pool
 --prealloc-metadata  preallocate metadata (for qcow2 instead of full allocation)
 --reflink        use btrfs COW lightweight copy
 
 
-[vol-delete]
-[--vol] <string>  vol name, key or path
+vol-delete
+--vol <string>  vol name, key or path
 --pool <string>  pool name or uuid
 --delete-snapshots  delete snapshots associated with volume (must be supported by storage driver)
 
 
-[vol-download]
-[--vol] <string>  vol name, key or path
-[--file] <string>  file
+vol-download
+--vol <string>  vol name, key or path
+--file <string>  file
 --pool <string>  pool name or uuid
 --offset <number>  volume offset to download from
 --length <number>  amount of data to download
 --sparse         preserve sparseness of volume
 
 
-[vol-dumpxml]
-[--vol] <string>  vol name, key or path
+vol-dumpxml
+--vol <string>  vol name, key or path
 --pool <string>  pool name or uuid
 
 
-[vol-info]
-[--vol] <string>  vol name, key or path
+vol-info
+--vol <string>  vol name, key or path
 --pool <string>  pool name or uuid
 --bytes          sizes are represented in bytes rather than pretty units
 --physical       return the physical size of the volume in allocation field
 
 
-[vol-key]
-[--vol] <string>  volume name or path
+vol-key
+--vol <string>  volume name or path
 --pool <string>  pool name or uuid
 
 
-[vol-name]
-[--vol] <string>  volume key or path
+vol-name
+--vol <string>  volume key or path
 
 
-[vol-path]
-[--vol] <string>  volume name or key
+vol-path
+--vol <string>  volume name or key
 --pool <string>  pool name or uuid
 
 
-[vol-pool]
-[--vol] <string>  volume key or path
+vol-pool
+--vol <string>  volume key or path
 --uuid           return the pool uuid rather than pool name
 
 
-[vol-resize]
-[--vol] <string>  vol name, key or path
-[--capacity] <string>  new capacity for the vol, as scaled integer (default bytes)
+vol-resize
+--vol <string>  vol name, key or path
+--capacity <string>  new capacity for the vol, as scaled integer (default bytes)
 --pool <string>  pool name or uuid
 --allocate       allocate the new capacity, rather than leaving it sparse
 --delta          use capacity as a delta to current size, rather than the new size
 --shrink         allow the resize to shrink the volume
 
 
-[vol-upload]
-[--vol] <string>  vol name, key or path
-[--file] <string>  file
+vol-upload
+--vol <string>  vol name, key or path
+--file <string>  file
 --pool <string>  pool name or uuid
 --offset <number>  volume offset to upload to
 --length <number>  amount of data to upload
 --sparse         preserve sparseness of volume
 
 
-[vol-wipe]
-[--vol] <string>  vol name, key or path
+vol-wipe
+--vol <string>  vol name, key or path
 --pool <string>  pool name or uuid
 --algorithm <string>  perform selected wiping algorithm
 
