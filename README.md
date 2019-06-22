@@ -38,7 +38,7 @@ kubectl apply -f yamls/
 
 ## Guide
 
-- [API introduction](docs/api.md)
+- [API introduction](docs/API.md)
 
 
 ## Limitations
