@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>com.github.kubesys</groupId>
 			<artifactId>kubernetes-client</artifactId>
-			<version>20190619</version>
+			<version>20190623</version>
 		</dependency>
 	</dependencies>
 	<build>

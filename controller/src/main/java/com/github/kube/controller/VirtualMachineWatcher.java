@@ -122,8 +122,8 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	private ResourceRequirements createResourceDemands(VirtualMachine vm) {
 		ResourceRequirements resources = new ResourceRequirements();
 		Map<String, Quantity> requests = new HashMap<String, Quantity>();
-		requests.put(CPU_RESOURCE, new Quantity(vm.getSpec().getLifecycle().getInstall().get__vcpus()));
-		requests.put(RAM_RESOURCE, new Quantity(vm.getSpec().getLifecycle().getInstall().get__memory()));
+		requests.put(CPU_RESOURCE, new Quantity(vm.getSpec().getLifecycle().getCreateAndStartVM().getVcpus()));
+		requests.put(RAM_RESOURCE, new Quantity(vm.getSpec().getLifecycle().getCreateAndStartVM().getMemory()));
 		resources.setRequests(requests);
 		return resources;
 	}
