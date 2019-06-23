@@ -7,7 +7,7 @@
   "spec": {
     "image": "CentOS7",
     "lifecycle": {
-      "install": {
+      "createAndStartVM": {
         "__name": "Centos",
         "__virt_type": "kvm",
         "__memory": 1024,
