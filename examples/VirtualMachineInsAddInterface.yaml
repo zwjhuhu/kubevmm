@@ -15,8 +15,8 @@
     "lifecycle": {
       "plugNIC": {
         "domain": "Centos",
-        "__type": "bridge",
-        "__source": "virbr0"
+        "type": "bridge",
+        "source": "virbr0"
       }
     }
   }

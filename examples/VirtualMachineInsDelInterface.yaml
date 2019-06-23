@@ -15,7 +15,7 @@
     "lifecycle": {
       "detach_interface": {
         "domain": "Centos",
-        "__type": "bridge"
+        "type": "bridge"
       }
     }
   }
