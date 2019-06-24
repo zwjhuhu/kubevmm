@@ -13,9 +13,12 @@
     "image": "CentOS7",
     "nodeName": "node22",
     "lifecycle": {
-      "detach_interface": {
+      "unplugNIC": {
         "domain": "Centos",
-        "type": "bridge"
+        "type": "bridge",
+        "mac": "52:54:00:23:c0:d1",
+        "live": true,
+        "config": true
       }
     }
   }

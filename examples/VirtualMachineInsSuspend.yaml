@@ -13,12 +13,8 @@
     "image": "CentOS7",
     "nodeName": "node22",
     "lifecycle": {
-      "plugNIC": {
-        "domain": "Centos",
-        "type": "bridge",
-        "source": "virbr0",
-        "live": true,
-        "config": true
+      "suspendVM": {
+        "domain": "Centos"
       }
     }
   }
