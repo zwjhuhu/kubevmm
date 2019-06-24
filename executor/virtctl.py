@@ -39,8 +39,14 @@ except ImportError:
     HAS_LIBVIRT = False
 import yaml
 
+class parser(ConfigParser.ConfigParser):  
+    def __init__(self,defaults=None):  
+        ConfigParser.ConfigParser.__init__(self,defaults=None)  
+    def optionxform(self, optionstr):  
+        return optionstr 
+
 cfg = "%s/default.cfg" % os.path.dirname(os.path.realpath(__file__))
-config_raw = ConfigParser.RawConfigParser()
+config_raw = parser()
 config_raw.read(cfg)
 
 TOKEN = config_raw.get('Kubernetes', 'token_file')
@@ -110,9 +116,9 @@ def getVMName(jsondict):
         return domain['name']['text']
     lifecycle = spec.get('lifecycle')
     if lifecycle:
-        install = lifecycle.get('install')
+        install = lifecycle.get('createAndStartVM')
         if install:
-            return install['__name']
+            return install['name']
     return None
 
 def _isInstallVM(jsondict):
@@ -126,7 +132,6 @@ def _isInstallVM(jsondict):
         Note that only the first CMD will be executed.
         '''
         cmd_head = ''
-        lifecycle = spec.get('lifecycle')
         lifecycle = spec.get('lifecycle')
         if not lifecycle:
             return False
@@ -210,7 +215,15 @@ def updateDomainStructureInJsonBackup(jsondict, body):
 '''
 Covert chars according to real CMD in back-end.
 '''
-def _convertCharsInJson(val, t):
+def _convertCharsInJson(key, value):
+#     if val[0:1] == '_':
+#         val = '_' + val
+    key, value = str(key), str(value)
+    if value == 'True':
+        value = ''
+    return ('--%s' % key.replace('_', '-'), value)
+
+def _convertCharsInJsonBackup(val, t):
 #     if val[0:1] == '_':
 #         val = '_' + val
     val = str(val)
@@ -226,7 +239,6 @@ def _convertCharsInJson(val, t):
 Unpack the CMD that will be executed in Json format.
 '''
 def unpackCmdFromJson(jsondict):
-    vm_ = None
     cmd = None
     if jsondict:
         '''
@@ -256,8 +268,7 @@ def unpackCmdFromJson(jsondict):
                 cmd_body = ''
                 contents = lifecycle.get(the_cmd_key)
                 for k, v in contents.items():
-                    k = _convertCharsInJson(k, 'key')
-                    v = _convertCharsInJson(v, 'value')
+                    (k, v) = _convertCharsInJson(k, v)
 #                     print k, v
                     cmd_body = '%s %s %s' % (cmd_body, k, v)
                 cmd = '%s %s' % (cmd_head, cmd_body)
@@ -290,6 +301,7 @@ def unpackCmdFromJsonBackup(jsondict):
                 return None
             keys = lifecycle.keys()
             for key in keys:
+                contents = lifecycle.get(key)
                 if key in SUPPORTCMDS.keys():
                     the_cmd_key = key
                     cmd_head = SUPPORTCMDS.get(key)
@@ -299,10 +311,8 @@ def unpackCmdFromJsonBackup(jsondict):
             '''
             if the_cmd_key:
                 cmd_body = ''
-                contents = lifecycle.get(the_cmd_key)
                 for k, v in contents.items():
-                    k = _convertCharsInJson(k, 'key')
-                    v = _convertCharsInJson(v, 'value')
+                    (k, v) = _convertCharsInJson(k, v)
 #                     print k, v
                     cmd_body = '%s %s %s' % (cmd_body, k, v)
                 cmd = '%s %s' % (cmd_head, cmd_body)
