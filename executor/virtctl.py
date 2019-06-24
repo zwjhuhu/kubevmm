@@ -941,5 +941,6 @@ def undefine(vm_):
 #     p.stderr.close()
 
 if __name__ == '__main__':
+    print vm_state('Centos')
     main()
 #     createVM(options)
