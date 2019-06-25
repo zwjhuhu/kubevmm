@@ -12,7 +12,7 @@
         "virt_type": "kvm",
         "memory": "1024",
         "vcpus": "1",
-        "cdrom": "/root/ISO/CentOS-7-x86_64-Minimal-1511.iso",
+        "cdrom": "/opt/ISO/CentOS-7-x86_64-Minimal-1511.iso",
         "disk": "size=10,format=qcow2",
         "network": "bridge=virbr0",
         "graphics": "vnc,listen=0.0.0.0"
