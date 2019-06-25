@@ -39,5 +39,5 @@ spec:
     - vm
     - vms
     singular: virtualmachine
-  scope: Cluster
+  scope: Namespaced
   version: v1alpha3
