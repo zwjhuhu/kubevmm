@@ -58,7 +58,6 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	public void eventReceived(Action action, VirtualMachine vm) {
 
 		String namespace = vm.getMetadata().getNamespace();
-		namespace = (namespace == null) ? POD_NAMESPACE : namespace;
 		String podName = POD_PREFIX + "-" + vm.getMetadata().getName() + "-" + namespace;
 		
 		if (action.toString().equals(ACTION_CREATE)) {
@@ -134,9 +133,7 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	private ObjectMeta createMetadataFrom(VirtualMachine vm, String podName) throws Exception {
 		ObjectMeta metadata = new ObjectMeta();
 		metadata.setName(podName);
-		String namespace = vm.getMetadata().getNamespace();
-		namespace = (namespace == null) ? POD_NAMESPACE : namespace;
-		metadata.setName(namespace);
+		metadata.setName(vm.getMetadata().getNamespace());
 		metadata.setAnnotations(createAnnotations(vm));
 		return metadata;
 	}

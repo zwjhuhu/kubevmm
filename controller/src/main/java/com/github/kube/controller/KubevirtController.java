@@ -28,15 +28,15 @@ import io.fabric8.kubernetes.client.ConfigBuilder;
  * 
  * debug at runWatch method of io.fabric8.kubernetes.client.dsl.internal.WatchConnectionManager
  **/
-public class KubevirtScheduler {
+public class KubevirtController {
 	
-	protected final static Logger m_logger = Logger.getLogger(KubevirtScheduler.class.getName());
+	protected final static Logger m_logger = Logger.getLogger(KubevirtController.class.getName());
 
 	public final static String TOKEN              = "/etc/kubernetes/admin.conf";
 	
 	protected final ExtendedKubernetesClient client;
 	
-	public KubevirtScheduler() throws Exception {
+	public KubevirtController() throws Exception {
 		super();
 		Map<String, Object> map = new Yaml().load(
 				new FileInputStream(new File(TOKEN)));
@@ -46,10 +46,6 @@ public class KubevirtScheduler {
 		@SuppressWarnings("unchecked")
 		Map<String, Map<String, Object>> userdata = (Map<String, Map<String, Object>>)
 												((List) map.get("users")).get(0);
-		System.out.println(clusdata.get("cluster").get("certificate-authority-data"));
-		System.out.println(userdata.get("user").get("client-certificate-data"));
-		System.out.println(userdata.get("user").get("client-key-data"));
-		System.out.println(clusdata.get("cluster").get("server"));
 		Config config = new ConfigBuilder()
 				.withApiVersion("v1")
 				.withCaCertData((String) clusdata.get("cluster").get("certificate-authority-data"))
@@ -66,7 +62,7 @@ public class KubevirtScheduler {
 	
 	public static void main(String[] args) throws Exception {
 		m_logger.log(Level.INFO, "Start VirtualMachineWatcher");
-		KubevirtScheduler scheduler = new KubevirtScheduler();
+		KubevirtController scheduler = new KubevirtController();
 		scheduler.start();
 	}
 
