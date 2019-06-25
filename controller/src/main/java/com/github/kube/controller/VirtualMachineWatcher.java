@@ -54,11 +54,13 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	public final static String POD_PREFIX = "vm2pod";
 
 	public final static String POD_NAMESPACE = "default";
-
+	
 	public void eventReceived(Action action, VirtualMachine vm) {
 
-		String podName = POD_PREFIX + "-" + vm.getMetadata().getName() + "-" + vm.getMetadata().getNamespace();
-
+		String namespace = vm.getMetadata().getNamespace();
+		namespace = (namespace == null) ? POD_NAMESPACE : namespace;
+		String podName = POD_PREFIX + "-" + vm.getMetadata().getName() + "-" + namespace;
+		
 		if (action.toString().equals(ACTION_CREATE)) {
 			Pod pod = null;;
 			try {
@@ -66,17 +68,18 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() == null) {
+			
+			if (client.pods().inNamespace(namespace).withName(podName).get() == null) {
 
-				client.pods().inNamespace(POD_NAMESPACE).create(pod);
+				client.pods().inNamespace(namespace).create(pod);
 				m_logger.log(Level.INFO, "Create VM '" + vm.getMetadata().getName() + "' in namespace '"
 						+ vm.getMetadata().getNamespace() + "'");
-				m_logger.log(Level.INFO, "Create Pod '" + podName + "' in namespace '" + POD_NAMESPACE + "'");
+				m_logger.log(Level.INFO, "Create Pod '" + podName + "' in namespace '" + namespace + "'");
 			}
 		} else if (action.toString().equals(ACTION_REMOVE)) {
-			if (client.pods().inNamespace(POD_NAMESPACE).withName(podName).get() != null) {
-				client.pods().inNamespace(POD_NAMESPACE).withName(podName).delete();
-				m_logger.log(Level.INFO, "Delete Pod '" + podName + "' in namespace '" + POD_NAMESPACE + "'");
+			if (client.pods().inNamespace(namespace).withName(podName).get() != null) {
+				client.pods().inNamespace(namespace).withName(podName).delete();
+				m_logger.log(Level.INFO, "Delete Pod '" + podName + "' in namespace '" + namespace + "'");
 				m_logger.log(Level.INFO, "Delete VM '" + vm.getMetadata().getName() + "' in namespace '"
 						+ vm.getMetadata().getNamespace() + "'");
 			}
@@ -131,6 +134,9 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	private ObjectMeta createMetadataFrom(VirtualMachine vm, String podName) throws Exception {
 		ObjectMeta metadata = new ObjectMeta();
 		metadata.setName(podName);
+		String namespace = vm.getMetadata().getNamespace();
+		namespace = (namespace == null) ? POD_NAMESPACE : namespace;
+		metadata.setName(namespace);
 		metadata.setAnnotations(createAnnotations(vm));
 		return metadata;
 	}
