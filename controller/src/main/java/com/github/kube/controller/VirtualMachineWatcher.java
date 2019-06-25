@@ -133,7 +133,6 @@ public class VirtualMachineWatcher implements Watcher<VirtualMachine> {
 	private ObjectMeta createMetadataFrom(VirtualMachine vm, String podName) throws Exception {
 		ObjectMeta metadata = new ObjectMeta();
 		metadata.setName(podName);
-		metadata.setName(vm.getMetadata().getNamespace());
 		metadata.setAnnotations(createAnnotations(vm));
 		return metadata;
 	}
