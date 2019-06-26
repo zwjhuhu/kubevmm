@@ -88,7 +88,7 @@ def main():
                     vm_xml = get_xml(name)
                     vm_json = toKubeJson(xmlToJson(vm_xml))
                     body = updateDomainStructureInJson(jsondict, vm_json)
-        #             print body
+            #             print body
                     modifyVM(metadata_name, body)
             elif operation_type == 'MODIFIED':
                 cmd = unpackCmdFromJson(jsondict)
@@ -327,12 +327,14 @@ def unpackCmdFromJsonBackup(jsondict):
 Run back-end command in subprocess.
 '''
 def runCmd(cmd):
+    std_err = None
     if not cmd:
         return
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         p.stdout.readlines()
-        p.stderr.readlines()
+        std_err = p.stderr.readlines()
+        return std_err
     finally:
         p.stdout.close()
         p.stderr.close()
