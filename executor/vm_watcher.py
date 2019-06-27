@@ -5,7 +5,7 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 @author: wuheng@otcaix.iscas.ac.cn
 '''
 
-import time, datetime
+import time, datetime, socket
 from dateutil.tz import gettz
 from kubernetes import client, config
 from kubernetes.client.models.v1_node_status import V1NodeStatus
@@ -13,26 +13,30 @@ from kubernetes.client.models.v1_node_condition import V1NodeCondition
 from kubernetes.client.models.v1_node_daemon_endpoints import V1NodeDaemonEndpoints
 from kubernetes.client.models.v1_node_system_info import V1NodeSystemInfo
 from kubernetes.client.models.v1_node import V1Node
+from kubernetes.client.models.v1_node_spec import V1NodeSpec
+from kubernetes.client.models.v1_object_meta import V1ObjectMeta
+from kubernetes.client.models.v1_node_address import V1NodeAddress
 
-class NodeWatcher:
+class VMWatcher:
     
-    def __init__(self, node, interval):
+    def __init__(self):
         self.node = V1Node()
-        self.interval = interval
+        self.node_api_version = 'v1'
+        self.node_kind = 'Node'
+        self.node_metadata = V1ObjectMeta()
+        self.node_spec = V1NodeSpec()
+        pass
 
     def get_node(self):
-        return self.__node
+        pass
+        
+    def get_status_address(self):
+        hostname = socket.gethostname()
+        ip = socket.gethostbyname(hostname)
+        print hostname
+        print ip
 
-    def set_node(self, value):
-        self.__node = value
-
-    def get_interval(self):
-        return self.__interval
-
-    def set_interval(self, value):
-        self.__interval = value
-
-    def getCondition(self):
+    def get_status_condition(self):
         time_zone = gettz('Asia/Shanghai')
         now = datetime.datetime.now(tz=time_zone)
         condition1 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient memory available", \
@@ -52,11 +56,8 @@ class NodeWatcher:
         self.node.status = node_status
         client.CoreV1Api().replace_node_status(name="node11", body=self.node)
         
-    interval = property(get_interval, set_interval, "interval's docstring")
-    node = property(get_node, set_node, "node's docstring")
-
 if __name__ == '__main__':
-    r = NodeWatcher()
+    r = VMWatcher()
     
 #     print client.CoreV1Api().read_node_status(name="node11")
     #client.CoreV1Api().patch_node_status(name="mocker", body=body)

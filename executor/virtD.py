@@ -14,7 +14,7 @@ from kubernetes.client.models.v1_node_condition import V1NodeCondition
 from kubernetes.client.models.v1_node_daemon_endpoints import V1NodeDaemonEndpoints
 from kubernetes.client.models.v1_node_system_info import V1NodeSystemInfo
 from kubernetes.client.models.v1_node import V1Node
-from nodewatcher import NodeWatcher
+from host_watcher import HostWatcher
  
 class CDaemon:
     '''
@@ -160,7 +160,7 @@ class ClientDaemon(CDaemon):
     def run(self, output_fn, **kwargs):
         config.load_kube_config(config_file='/etc/kubernetes/admin.conf')
         while True:
-            node_watcher = NodeWatcher()
+            node_watcher = HostWatcher()
             time.sleep(5)
  
  
