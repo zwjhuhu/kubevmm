@@ -78,7 +78,7 @@ def main():
                     vm_xml = get_xml(name)
                     vm_json = toKubeJson(xmlToJson(vm_xml))
                     body = updateDomainStructureInJson(jsondict, vm_json)
-            #             print body
+                    print body
                     modifyVM(metadata_name, body)
             elif operation_type == 'MODIFIED':
                 cmd = unpackCmdFromJson(jsondict)

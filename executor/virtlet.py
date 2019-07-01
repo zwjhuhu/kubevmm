@@ -161,6 +161,8 @@ class ClientDaemon(CDaemon):
         config.load_kube_config(config_file='/etc/kubernetes/admin.conf')
         while True:
             node_watcher = HostWatcher()
+            node_status = node_watcher.get_node_status()
+            client.CoreV1Api().replace_node_status(name="node11", body=node_status)
             time.sleep(5)
  
  
@@ -169,10 +171,10 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print help_msg
         sys.exit(1)
-    p_name = 'example1'
-    pid_fn = '/tmp/virtctl_daemon.pid'
-    log_fn = '/tmp/virtctl_daemon.log'
-    err_fn = '/tmp/virtctl_error.log'
+    p_name = 'virtlet'
+    pid_fn = '/tmp/virtlet_daemon.pid'
+    log_fn = '/tmp/virtlet_daemon.log'
+    err_fn = '/tmp/virtlet_error.log'
     cD = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  
     if sys.argv[1] == 'start':
