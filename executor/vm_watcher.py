@@ -5,59 +5,60 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 @author: wuheng@otcaix.iscas.ac.cn
 '''
 
-import time, datetime, socket
-from dateutil.tz import gettz
-from kubernetes import client, config
-from kubernetes.client.models.v1_node_status import V1NodeStatus
-from kubernetes.client.models.v1_node_condition import V1NodeCondition
-from kubernetes.client.models.v1_node_daemon_endpoints import V1NodeDaemonEndpoints
-from kubernetes.client.models.v1_node_system_info import V1NodeSystemInfo
-from kubernetes.client.models.v1_node import V1Node
-from kubernetes.client.models.v1_node_spec import V1NodeSpec
-from kubernetes.client.models.v1_object_meta import V1ObjectMeta
-from kubernetes.client.models.v1_node_address import V1NodeAddress
+'''
+Import python libs
+'''
+import os, socket, ConfigParser
+
+'''
+Import third party libs
+'''
+from kubernetes import client
+
+'''
+Import local libs
+'''
+from libvirt_util import get_xml, list_vms, vm_state
+
+class parser(ConfigParser.ConfigParser):  
+    def __init__(self,defaults=None):  
+        ConfigParser.ConfigParser.__init__(self,defaults=None)  
+    def optionxform(self, optionstr):  
+        return optionstr 
+    
+cfg = "%s/default.cfg" % os.path.dirname(os.path.realpath(__file__))
+config_raw = parser()
+config_raw.read(cfg)
+
+TOKEN = config_raw.get('Kubernetes', 'token_file')
+PLURAL = config_raw.get('VirtualMachine', 'plural')
+VERSION = config_raw.get('VirtualMachine', 'version')
+GROUP = config_raw.get('VirtualMachine', 'group')
 
 class VMWatcher:
     
     def __init__(self):
-        self.node = V1Node()
-        self.node_api_version = 'v1'
-        self.node_kind = 'Node'
-        self.node_metadata = V1ObjectMeta()
-        self.node_spec = V1NodeSpec()
+#         self.vms_in_libvirt = self.get_vms_in_libvirt()
+#         self.vms_in_virtlet = self.get_vms_in_virtlet()
         pass
 
-    def get_node(self):
-        pass
+    def get_vms_in_libvirt(self):
+        return list_vms()
+    
+    def get_vm_state_in_libvirt(self, vm):
+        return vm_state(vm)
+
+    def get_vms_in_virtlet(self):
+        return client.CustomObjectsApi().list_namespaced_custom_object(group=GROUP, version=VERSION, namespace='default', plural=PLURAL)
         
-    def get_status_address(self):
-        hostname = socket.gethostname()
-        ip = socket.gethostbyname(hostname)
-        print hostname
-        print ip
+    def get_vm_state_in_virtlet(self, vm):
+        return client.CustomObjectsApi().list_namespaced_custom_object(group=GROUP, version=VERSION, namespace='default', plural=PLURAL)
 
-    def get_status_condition(self):
-        time_zone = gettz('Asia/Shanghai')
-        now = datetime.datetime.now(tz=time_zone)
-        condition1 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient memory available", \
-                            reason="KubeletHasSufficientMemory", status="False", type="MemoryPressure")
-        condition2 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has no disk pressure", \
-                            reason="KubeletHasNoDiskPressure", status="False", type="DiskPressure")
-        condition3 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet has sufficient PID available", \
-                            reason="KubeletHasSufficientPID", status="False", type="PIDPressure")
-        condition4 = V1NodeCondition(last_heartbeat_time=now, last_transition_time=now, message="kubelet is posting ready status", \
-                            reason="KubeletReady", status="True", type="Ready")    
-        daemon_endpoints = V1NodeDaemonEndpoints(kubelet_endpoint={'port':0})
-        node_info = V1NodeSystemInfo(architecture="", boot_id="", container_runtime_version="", \
-                                     kernel_version="", kube_proxy_version="", kubelet_version="", \
-                                     machine_id="", operating_system="", os_image="", system_uuid="")    
-        node_status = V1NodeStatus(conditions=[condition1, condition2, condition3, condition4], daemon_endpoints=daemon_endpoints, \
-                                   node_info=node_info)
-        self.node.status = node_status
-        client.CoreV1Api().replace_node_status(name="node11", body=self.node)
         
 if __name__ == '__main__':
     r = VMWatcher()
+    print(r.get_vms_in_libvirt())
+#     print(r.get_vms_in_virtlet())
     
 #     print client.CoreV1Api().read_node_status(name="node11")
     #client.CoreV1Api().patch_node_status(name="mocker", body=body)
