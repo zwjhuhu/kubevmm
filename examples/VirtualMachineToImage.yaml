@@ -1,0 +1,15 @@
+{
+  "apiVersion": "cloudplus.io/v1alpha3",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "vm"
+  },
+  "spec": {
+    "lifecycle": {
+      "ConvertVMToImage": {
+        "vmName": "Centos",
+        "imageName": "image"
+      }
+    }
+  }
+}
