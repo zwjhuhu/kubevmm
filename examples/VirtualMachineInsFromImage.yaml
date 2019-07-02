@@ -10,6 +10,8 @@
       "createAndStartVMFromImage": {
         "name": "henry-clone",
         "original": "Centos",
+        "memory": "1024",
+        "vcpus": "1",
         "file": "/var/lib/libvirt/images/henry-clone.qcow2"
       }
     }
