@@ -32,7 +32,7 @@ public class KubevirtController {
 	
 	protected final static Logger m_logger = Logger.getLogger(KubevirtController.class.getName());
 
-	public final static String TOKEN              = "admin.conf";
+	public final static String TOKEN              = "/etc/kubernetes/admin.conf";
 	
 	protected final ExtendedKubernetesClient client;
 	
