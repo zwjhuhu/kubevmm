@@ -35,7 +35,7 @@ from xmljson import badgerfish as bf
 '''
 Import local libs
 '''
-from libvirt_util import get_xml, destroy, undefine
+from libvirt_util import get_xml, destroy, undefine, create, setmem, setvcpus
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
@@ -56,45 +56,67 @@ SUPPORTCMDS = config_raw._sections['SupportCmds']
 LABEL = 'host=%s' % (socket.gethostname())
 
 def main():
-    try:
-        config.load_kube_config(config_file=TOKEN)
-    #     crd = client.ApiextensionsV1beta1Api().read_custom_resource_definition(NAME)
-    #     client.CustomObjectsApi().list_cluster_custom_object_with_http_info(group=GROUP, version=VERSION, plural=PLURAL, labelSelector='host=a', watch=True);
-        w = watch.Watch()
-        kwargs = {}
-        kwargs['label_selector'] = LABEL
-        kwargs['watch'] = True
-        for jsondict in w.stream(client.CustomObjectsApi().list_cluster_custom_object,
-                                    group=GROUP, version=VERSION, plural=PLURAL, **kwargs):
-    #         jsondict = json.loads(vm)
-            operation_type = jsondict.get('type')
-            print operation_type
-            metadata_name = getMetadataName(jsondict)
-            name = getVMName(jsondict)
-            if operation_type == 'ADDED':
-                if _isInstallVM(jsondict):
-                    cmd = unpackCmdFromJson(jsondict)
-                    runCmd(cmd)
-                    vm_xml = get_xml(name)
-                    vm_json = toKubeJson(xmlToJson(vm_xml))
-                    body = updateDomainStructureInJson(jsondict, vm_json)
-                    print body
-                    modifyVM(metadata_name, body)
-            elif operation_type == 'MODIFIED':
+#     try:
+    config.load_kube_config(config_file=TOKEN)
+#     crd = client.ApiextensionsV1beta1Api().read_custom_resource_definition(NAME)
+#     client.CustomObjectsApi().list_cluster_custom_object_with_http_info(group=GROUP, version=VERSION, plural=PLURAL, labelSelector='host=a', watch=True);
+    w = watch.Watch()
+    kwargs = {}
+    kwargs['label_selector'] = LABEL
+    kwargs['watch'] = True
+    for jsondict in w.stream(client.CustomObjectsApi().list_cluster_custom_object,
+                                group=GROUP, version=VERSION, plural=PLURAL, **kwargs):
+#         jsondict = json.loads(vm)
+        operation_type = jsondict.get('type')
+        print operation_type
+        metadata_name = getMetadataName(jsondict)
+        print('metadata name: %s' % metadata_name)
+        name = getVMName(jsondict)
+        print('name: %s' % name)
+        if operation_type == 'ADDED':
+            if _isInstallVMFromISO(jsondict):
                 cmd = unpackCmdFromJson(jsondict)
                 runCmd(cmd)
                 vm_xml = get_xml(name)
                 vm_json = toKubeJson(xmlToJson(vm_xml))
                 body = updateDomainStructureInJson(jsondict, vm_json)
+#                     print body
+                modifyVM(metadata_name, body)
+            elif _isInstallVMFromImage(jsondict):
+                (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
+                print new_vm_vcpus, new_vm_memory
+                cmd = unpackCmdFromJson(jsondict)
+                runCmd(cmd)
+                '''
+                Set new VM's CPU and Memory
+                '''
+                setvcpus(name, int(new_vm_vcpus), config=True)
+                setmem(name, int(new_vm_memory), config=True)
+                '''
+                Start VM
+                '''
+                create(name)
+                vm_xml = get_xml(name)
+                vm_json = toKubeJson(xmlToJson(vm_xml))
+                body = updateDomainStructureInJson(jsondict, vm_json)
+                modifyVM(metadata_name, body)
+        elif operation_type == 'MODIFIED':
+            cmd = unpackCmdFromJson(jsondict)
+            runCmd(cmd)
+            if name:
+                vm_xml = get_xml(name)
+                vm_json = toKubeJson(xmlToJson(vm_xml))
+                body = updateDomainStructureInJson(jsondict, vm_json)
     #             print body
                 modifyVM(metadata_name, body)
-            elif operation_type == 'DELETED':
+        elif operation_type == 'DELETED':
+            if name:
                 destroy(name)
                 undefine(name)
-    #             body = jsondict['raw_object']
-    #             deleteVM(name, body)
-    except Exception, e:
-        print e
+#             body = jsondict['raw_object']
+#             deleteVM(name, body)
+#     except Exception, e:
+#         print e
 
 def getMetadataName(jsondict):
     return jsondict['raw_object']['metadata']['name']
@@ -107,17 +129,24 @@ def getVMName(jsondict):
     domain = spec.get('domain')
     if domain:
         return domain['name']['text']
-    lifecycle = spec.get('lifecycle')
-    if lifecycle:
-        install = lifecycle.get('createAndStartVM')
-        if install:
-            return install['name']
+    else:
+        lifecycle = spec.get('lifecycle')
+        the_key = None
+        keys = lifecycle.keys()
+        for key in keys:
+            if key in SUPPORTCMDS.keys():
+                cmd_head = SUPPORTCMDS.get(key)
+                the_key = key
+                break;
+        print cmd_head
+        if cmd_head and cmd_head.startswith('virt-'):
+            return lifecycle[the_key].get('name')
     return None
 
-def _isInstallVM(jsondict):
-    '''
-    Get target VM name from Json.
-    '''
+'''
+Install VM from ISO.
+'''
+def _isInstallVMFromISO(jsondict):
     spec = jsondict['raw_object'].get('spec')
     if spec:
         '''
@@ -136,6 +165,68 @@ def _isInstallVM(jsondict):
         if cmd_head and cmd_head.startswith('virt-install'):
             return True
     return False
+
+'''
+Install VM from image.
+'''
+def _isInstallVMFromImage(jsondict):
+    spec = jsondict['raw_object'].get('spec')
+    if spec:
+        '''
+        Iterate keys in 'spec' structure and map them to real CMDs in back-end.
+        Note that only the first CMD will be executed.
+        '''
+        cmd_head = ''
+        lifecycle = spec.get('lifecycle')
+        if not lifecycle:
+            return False
+        keys = lifecycle.keys()
+        for key in keys:
+            if key in SUPPORTCMDS.keys():
+                cmd_head = SUPPORTCMDS.get(key)
+                break;
+        if cmd_head and cmd_head.startswith('virt-clone'):
+            return True
+    return False
+
+def _preprocessInCreateVMFromImage(jsondict):
+    new_vm_memory = None
+    new_vm_vcpus = None
+    '''
+    Get target VM name from Json.
+    '''
+    spec = jsondict['raw_object'].get('spec')
+    if spec:
+        '''
+        Iterate keys in 'spec' structure and map them to real CMDs in back-end.
+        Note that only the first CMD will be executed.
+        '''
+        the_cmd_key = None
+        lifecycle = spec.get('lifecycle')
+        if not lifecycle:
+            return
+        keys = lifecycle.keys()
+        for key in keys:
+            if key in SUPPORTCMDS.keys():
+                the_cmd_key = key
+                break;
+        '''
+        Get the CMD body from 'dict' structure.
+        '''
+        if the_cmd_key:
+            contents = lifecycle.get(the_cmd_key)
+            for k, v in contents.items():
+                if k == "memory":
+                    new_vm_memory = v
+                    del jsondict['raw_object']['spec']['lifecycle'][the_cmd_key][k]
+                elif k == 'vcpus':
+                    new_vm_vcpus = v
+                    del jsondict['raw_object']['spec']['lifecycle'][the_cmd_key][k]
+                else:
+                    continue
+        print jsondict
+        return (jsondict, new_vm_vcpus, new_vm_memory)
+                   
         
 def modifyVM(name, body):
     retv = client.CustomObjectsApi().replace_namespaced_custom_object(
@@ -265,6 +356,7 @@ def unpackCmdFromJson(jsondict):
 #                     print k, v
                     cmd_body = '%s %s %s' % (cmd_body, k, v)
                 cmd = '%s %s' % (cmd_head, cmd_body)
+            print "The CMD is:"
             print cmd
     return cmd
 

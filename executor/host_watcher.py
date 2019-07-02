@@ -102,7 +102,7 @@ class HostWatcher:
     node_status = property(get_node_status, "node_status's docstring")
 
 if __name__ == '__main__':
-    print client.CoreV1Api().read_node_status(name="node12")
+    print(client.CoreV1Api().read_node_status(name="node12"))
     r = HostWatcher()
 #     print(r.get_node())
     s = requests.session()
