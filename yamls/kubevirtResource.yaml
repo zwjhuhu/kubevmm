@@ -41,3 +41,34 @@ spec:
     singular: virtualmachine
   scope: Namespaced
   version: v1alpha3
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachineimages.cloudplus.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.domain.uuid.text
+    name: UUID
+    type: string
+  - JSONPath: .spec.domain._type
+    name: TYPE
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.image
+    name: IMAGE
+    type: string
+  group: cloudplus.io
+  names:
+    kind: VirtualMachineImage
+    plural: virtualmachineimages
+    shortNames:
+    - vmi
+    - vmis
+    singular: virtualmachineimage
+  scope: Namespaced
+  version: v1alpha3
