@@ -47,7 +47,7 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     kubevirt.io: ""
-  name: virtualmachinetemplates.cloudplus.io
+  name: virtualmachineimages.cloudplus.io
 spec:
   additionalPrinterColumns:
   - JSONPath: .spec.domain.uuid.text
@@ -64,11 +64,11 @@ spec:
     type: string
   group: cloudplus.io
   names:
-    kind: VirtualMachineTemplate
-    plural: virtualmachinetemplates
+    kind: VirtualMachineImage
+    plural: virtualmachineimages
     shortNames:
-    - vm
-    - vms
-    singular: virtualmachinetemplate
+    - vmi
+    - vmis
+    singular: virtualmachineimage
   scope: Namespaced
   version: v1alpha3
