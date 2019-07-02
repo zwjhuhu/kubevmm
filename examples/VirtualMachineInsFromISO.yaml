@@ -7,7 +7,7 @@
   "spec": {
     "image": "CentOS7",
     "lifecycle": {
-      "createAndStartVM": {
+      "createAndStartVMFromISO": {
         "name": "Centos",
         "virt_type": "kvm",
         "memory": "1024",
@@ -15,7 +15,8 @@
         "cdrom": "/opt/ISO/CentOS-7-x86_64-Minimal-1511.iso",
         "disk": "size=10,format=qcow2",
         "network": "bridge=virbr0",
-        "graphics": "vnc,listen=0.0.0.0"
+        "graphics": "vnc,listen=0.0.0.0",
+        "noautoconsole": true
       }
     }
   }

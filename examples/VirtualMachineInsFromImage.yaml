@@ -1,0 +1,17 @@
+{
+  "apiVersion": "cloudplus.io/v1alpha3",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "vm"
+  },
+  "spec": {
+    "image": "CentOS7",
+    "lifecycle": {
+      "createAndStartVMFromImage": {
+        "name": "Centos",
+        "original_xml": "/etc/libvirt/qemu/henry.xml",
+        "file": "/var/lib/libvirt/images/henry-clone.qcow2"
+      }
+    }
+  }
+}
