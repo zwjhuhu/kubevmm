@@ -2,13 +2,13 @@
   "apiVersion": "cloudplus.io/v1alpha3",
   "kind": "VirtualMachine",
   "metadata": {
-    "name": "vm"
+    "name": "ddd"
   },
   "spec": {
     "image": "CentOS7",
     "lifecycle": {
       "createAndStartVMFromISO": {
-        "name": "Centos",
+        "name": "yuewen",
         "virt_type": "kvm",
         "memory": "1024",
         "vcpus": "1",

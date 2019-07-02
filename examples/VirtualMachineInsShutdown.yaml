@@ -7,15 +7,14 @@
   "spec": {
     "domain": {
        "name": {
-          "text": "yuewen"
+          "text": "Centos"
         }
     },
     "image": "CentOS7",
     "nodeName": "node22",
     "lifecycle": {
-      "convertVMToImage": {
-        "vmName": "ddd",
-        "imageName": "dda"
+      "stopVM": {
+        "domain": "yuewen"
       }
     }
   }
