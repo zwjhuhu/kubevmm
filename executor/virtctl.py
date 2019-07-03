@@ -56,63 +56,63 @@ SUPPORTCMDS = config_raw._sections['SupportCmds']
 LABEL = 'host=%s' % (socket.gethostname())
 
 def main():
-#     try:
-    config.load_kube_config(config_file=TOKEN)
-#     crd = client.ApiextensionsV1beta1Api().read_custom_resource_definition(NAME)
-#     client.CustomObjectsApi().list_cluster_custom_object_with_http_info(group=GROUP, version=VERSION, plural=PLURAL, labelSelector='host=a', watch=True);
-    w = watch.Watch()
-    kwargs = {}
-    kwargs['label_selector'] = LABEL
-    kwargs['watch'] = True
-    for jsondict in w.stream(client.CustomObjectsApi().list_cluster_custom_object,
-                                group=GROUP, version=VERSION, plural=PLURAL, **kwargs):
-#         jsondict = json.loads(vm)
-        operation_type = jsondict.get('type')
-        print operation_type
-        metadata_name = getMetadataName(jsondict)
-        print('metadata name: %s' % metadata_name)
-        name = getVMName(jsondict)
-        print('name: %s' % name)
-        if operation_type == 'ADDED':
-            if _isInstallVMFromISO(jsondict):
+    try:
+        config.load_kube_config(config_file=TOKEN)
+    #     crd = client.ApiextensionsV1beta1Api().read_custom_resource_definition(NAME)
+    #     client.CustomObjectsApi().list_cluster_custom_object_with_http_info(group=GROUP, version=VERSION, plural=PLURAL, labelSelector='host=a', watch=True);
+        w = watch.Watch()
+        kwargs = {}
+        kwargs['label_selector'] = LABEL
+        kwargs['watch'] = True
+        for jsondict in w.stream(client.CustomObjectsApi().list_cluster_custom_object,
+                                    group=GROUP, version=VERSION, plural=PLURAL, **kwargs):
+    #         jsondict = json.loads(vm)
+            operation_type = jsondict.get('type')
+            print operation_type
+            metadata_name = getMetadataName(jsondict)
+            print('metadata name: %s' % metadata_name)
+            name = getVMName(jsondict)
+            print('name: %s' % name)
+            if operation_type == 'ADDED':
+                if _isInstallVMFromISO(jsondict):
+                    cmd = unpackCmdFromJson(jsondict)
+                    runCmd(cmd)
+                    vm_xml = get_xml(name)
+                    vm_json = toKubeJson(xmlToJson(vm_xml))
+                    body = updateDomainStructureInJson(jsondict, vm_json)
+                    modifyVM(metadata_name, body)
+                elif _isInstallVMFromImage(jsondict):
+                    (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
+                    print new_vm_vcpus, new_vm_memory
+                    cmd = unpackCmdFromJson(jsondict)
+                    runCmd(cmd)
+                    '''
+                    Set new VM's CPU and Memory
+                    '''
+                    setvcpus(name, int(new_vm_vcpus), config=True)
+                    setmem(name, int(new_vm_memory), config=True)
+                    '''
+                    Start VM
+                    '''
+                    create(name)
+                    vm_xml = get_xml(name)
+                    vm_json = toKubeJson(xmlToJson(vm_xml))
+                    body = updateDomainStructureInJson(jsondict, vm_json)
+                    modifyVM(metadata_name, body)
+            elif operation_type == 'MODIFIED':
                 cmd = unpackCmdFromJson(jsondict)
                 runCmd(cmd)
-                vm_xml = get_xml(name)
-                vm_json = toKubeJson(xmlToJson(vm_xml))
-                body = updateDomainStructureInJson(jsondict, vm_json)
-                modifyVM(metadata_name, body)
-            elif _isInstallVMFromImage(jsondict):
-                (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
-                print new_vm_vcpus, new_vm_memory
-                cmd = unpackCmdFromJson(jsondict)
-                runCmd(cmd)
-                '''
-                Set new VM's CPU and Memory
-                '''
-                setvcpus(name, int(new_vm_vcpus), config=True)
-                setmem(name, int(new_vm_memory), config=True)
-                '''
-                Start VM
-                '''
-                create(name)
-                vm_xml = get_xml(name)
-                vm_json = toKubeJson(xmlToJson(vm_xml))
-                body = updateDomainStructureInJson(jsondict, vm_json)
-                modifyVM(metadata_name, body)
-        elif operation_type == 'MODIFIED':
-            cmd = unpackCmdFromJson(jsondict)
-            runCmd(cmd)
-            if name:
-                vm_xml = get_xml(name)
-                vm_json = toKubeJson(xmlToJson(vm_xml))
-                body = updateDomainStructureInJson(jsondict, vm_json)
-                modifyVM(metadata_name, body)
-        elif operation_type == 'DELETED':
-            if name:
-                destroy(name)
-                undefine(name)
-#     except Exception, e:
-#         print e
+                if name:
+                    vm_xml = get_xml(name)
+                    vm_json = toKubeJson(xmlToJson(vm_xml))
+                    body = updateDomainStructureInJson(jsondict, vm_json)
+                    modifyVM(metadata_name, body)
+            elif operation_type == 'DELETED':
+                if name:
+                    destroy(name)
+                    undefine(name)
+    except Exception, e:
+        print e
 
 def getMetadataName(jsondict):
     return jsondict['raw_object']['metadata']['name']
