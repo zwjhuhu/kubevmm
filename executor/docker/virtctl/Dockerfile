@@ -8,7 +8,7 @@ ADD virtctl.sh /home/virtctl/bin
 
 ADD default.cfg /home/virtctl/bin
 
-ADD libvirt_util.py /home/virtlet/bin
+ADD libvirt_util.py /home/virtctl/bin
 
 RUN yum install epel-release -y
 
