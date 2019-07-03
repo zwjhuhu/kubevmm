@@ -80,7 +80,6 @@ def main():
                 vm_xml = get_xml(name)
                 vm_json = toKubeJson(xmlToJson(vm_xml))
                 body = updateDomainStructureInJson(jsondict, vm_json)
-#                     print body
                 modifyVM(metadata_name, body)
             elif _isInstallVMFromImage(jsondict):
                 (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
@@ -107,14 +106,11 @@ def main():
                 vm_xml = get_xml(name)
                 vm_json = toKubeJson(xmlToJson(vm_xml))
                 body = updateDomainStructureInJson(jsondict, vm_json)
-    #             print body
                 modifyVM(metadata_name, body)
         elif operation_type == 'DELETED':
             if name:
                 destroy(name)
                 undefine(name)
-#             body = jsondict['raw_object']
-#             deleteVM(name, body)
 #     except Exception, e:
 #         print e
 
