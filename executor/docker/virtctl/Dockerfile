@@ -8,6 +8,8 @@ ADD virtctl.sh /home/virtctl/bin
 
 ADD default.cfg /home/virtctl/bin
 
+ADD libvirt_util.py /home/virtlet/bin
+
 RUN yum install epel-release -y
 
 RUN yum install virt-manager python2-devel python2-pip libvirt-devel gcc gcc-c++ glib-devel glibc-devel -y

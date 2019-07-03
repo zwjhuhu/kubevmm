@@ -8,6 +8,8 @@ ADD virtlet.sh /home/virtlet/bin
 
 ADD host_watcher.py /home/virtlet/bin
 
+ADD libvirt_util.py /home/virtlet/bin
+
 ADD default.cfg /home/virtlet/bin
 
 RUN yum install epel-release -y
