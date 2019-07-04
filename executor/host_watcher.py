@@ -8,7 +8,7 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 '''
 Import python libs
 '''
-import os, time, datetime, socket, requests, subprocess
+import os, datetime, socket, subprocess
 import ConfigParser
 from dateutil.tz import gettz
 
@@ -147,6 +147,3 @@ if __name__ == '__main__':
     print(r.get_node())
     host.status = r.get_node_status()
     print client.CoreV1Api().replace_node_status(name="node12", body=host)
-    
-#     print client.CoreV1Api().read_node_status(name="node11")
-    #client.CoreV1Api().patch_node_status(name="mocker", body=body)

@@ -61,8 +61,8 @@ def _get_dom(vm_):
     Return a domain object for the named vm
     '''
     conn = __get_conn()
-    if vm_ not in list_vms():
-        raise Exception('The specified vm is not present')
+#     if vm_ not in list_vms():
+#         raise Exception('The specified vm is not present')
     return conn.lookupByName(vm_)
 
 def list_vms():

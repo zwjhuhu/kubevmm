@@ -6,14 +6,8 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 
 '''
  
-import atexit, os, sys, time, signal, datetime, ConfigParser, socket
-from dateutil.tz import gettz
+import atexit, os, sys, time, signal, ConfigParser, socket
 from kubernetes import client, config
-from kubernetes.client.models.v1_node_status import V1NodeStatus
-from kubernetes.client.models.v1_node_condition import V1NodeCondition
-from kubernetes.client.models.v1_node_daemon_endpoints import V1NodeDaemonEndpoints
-from kubernetes.client.models.v1_node_system_info import V1NodeSystemInfo
-from kubernetes.client.models.v1_node import V1Node
 from host_watcher import HostWatcher
 
 class parser(ConfigParser.ConfigParser):  

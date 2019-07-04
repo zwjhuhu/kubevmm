@@ -13,22 +13,19 @@ Import python libs
 '''
 import os
 import subprocess
-import random
 import ConfigParser
 import xmltodict
 import socket
-import re
-import json
-from xml.dom import minidom
+import traceback
+from json import loads
+from json import dumps
 from StringIO import StringIO as _StringIO
 from xml.etree.ElementTree import fromstring
 
 '''
 Import third party libs
 '''
-from kubernetes import client, config, watch, stream
-from json import loads
-from json import dumps
+from kubernetes import client, config, watch
 from xmltodict import unparse
 from xmljson import badgerfish as bf
 
@@ -71,16 +68,16 @@ def main():
             print operation_type
             metadata_name = getMetadataName(jsondict)
             print('metadata name: %s' % metadata_name)
-            name = getVMName(jsondict)
-            print('name: %s' % name)
+            jsondict = forceUsingMetadataName(metadata_name, jsondict)
+#             print(jsondict)
             if operation_type == 'ADDED':
                 if _isInstallVMFromISO(jsondict):
                     cmd = unpackCmdFromJson(jsondict)
                     runCmd(cmd)
-                    vm_xml = get_xml(name)
-                    vm_json = toKubeJson(xmlToJson(vm_xml))
-                    body = updateDomainStructureInJson(jsondict, vm_json)
-                    modifyVM(metadata_name, body)
+#                     vm_xml = get_xml(metadata_name)
+#                     vm_json = toKubeJson(xmlToJson(vm_xml))
+#                     body = updateDomainStructureInJson(jsondict, vm_json)
+#                     modifyVM(metadata_name, body)
                 elif _isInstallVMFromImage(jsondict):
                     (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
                     print new_vm_vcpus, new_vm_memory
@@ -89,30 +86,33 @@ def main():
                     '''
                     Set new VM's CPU and Memory
                     '''
-                    setvcpus(name, int(new_vm_vcpus), config=True)
-                    setmem(name, int(new_vm_memory), config=True)
+                    setvcpus(metadata_name, int(new_vm_vcpus), config=True)
+                    setmem(metadata_name, int(new_vm_memory), config=True)
                     '''
                     Start VM
                     '''
-                    create(name)
-                    vm_xml = get_xml(name)
-                    vm_json = toKubeJson(xmlToJson(vm_xml))
-                    body = updateDomainStructureInJson(jsondict, vm_json)
-                    modifyVM(metadata_name, body)
+                    create(metadata_name)
+#                     vm_xml = get_xml(metadata_name)
+#                     vm_json = toKubeJson(xmlToJson(vm_xml))
+#                     body = updateDomainStructureInJson(jsondict, vm_json)
+#                     modifyVM(metadata_name, body)
+                else:
+                    cmd = unpackCmdFromJson(jsondict)
+                    runCmd(cmd)
             elif operation_type == 'MODIFIED':
                 cmd = unpackCmdFromJson(jsondict)
                 runCmd(cmd)
-                if name:
-                    vm_xml = get_xml(name)
-                    vm_json = toKubeJson(xmlToJson(vm_xml))
-                    body = updateDomainStructureInJson(jsondict, vm_json)
-                    modifyVM(metadata_name, body)
+#                 if metadata_name:
+#                     vm_xml = get_xml(metadata_name)
+#                     vm_json = toKubeJson(xmlToJson(vm_xml))
+#                     body = updateDomainStructureInJson(jsondict, vm_json)
+#                     modifyVM(metadata_name, body)
             elif operation_type == 'DELETED':
-                if name:
-                    destroy(name)
-                    undefine(name)
+                if metadata_name:
+                    destroy(metadata_name)
+                    undefine(metadata_name)
     except Exception, e:
-        print e
+        traceback.print_exc()
 
 def getMetadataName(jsondict):
     return jsondict['raw_object']['metadata']['name']
@@ -138,6 +138,25 @@ def getVMName(jsondict):
         if cmd_head and cmd_head.startswith('virt-'):
             return lifecycle[the_key].get('name')
     return None
+
+def forceUsingMetadataName(metadata_name,jsondict):
+    spec = jsondict['raw_object']['spec']
+    lifecycle = spec.get('lifecycle')
+    if lifecycle:
+        the_key = None
+        keys = lifecycle.keys()
+        for key in keys:
+            if key in SUPPORTCMDS.keys():
+                cmd_head = SUPPORTCMDS.get(key)
+                the_key = key
+                break;
+#         print(cmd_head)
+        if cmd_head and cmd_head.startswith('virt-'):
+            lifecycle[the_key]['name'] = metadata_name    
+        elif cmd_head:
+            lifecycle[the_key]['domain'] = metadata_name
+    return jsondict
+
 
 '''
 Install VM from ISO.
@@ -273,7 +292,7 @@ def updateDomainStructureInJson(jsondict, body):
             lifecycle = spec.get('lifecycle')
             if lifecycle:
                 del spec['lifecycle']
-            spec.update(json.loads(body))
+            spec.update(loads(body))
     return jsondict['raw_object']
 
 def updateDomainStructureInJsonBackup(jsondict, body):
@@ -289,7 +308,7 @@ def updateDomainStructureInJsonBackup(jsondict, body):
             lifecycle = spec.get('lifecycle')
             if lifecycle:
                 del spec['lifecycle']
-            spec.update(json.loads(body))
+            spec.update(loads(body))
     return jsondict['items'][0]
 
 '''
@@ -352,8 +371,7 @@ def unpackCmdFromJson(jsondict):
 #                     print k, v
                     cmd_body = '%s %s %s' % (cmd_body, k, v)
                 cmd = '%s %s' % (cmd_head, cmd_body)
-            print "The CMD is:"
-            print cmd
+            print("The CMD is: %s" % cmd)
     return cmd
 
 '''

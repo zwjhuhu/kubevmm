@@ -18,6 +18,10 @@ RUN pip install --upgrade pip
 
 RUN pip install --ignore-installed kubernetes libvirt-python xmljson xmltodict
 
+RUN yum clean all
+
+RUN rm -fr /tmp/*
+
 WORKDIR /home/virtctl/bin
 
 RUN bash virtctl.sh
