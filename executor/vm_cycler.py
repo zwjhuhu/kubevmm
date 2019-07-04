@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-#
-#
-#
-##############################################################################
-# Start off by implementing a general purpose event loop for anyone's use
-##############################################################################
+'''
+Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
+
+@author: wuyuewen@otcaix.iscas.ac.cn
+@author: wuheng@otcaix.iscas.ac.cn
+'''
 
 '''
 Import python libs
