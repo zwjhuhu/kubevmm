@@ -18,20 +18,24 @@ import errno
 import time
 import threading
 import ConfigParser
+import traceback
 from json import loads
 from json import dumps
 from xml.etree.ElementTree import fromstring
+import atexit, signal
 
 '''
 Import third party libs
 '''
 from kubernetes import client, config
+from kubernetes.client.rest import ApiException 
 from xmljson import badgerfish as bf
 
 '''
 Import local libs
 '''
 from libvirt_util import get_xml
+import logger
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
@@ -48,7 +52,182 @@ PLURAL = config_raw.get('VirtualMachine', 'plural')
 VERSION = config_raw.get('VirtualMachine', 'version')
 GROUP = config_raw.get('VirtualMachine', 'group')
 
-config.load_kube_config(config_file=TOKEN)
+logger = logger.set_logger('/var/log/virtlet_vm_cycler_output.log')
+
+class CDaemon:
+    '''
+    a generic daemon class.
+    usage: subclass the CDaemon class and override the run() method
+    stderr:
+    verbose:
+    save_path:
+    '''
+    def __init__(self, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
+        self.stdin = stdin
+        self.stdout = stdout
+        self.stderr = stderr
+        self.pidfile = save_path
+        self.home_dir = home_dir
+        self.verbose = verbose
+        self.umask = umask
+        self.daemon_alive = True
+ 
+    def daemonize(self):
+        try:
+            pid = os.fork()
+            if pid > 0:
+                sys.exit(0)
+        except OSError, e:
+            sys.stderr.write('fork #1 failed: %d (%s)\n' % (e.errno, e.strerror))
+            sys.exit(1)
+ 
+        os.chdir(self.home_dir)
+        os.setsid()
+        os.umask(self.umask)
+ 
+        try:
+            pid = os.fork()
+            if pid > 0:
+                sys.exit(0)
+        except OSError, e:
+            sys.stderr.write('fork #2 failed: %d (%s)\n' % (e.errno, e.strerror))
+            sys.exit(1)
+ 
+        sys.stdout.flush()
+        sys.stderr.flush()
+ 
+        si = file(self.stdin, 'r')
+        so = file(self.stdout, 'a+')
+        if self.stderr:
+            se = file(self.stderr, 'a+', 0)
+        else:
+            se = so
+ 
+        os.dup2(si.fileno(), sys.stdin.fileno())
+        os.dup2(so.fileno(), sys.stdout.fileno())
+        os.dup2(se.fileno(), sys.stderr.fileno())
+ 
+        def sig_handler(signum, frame):
+            self.daemon_alive = False
+        signal.signal(signal.SIGTERM, sig_handler)
+        signal.signal(signal.SIGINT, sig_handler)
+ 
+        if self.verbose >= 1:
+            print 'daemon process started ...'
+ 
+        atexit.register(self.del_pid)
+        pid = str(os.getpid())
+        file(self.pidfile, 'w+').write('%s\n' % pid)
+ 
+    def get_pid(self):
+        try:
+            pf = file(self.pidfile, 'r')
+            pid = int(pf.read().strip())
+            pf.close()
+        except IOError:
+            pid = None
+        except SystemExit:
+            pid = None
+        return pid
+ 
+    def del_pid(self):
+        if os.path.exists(self.pidfile):
+            os.remove(self.pidfile)
+ 
+    def start(self, *args, **kwargs):
+        if self.verbose >= 1:
+            print 'ready to starting ......'
+        #check for a pid file to see if the daemon already runs
+        pid = self.get_pid()
+        if pid:
+            msg = 'pid file %s already exists, is it already running?\n'
+            sys.stderr.write(msg % self.pidfile)
+            sys.exit(1)
+        #start the daemon
+        self.daemonize()
+        self.run(*args, **kwargs)
+ 
+    def stop(self):
+        if self.verbose >= 1:
+            print 'stopping ...'
+        pid = self.get_pid()
+        if not pid:
+            msg = 'pid file [%s] does not exist. Not running?\n' % self.pidfile
+            sys.stderr.write(msg)
+            if os.path.exists(self.pidfile):
+                os.remove(self.pidfile)
+            return
+        #try to kill the daemon process
+        try:
+            i = 0
+            while 1:
+                os.kill(pid, signal.SIGTERM)
+                time.sleep(0.1)
+                i = i + 1
+                if i % 10 == 0:
+                    os.kill(pid, signal.SIGHUP)
+        except OSError, err:
+            err = str(err)
+            if err.find('No such process') > 0:
+                if os.path.exists(self.pidfile):
+                    os.remove(self.pidfile)
+            else:
+                print str(err)
+                sys.exit(1)
+            if self.verbose >= 1:
+                print 'Stopped!'
+ 
+    def restart(self, *args, **kwargs):
+        self.stop()
+        self.start(*args, **kwargs)
+ 
+    def is_running(self):
+        pid = self.get_pid()
+        #print(pid)
+        return pid and os.path.exists('/proc/%d' % pid)
+ 
+    def run(self, *args, **kwargs):
+        'NOTE: override the method in subclass'
+        print 'base class run()'
+ 
+class ClientDaemon(CDaemon):
+    def __init__(self, name, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
+        CDaemon.__init__(self, save_path, stdin, stdout, stderr, home_dir, umask, verbose)
+        self.name = name
+ 
+    def run(self, output_fn, **kwargs):
+        try:
+            main()
+        except Exception, e:
+            traceback.print_exc()
+            main()
+
+def daemonize():
+    help_msg = 'Usage: python %s <start|stop|restart|status>' % sys.argv[0]
+    if len(sys.argv) != 2:
+        print help_msg
+        sys.exit(1)
+    p_name = 'virtlet_vm_cycler'
+    pid_fn = '/tmp/virtlet_vm_cycler_daemon.pid'
+    log_fn = '/var/log/virtlet_vm_cycler_output.log'
+    err_fn = '/var/log/virtlet_vm_cycler_error.log'
+    cD1 = ClientDaemon(p_name, pid_fn, stdout=log_fn, stderr=err_fn, verbose=1)
+ 
+    if sys.argv[1] == 'start':
+        cD1.start(log_fn)
+    elif sys.argv[1] == 'stop':
+        cD1.stop()
+    elif sys.argv[1] == 'restart':
+        cD1.restart(log_fn)
+    elif sys.argv[1] == 'status':
+        alive = cD1.is_running()
+        if alive:
+            print 'process [%s] is running ......' % cD1.get_pid()
+        else:
+            print 'daemon process [%s] stopped' %cD1.name
+    else:
+        print 'invalid argument!'
+        print help_msg
 
 def modifyVM(name, body):
     retv = client.CustomObjectsApi().replace_namespaced_custom_object(
@@ -578,145 +757,154 @@ GRAPHICS_PHASES = Description("Connect", "Initialize", "Disconnect")
 DISK_EVENTS = Description("Change missing on start", "Drop missing on start")
 TRAY_EVENTS = Description("Opened", "Closed")
 
-def handler(conn, dom, *args, **kwargs):
-    jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP, version=VERSION, namespace='default', plural=PLURAL, name=dom.name())
-#     print(jsondict)
-    if len(args) >= 4 and str(args[2]) == "Undefined" and str(args[3]) == "Removed":
-        print('Callback domain deletion to virtlet')
-        deleteVM(dom.name(), jsondict)
-    else:
-        print('Callback domain changes to virtlet')
-        vm_xml = get_xml(dom.name())
-        vm_json = toKubeJson(xmlToJson(vm_xml))
-        body = updateDomainStructureInJson(jsondict, vm_json)
-        modifyVM(dom.name(), body)
+def myDomainEventHandler(conn, dom, *args, **kwargs):
+    try:
+        jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP, version=VERSION, namespace='default', plural=PLURAL, name=dom.name())
+    #     print(jsondict)
+        if kwargs.has_key('event') and kwargs.has_key('detail') and \
+        str(DOM_EVENTS[kwargs['event']]) == "Undefined" and \
+        str(DOM_EVENTS[kwargs['event']][kwargs['detail']]) == "Removed":
+            logger.debug('Callback domain deletion to virtlet')
+            deleteVM(dom.name(), jsondict)
+        else:
+            logger.debug('Callback domain changes to virtlet')
+            vm_xml = get_xml(dom.name())
+            vm_json = toKubeJson(xmlToJson(vm_xml))
+            body = updateDomainStructureInJson(jsondict, vm_json)
+            modifyVM(dom.name(), body)
+    except ApiException, e:
+        if e.status == 404:
+            logger.debug('The vm(%s) no longer exists in kubevirt.' % dom.name())
+            return
+        else:
+            traceback.print_exc()
 
 
 def myDomainEventCallback(conn, dom, event, detail, opaque):
-    print("myDomainEventCallback%s EVENT: Domain %s(%s) %s %s" % (
+    logger.debug("myDomainEventCallback%s EVENT: Domain %s(%s) %s %s" % (
         opaque, dom.name(), dom.ID(), DOM_EVENTS[event], DOM_EVENTS[event][detail]))
-    handler(conn, dom, event, detail, opaque)
+    myDomainEventHandler(conn, dom, event=event, detail=detail, opaque=opaque)
     
 
 def myDomainEventRebootCallback(conn, dom, opaque):
-    print("myDomainEventRebootCallback: Domain %s(%s)" % (
+    logger.debug("myDomainEventRebootCallback: Domain %s(%s)" % (
         dom.name(), dom.ID()))
-    handler(conn, dom, opaque)
+    myDomainEventHandler(conn, dom, opaque=opaque)
 
 def myDomainEventRTCChangeCallback(conn, dom, utcoffset, opaque):
-    print("myDomainEventRTCChangeCallback: Domain %s(%s) %d" % (
+    logger.debug("myDomainEventRTCChangeCallback: Domain %s(%s) %d" % (
         dom.name(), dom.ID(), utcoffset))
-    handler(conn, dom, utcoffset, opaque)
+    myDomainEventHandler(conn, dom, utcoffset=utcoffset, opaque=opaque)
 
 def myDomainEventWatchdogCallback(conn, dom, action, opaque):
-    print("myDomainEventWatchdogCallback: Domain %s(%s) %s" % (
+    logger.debug("myDomainEventWatchdogCallback: Domain %s(%s) %s" % (
         dom.name(), dom.ID(), WATCHDOG_ACTIONS[action]))
-    handler(conn, dom, action, opaque)
+    myDomainEventHandler(conn, dom, action=action, opaque=opaque)
 
 def myDomainEventIOErrorCallback(conn, dom, srcpath, devalias, action, opaque):
-    print("myDomainEventIOErrorCallback: Domain %s(%s) %s %s %s" % (
+    logger.debug("myDomainEventIOErrorCallback: Domain %s(%s) %s %s %s" % (
         dom.name(), dom.ID(), srcpath, devalias, ERROR_EVENTS[action]))
-    handler(conn, dom, srcpath, devalias, action, opaque)
+    myDomainEventHandler(conn, dom, srcpath=srcpath, devalias=devalias, action=action, opaque=opaque)
 
 def myDomainEventIOErrorReasonCallback(conn, dom, srcpath, devalias, action, reason, opaque):
-    print("myDomainEventIOErrorReasonCallback: Domain %s(%s) %s %s %s %s" % (
+    logger.debug("myDomainEventIOErrorReasonCallback: Domain %s(%s) %s %s %s %s" % (
         dom.name(), dom.ID(), srcpath, devalias, ERROR_EVENTS[action], reason))
-    handler(conn, dom, srcpath, devalias, action, reason, opaque)
+    myDomainEventHandler(conn, dom, srcpath=srcpath, devalias=devalias, action=action, reason=reason, opaque=opaque)
 
 def myDomainEventGraphicsCallback(conn, dom, phase, localAddr, remoteAddr, authScheme, subject, opaque):
-    print("myDomainEventGraphicsCallback: Domain %s(%s) %s %s" % (
+    logger.debug("myDomainEventGraphicsCallback: Domain %s(%s) %s %s" % (
         dom.name(), dom.ID(), GRAPHICS_PHASES[phase], authScheme))
-    handler(conn, dom, phase, localAddr, remoteAddr, authScheme, subject, opaque)
+    myDomainEventHandler(conn, dom, phase=phase, localAddr=localAddr, remoteAddr=remoteAddr, authScheme=authScheme, subject=subject, opaque=opaque)
 
 def myDomainEventControlErrorCallback(conn, dom, opaque):
-    print("myDomainEventControlErrorCallback: Domain %s(%s)" % (
+    logger.debug("myDomainEventControlErrorCallback: Domain %s(%s)" % (
         dom.name(), dom.ID()))
-    handler(conn, dom, opaque)
+    myDomainEventHandler(conn, dom, opaque=opaque)
 
 def myDomainEventBlockJobCallback(conn, dom, disk, type, status, opaque):
-    print("myDomainEventBlockJobCallback: Domain %s(%s) %s on disk %s %s" % (
+    logger.debug("myDomainEventBlockJobCallback: Domain %s(%s) %s on disk %s %s" % (
         dom.name(), dom.ID(), BLOCK_JOB_TYPES[type], disk, BLOCK_JOB_STATUS[status]))
-    handler(conn, dom, disk, type, status, opaque)
+    myDomainEventHandler(conn, dom, disk=disk, type=type, status=status, opaque=opaque)
 
 def myDomainEventDiskChangeCallback(conn, dom, oldSrcPath, newSrcPath, devAlias, reason, opaque):
-    print("myDomainEventDiskChangeCallback: Domain %s(%s) disk change oldSrcPath: %s newSrcPath: %s devAlias: %s reason: %s" % (
+    logger.debug("myDomainEventDiskChangeCallback: Domain %s(%s) disk change oldSrcPath: %s newSrcPath: %s devAlias: %s reason: %s" % (
         dom.name(), dom.ID(), oldSrcPath, newSrcPath, devAlias, DISK_EVENTS[reason]))
-    handler(conn, dom, oldSrcPath, newSrcPath, devAlias, reason, opaque)
+    myDomainEventHandler(conn, dom, oldSrcPath=oldSrcPath, newSrcPath=newSrcPath, devAlias=devAlias, reason=reason, opaque=opaque)
 
 def myDomainEventTrayChangeCallback(conn, dom, devAlias, reason, opaque):
-    print("myDomainEventTrayChangeCallback: Domain %s(%s) tray change devAlias: %s reason: %s" % (
+    logger.debug("myDomainEventTrayChangeCallback: Domain %s(%s) tray change devAlias: %s reason: %s" % (
         dom.name(), dom.ID(), devAlias, TRAY_EVENTS[reason]))
-    handler(conn, dom, devAlias, reason, opaque)
+    myDomainEventHandler(conn, dom, devAlias=devAlias, reason=reason, opaque=opaque)
 
 def myDomainEventPMWakeupCallback(conn, dom, reason, opaque):
-    print("myDomainEventPMWakeupCallback: Domain %s(%s) system pmwakeup" % (
+    logger.debug("myDomainEventPMWakeupCallback: Domain %s(%s) system pmwakeup" % (
         dom.name(), dom.ID()))
-    handler(conn, dom, reason, opaque)
+    myDomainEventHandler(conn, dom, reason=reason, opaque=opaque)
 
 def myDomainEventPMSuspendCallback(conn, dom, reason, opaque):
-    print("myDomainEventPMSuspendCallback: Domain %s(%s) system pmsuspend" % (
+    logger.debug("myDomainEventPMSuspendCallback: Domain %s(%s) system pmsuspend" % (
         dom.name(), dom.ID()))
-    handler(conn, dom, reason, opaque)
+    myDomainEventHandler(conn, dom, reason=reason, opaque=opaque)
 
 def myDomainEventBalloonChangeCallback(conn, dom, actual, opaque):
-    print("myDomainEventBalloonChangeCallback: Domain %s(%s) %d" % (
+    logger.debug("myDomainEventBalloonChangeCallback: Domain %s(%s) %d" % (
         dom.name(), dom.ID(), actual))
-    handler(conn, dom, actual, opaque)
+    myDomainEventHandler(conn, dom, actual=actual, opaque=opaque)
 
 def myDomainEventPMSuspendDiskCallback(conn, dom, reason, opaque):
-    print("myDomainEventPMSuspendDiskCallback: Domain %s(%s) system pmsuspend_disk" % (
+    logger.debug("myDomainEventPMSuspendDiskCallback: Domain %s(%s) system pmsuspend_disk" % (
         dom.name(), dom.ID()))
-    handler(conn, dom, reason, opaque)
+    myDomainEventHandler(conn, dom, reason=reason, opaque=opaque)
 
 def myDomainEventDeviceRemovedCallback(conn, dom, dev, opaque):
-    print("myDomainEventDeviceRemovedCallback: Domain %s(%s) device removed: %s" % (
+    logger.debug("myDomainEventDeviceRemovedCallback: Domain %s(%s) device removed: %s" % (
         dom.name(), dom.ID(), dev))
-    handler(conn, dom, dev, opaque)
+    myDomainEventHandler(conn, dom, dev=dev, opaque=opaque)
 
 def myDomainEventBlockJob2Callback(conn, dom, disk, type, status, opaque):
-    print("myDomainEventBlockJob2Callback: Domain %s(%s) %s on disk %s %s" % (
+    logger.debug("myDomainEventBlockJob2Callback: Domain %s(%s) %s on disk %s %s" % (
         dom.name(), dom.ID(), BLOCK_JOB_TYPES[type], disk, BLOCK_JOB_STATUS[status]))
-    handler(conn, dom, disk, type, status, opaque)
+    myDomainEventHandler(conn, dom, disk=disk, type=type, status=status, opaque=opaque)
 
 def myDomainEventTunableCallback(conn, dom, params, opaque):
-    print("myDomainEventTunableCallback: Domain %s(%s) %s" % (
+    logger.debug("myDomainEventTunableCallback: Domain %s(%s) %s" % (
         dom.name(), dom.ID(), params))
-    handler(conn, dom, params, opaque)
+    myDomainEventHandler(conn, dom, params=params, opaque=opaque)
 
 def myDomainEventAgentLifecycleCallback(conn, dom, state, reason, opaque):
-    print("myDomainEventAgentLifecycleCallback: Domain %s(%s) %s %s" % (
+    logger.debug("myDomainEventAgentLifecycleCallback: Domain %s(%s) %s %s" % (
         dom.name(), dom.ID(), AGENT_STATES[state], AGENT_REASONS[reason]))
-    handler(conn, dom, state, reason, opaque)
+    myDomainEventHandler(conn, dom, state=state, reason=reason, opaque=opaque)
 
 def myDomainEventDeviceAddedCallback(conn, dom, dev, opaque):
-    print("myDomainEventDeviceAddedCallback: Domain %s(%s) device added: %s" % (
+    logger.debug("myDomainEventDeviceAddedCallback: Domain %s(%s) device added: %s" % (
         dom.name(), dom.ID(), dev))
-    handler(conn, dom, dev, opaque)
+    myDomainEventHandler(conn, dom, dev=dev, opaque=opaque)
 
 def myDomainEventMigrationIteration(conn, dom, iteration, opaque):
-    print("myDomainEventMigrationIteration: Domain %s(%s) started migration iteration %d" % (
+    logger.debug("myDomainEventMigrationIteration: Domain %s(%s) started migration iteration %d" % (
         dom.name(), dom.ID(), iteration))
-    handler(conn, dom, iteration, opaque)
+    myDomainEventHandler(conn, dom, iteration=iteration, opaque=opaque)
 
 def myDomainEventJobCompletedCallback(conn, dom, params, opaque):
-    print("myDomainEventJobCompletedCallback: Domain %s(%s) %s" % (
+    logger.debug("myDomainEventJobCompletedCallback: Domain %s(%s) %s" % (
         dom.name(), dom.ID(), params))
-    handler(conn, dom, params, opaque)
+    myDomainEventHandler(conn, dom, params=params, opaque=opaque)
 
 def myDomainEventDeviceRemovalFailedCallback(conn, dom, dev, opaque):
-    print("myDomainEventDeviceRemovalFailedCallback: Domain %s(%s) failed to remove device: %s" % (
+    logger.debug("myDomainEventDeviceRemovalFailedCallback: Domain %s(%s) failed to remove device: %s" % (
         dom.name(), dom.ID(), dev))
-    handler(conn, dom, dev, opaque)
+    myDomainEventHandler(conn, dom, dev=dev, opaque=opaque)
 
 def myDomainEventMetadataChangeCallback(conn, dom, mtype, nsuri, opaque):
-    print("myDomainEventMetadataChangeCallback: Domain %s(%s) changed metadata mtype=%d nsuri=%s" % (
+    logger.debug("myDomainEventMetadataChangeCallback: Domain %s(%s) changed metadata mtype=%d nsuri=%s" % (
         dom.name(), dom.ID(), mtype, nsuri))
-    handler(conn, dom, mtype, nsuri, opaque)
+    myDomainEventHandler(conn, dom, mtype=mtype, nsuri=nsuri, opaque=opaque)
 
 def myDomainEventBlockThresholdCallback(conn, dom, dev, path, threshold, excess, opaque):
-    print("myDomainEventBlockThresholdCallback: Domain %s(%s) block device %s(%s) threshold %d exceeded by %d" % (
+    logger.debug("myDomainEventBlockThresholdCallback: Domain %s(%s) block device %s(%s) threshold %d exceeded by %d" % (
         dom.name(), dom.ID(), dev, path, threshold, excess))
-    handler(conn, dom, dev, path, threshold, excess, opaque)
+    myDomainEventHandler(conn, dom, dev=dev, path=path, threshold=threshold, excess=excess, opaque=opaque)
 
 ##########################################################################
 # Network events
@@ -730,7 +918,7 @@ NET_EVENTS = Description(
 
 
 def myNetworkEventLifecycleCallback(conn, net, event, detail, opaque):
-    print("myNetworkEventLifecycleCallback: Network %s %s %s" % (
+    logger.debug("myNetworkEventLifecycleCallback: Network %s %s %s" % (
         net.name(), NET_EVENTS[event], NET_EVENTS[event][detail]))
 
 
@@ -748,12 +936,12 @@ STORAGE_EVENTS = Description(
 
 
 def myStoragePoolEventLifecycleCallback(conn, pool, event, detail, opaque):
-    print("myStoragePoolEventLifecycleCallback: Storage pool %s %s %s" % (
+    logger.debug("myStoragePoolEventLifecycleCallback: Storage pool %s %s %s" % (
         pool.name(), STORAGE_EVENTS[event], STORAGE_EVENTS[event][detail]))
 
 
 def myStoragePoolEventRefreshCallback(conn, pool, opaque):
-    print("myStoragePoolEventRefreshCallback: Storage pool %s" % pool.name())
+    logger.debug("myStoragePoolEventRefreshCallback: Storage pool %s" % pool.name())
 
 
 ##########################################################################
@@ -766,12 +954,12 @@ DEVICE_EVENTS = Description(
 
 
 def myNodeDeviceEventLifecycleCallback(conn, dev, event, detail, opaque):
-    print("myNodeDeviceEventLifecycleCallback: Node device  %s %s %s" % (
+    logger.debug("myNodeDeviceEventLifecycleCallback: Node device  %s %s %s" % (
         dev.name(), DEVICE_EVENTS[event], DEVICE_EVENTS[event][detail]))
 
 
 def myNodeDeviceEventUpdateCallback(conn, dev, opaque):
-    print("myNodeDeviceEventUpdateCallback: Node device %s" % dev.name())
+    logger.debug("myNodeDeviceEventUpdateCallback: Node device %s" % dev.name())
 
 
 ##########################################################################
@@ -784,12 +972,12 @@ SECRET_EVENTS = Description(
 
 
 def mySecretEventLifecycleCallback(conn, secret, event, detail, opaque):
-    print("mySecretEventLifecycleCallback: Secret %s %s %s" % (
+    logger.debug("mySecretEventLifecycleCallback: Secret %s %s %s" % (
         secret.UUIDString(), SECRET_EVENTS[event], SECRET_EVENTS[event][detail]))
 
 
 def mySecretEventValueChanged(conn, secret, opaque):
-    print("mySecretEventValueChanged: Secret %s" % secret.UUIDString())
+    logger.debug("mySecretEventValueChanged: Secret %s" % secret.UUIDString())
 
 
 ##########################################################################
@@ -801,7 +989,7 @@ CONNECTION_EVENTS = Description("Error", "End-of-file", "Keepalive", "Client")
 
 
 def myConnectionCloseCallback(conn, reason, opaque):
-    print("myConnectionCloseCallback: %s: %s" % (
+    logger.debug("myConnectionCloseCallback: %s: %s" % (
         conn.getURI(), CONNECTION_EVENTS[reason]))
     global run
     run = False
@@ -817,6 +1005,7 @@ def usage():
 
 
 def main():
+    config.load_kube_config(config_file=TOKEN)
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hdl:", ["help", "debug", "loop=", "timeout="])
     except getopt.GetoptError as err:
@@ -838,10 +1027,10 @@ def main():
         if o in ("--timeout"):
             timeout = int(a)
 
-    if len(args) >= 1:
-        uri = args[0]
-    else:
-        uri = "qemu:///system"
+#     if len(args) >= 1:
+#         uri = args[0]
+#     else:
+    uri = "qemu:///system"
 
     print("Using uri '%s' and event loop '%s'" % (uri, event_impl))
 
@@ -953,6 +1142,5 @@ def main():
     # Allow delayed event loop cleanup to run, just for sake of testing
     time.sleep(2)
 
-
 if __name__ == "__main__":
-    main()
+    daemonize()
