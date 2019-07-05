@@ -2,7 +2,7 @@
   "apiVersion": "cloudplus.io/v1alpha3",
   "kind": "VirtualMachine",
   "metadata": {
-    "name": "vm"
+    "name": "ddd"
   },
   "spec": {
     "domain": {
@@ -16,7 +16,7 @@
       "unplugNIC": {
         "domain": "Centos",
         "type": "bridge",
-        "mac": "52:54:00:23:c0:d1",
+        "mac": "52:54:00:de:32:fe",
         "live": true,
         "config": true
       }

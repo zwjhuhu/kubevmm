@@ -2,7 +2,7 @@
   "apiVersion": "cloudplus.io/v1alpha3",
   "kind": "VirtualMachine",
   "metadata": {
-    "name": "vm"
+    "name": "ddd"
   },
   "spec": {
     "domain": {
