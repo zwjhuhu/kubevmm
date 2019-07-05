@@ -9,7 +9,6 @@ Kubernetes.
 **Authors**
 - wuheng@otcaix.iscas.ac.cn
 - wuyuewen@otcaix.iscas.ac.cn
-- xuyuanjia2017@otcaix.iscas.ac.cn
 
 **Thanks**
 - xianghao16@otcaix.iscas.ac.cn
@@ -50,8 +49,8 @@ kubectl apply -f yamls/
 ## Capacities
 
 - VirtualMachine
-- VirtualNetwork
-- VirtualDisk
+- VirtualMachineNetwork
+- VirtualMachineDisk
 - VirtualMachineSnapshot
 - VirtualMachineImage
 - VirtualMachineStoragePool

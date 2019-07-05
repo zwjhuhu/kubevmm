@@ -28,6 +28,11 @@
 			<version>1.24</version>
 		</dependency>
 		<dependency>
+			<groupId>io.etcd</groupId>
+			<artifactId>jetcd-core</artifactId>
+			<version>0.3.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.github.kubesys</groupId>
 			<artifactId>kubernetes-client</artifactId>
 			<version>20190623</version>
