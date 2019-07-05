@@ -72,3 +72,34 @@ spec:
     singular: virtualmachineimage
   scope: Namespaced
   version: v1alpha3
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinedisks.cloudplus.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.name
+    name: NAME
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.path
+    name: PATH
+    type: string
+  - JSONPath: .spec.usedby
+    name: USEDBY
+    type: string
+  group: cloudplus.io
+  names:
+    kind: VirtualMachineDisk
+    plural: virtualmachinedisks
+    shortNames:
+    - vmd
+    - vmds
+    singular: virtualmachineDisk
+  scope: Namespaced
+  version: v1alpha3
