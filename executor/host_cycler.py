@@ -44,7 +44,7 @@ config_raw.read(cfg)
 TOKEN = config_raw.get('Kubernetes', 'token_file')
 HOSTNAME = socket.gethostname()
 
-logger = logger.set_logger('/var/log/virtlet_host_cycler_output.log')
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet_host_cycler_output.log')
 
 class CDaemon:
     '''
@@ -200,10 +200,10 @@ def daemonize():
         print help_msg
         sys.exit(1)
     p_name = 'virtlet_host_cycler'
-    pid_fn = '/tmp/virtlet_host_cycler_daemon.pid'
+    pid_fn = '/var/run/virtlet_host_cycler_daemon.pid'
     log_fn = '/var/log/virtlet_host_cycler_output.log'
     err_fn = '/var/log/virtlet_host_cycler_error.log'
-    cD1 = ClientDaemon(p_name, pid_fn, stdout=log_fn, stderr=err_fn, verbose=1)
+    cD1 = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  
     if sys.argv[1] == 'start':
         cD1.start(log_fn)

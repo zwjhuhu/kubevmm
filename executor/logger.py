@@ -2,8 +2,8 @@ import logging
 import logging.handlers
 
 
-def set_logger(fn):
-    logger = logging.getLogger("logger")
+def set_logger(header,fn):
+    logger = logging.getLogger(header)
     
     handler1 = logging.StreamHandler()
     handler2 = logging.FileHandler(filename=fn)

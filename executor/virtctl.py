@@ -186,10 +186,10 @@ if __name__ == '__main__':
         print help_msg
         sys.exit(1)
     p_name = 'virtctl'
-    pid_fn = '/tmp/virtctl_daemon.pid'
+    pid_fn = '/var/run/virtctl_daemon.pid'
     log_fn = '/var/log/virtctl_output.log'
     err_fn = '/var/log/virtctl_error.log'
-    cD = ClientDaemon(p_name, pid_fn, stdout=log_fn, stderr=err_fn, verbose=1)
+    cD = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  
     if sys.argv[1] == 'start':
         cD.start(log_fn)

@@ -10,7 +10,7 @@ Import python libs
 '''
 import os, sys, subprocess
 
-vm_cycler = '%s/vm_cycler.py' %(os.path.dirname(os.path.realpath(__file__)))
+libvirt_event_handler = '%s/libvirt_event_handler.py' %(os.path.dirname(os.path.realpath(__file__)))
 host_cycler = '%s/host_cycler.py' %(os.path.dirname(os.path.realpath(__file__)))
 
 '''
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     if len(sys.argv) != 2:
         print(help_msg)
         sys.exit(1)
-    cmd1 = 'python %s %s' %(vm_cycler, sys.argv[1])
+    cmd1 = 'python %s %s' %(libvirt_event_handler, sys.argv[1])
     cmd2 = 'python %s %s' %(host_cycler, sys.argv[1])
     print(runCmd(cmd1))
     print(runCmd(cmd2))
