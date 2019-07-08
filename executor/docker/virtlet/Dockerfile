@@ -6,9 +6,7 @@ ADD virtlet.py /home/virtlet/bin
 
 ADD virtlet.sh /home/virtlet/bin
 
-ADD host_watcher.py /home/virtlet/bin
-
-ADD libvirt_util.py /home/virtlet/bin
+ADD utils /home/virtlet/bin
 
 ADD default.cfg /home/virtlet/bin
 

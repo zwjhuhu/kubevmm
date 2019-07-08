@@ -65,6 +65,16 @@ def _get_dom(vm_):
         raise Exception('The specified vm is not present')
     return conn.lookupByName(vm_)
 
+def is_vm_exists(vm_):
+    if vm_ in list_vms():
+        return True
+    return False
+
+def is_vm_active(vm_):
+    if vm_ in list_active_vms():
+        return True
+    return False
+
 def list_vms():
     '''
     Return a list of virtual machine names on the minion
