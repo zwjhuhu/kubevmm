@@ -6,7 +6,7 @@ ADD virtctl.py /home/virtctl/bin
 
 ADD virtctl.sh /home/virtctl/bin
 
-RUN cp -r utils /home/virtctl/bin
+ADD utils /home/virtctl/bin/utils
 
 ADD invoker.py /home/virtctl/bin
 

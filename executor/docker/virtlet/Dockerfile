@@ -6,7 +6,7 @@ ADD virtlet.py /home/virtlet/bin
 
 ADD virtlet.sh /home/virtlet/bin
 
-RUN cp -r utils /home/virtctl/bin
+ADD utils /home/virtctl/bin/utils
 
 ADD host_cycler.py /home/virtlet/bin
 

@@ -1,0 +1,25 @@
+{
+  "apiVersion": "cloudplus.io/v1alpha3",
+  "kind": "VirtualMachine",
+  "metadata": {
+    "name": "ddd"
+  },
+  "spec": {
+    "domain": {
+       "name": {
+          "text": "Centos"
+        }
+    },
+    "image": "CentOS7",
+    "nodeName": "node22",
+    "lifecycle": {
+      "plugDisk": {
+        "domain": "ddd",
+        "source": "/var/lib/libvirt/images/image1.qcow2",
+        "target": "vdb",
+        "live": true,
+        "config": true
+      }
+    }
+  }
+}

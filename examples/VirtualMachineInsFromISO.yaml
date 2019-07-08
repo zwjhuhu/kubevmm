@@ -8,7 +8,7 @@
     "image": "CentOS7",
     "lifecycle": {
       "createAndStartVMFromISO": {
-        "name": "yuewen",
+        "name": "虚拟机",
         "virt_type": "kvm",
         "memory": "1024",
         "vcpus": "1",
