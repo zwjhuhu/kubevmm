@@ -6,7 +6,11 @@ ADD virtlet.py /home/virtlet/bin
 
 ADD virtlet.sh /home/virtlet/bin
 
-ADD utils /home/virtlet/bin
+RUN cp -r utils /home/virtctl/bin
+
+ADD host_cycler.py /home/virtlet/bin
+
+ADD libvirt_event_handler.py /home/virtlet/bin
 
 ADD default.cfg /home/virtlet/bin
 

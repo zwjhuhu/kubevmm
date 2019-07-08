@@ -7,4 +7,4 @@
 ################################################################
 
 
-python /home/virtctl/bin/virtctl.py
+python /home/virtctl/bin/virtctl.py start
