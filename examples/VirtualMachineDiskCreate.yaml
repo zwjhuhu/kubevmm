@@ -5,17 +5,11 @@
     "name": "disk1"
   },
   "spec": {
-    "domain": {
-       "name": {
-          "text": "Centos"
-        }
-    },
     "image": "CentOS7",
-    "nodeName": "node22",
+    "nodeName": "localhost.localdomain",
     "lifecycle": {
-      "createVolume": {
+      "createDisk": {
         "pool": "default",
-        "name": "image1",
         "capacity": "10G",
         "format": "qcow2"
       }
