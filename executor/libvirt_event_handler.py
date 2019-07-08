@@ -34,9 +34,10 @@ from xmljson import badgerfish as bf
 '''
 Import local libs
 '''
-from libvirt_util import get_xml
-from utils import CDaemon
-import logger
+# sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
+from utils.libvirt_util import get_xml
+from utils.utils import CDaemon
+from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  

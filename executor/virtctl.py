@@ -16,8 +16,9 @@ from kubernetes import config
 '''
 Import local libs
 '''
+# sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
 import invoker
-from utils import CDaemon
+from utils.utils import CDaemon
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  

@@ -12,6 +12,7 @@ https://github.com/kubernetes/kubernetes/issues/51046
 Import python libs
 '''
 import os
+import sys
 import subprocess
 import ConfigParser
 import xmltodict
@@ -33,8 +34,9 @@ from xmljson import badgerfish as bf
 '''
 Import local libs
 '''
-from libvirt_util import get_xml, destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists
-import logger
+# sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
+from utils.libvirt_util import get_xml, destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists
+from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  

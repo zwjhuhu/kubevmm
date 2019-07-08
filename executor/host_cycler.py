@@ -28,9 +28,10 @@ from kubernetes.client.models.v1_node_address import V1NodeAddress
 '''
 Import local libs
 '''
-from libvirt_util import freecpu, freemem, node_info
-from utils import CDaemon
-import logger
+# sys.path.append('%s/utils/libvirt_util.py' % (os.path.dirname(os.path.realpath(__file__))))
+from utils.libvirt_util import freecpu, freemem, node_info
+from utils.utils import CDaemon
+from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
