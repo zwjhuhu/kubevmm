@@ -12,6 +12,10 @@ import java.util.logging.Logger;
 
 import org.yaml.snakeyaml.Yaml;
 
+import com.github.kube.controller.watcher.VirtualMachineDiskWatcher;
+import com.github.kube.controller.watcher.VirtualMachineImageWatcher;
+import com.github.kube.controller.watcher.VirtualMachineSnapshotWatcher;
+import com.github.kube.controller.watcher.VirtualMachineWatcher;
 import com.github.kubesys.kubernetes.ExtendedKubernetesClient;
 
 import io.fabric8.kubernetes.client.Config;
@@ -58,10 +62,16 @@ public class KubevirtController {
 	
 	public void start() {
 		client.watchVirtualMachine(new VirtualMachineWatcher(client));
+		client.watchVirtualMachineDisk(new VirtualMachineDiskWatcher(client));
+		client.watchVirtualMachineImage(new VirtualMachineImageWatcher(client));
+		client.watchVirtualMachineSnapshot(new VirtualMachineSnapshotWatcher(client));
 	}
 	
 	public static void main(String[] args) throws Exception {
 		m_logger.log(Level.INFO, "Start VirtualMachineWatcher");
+		m_logger.log(Level.INFO, "Start VirtualMachineImageWatcher");
+		m_logger.log(Level.INFO, "Start VirtualMachineDiskWatcher");
+		m_logger.log(Level.INFO, "Start VirtualMachineSnapshotWatcher");
 		KubevirtController scheduler = new KubevirtController();
 		scheduler.start();
 	}

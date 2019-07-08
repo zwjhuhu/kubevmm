@@ -1,7 +1,7 @@
 /**
  * Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
  */
-package com.github.kube.controller;
+package com.github.kube.controller.watcher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
