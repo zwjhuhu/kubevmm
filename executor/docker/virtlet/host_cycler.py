@@ -8,7 +8,7 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 '''
 Import python libs
 '''
-import os, time, datetime, socket, requests, subprocess
+import os, sys, time, datetime, socket, subprocess, time, traceback
 import ConfigParser
 from dateutil.tz import gettz
 
@@ -28,7 +28,10 @@ from kubernetes.client.models.v1_node_address import V1NodeAddress
 '''
 Import local libs
 '''
-from libvirt_util import freecpu, freemem, node_info
+# sys.path.append('%s/utils/libvirt_util.py' % (os.path.dirname(os.path.realpath(__file__))))
+from utils.libvirt_util import freecpu, freemem, node_info
+from utils.utils import CDaemon
+from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
@@ -41,8 +44,59 @@ config_raw = parser()
 config_raw.read(cfg)
 
 TOKEN = config_raw.get('Kubernetes', 'token_file')
+HOSTNAME = socket.gethostname()
 
-class HostWatcher:
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet_host_cycler_output.log')
+ 
+class ClientDaemon(CDaemon):
+    def __init__(self, name, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
+        CDaemon.__init__(self, save_path, stdin, stdout, stderr, home_dir, umask, verbose)
+        self.name = name
+ 
+    def run(self, output_fn, **kwargs):
+        try:
+            main()
+        except Exception, e:
+            traceback.print_exc()
+            main()
+            
+def daemonize():
+    help_msg = 'Usage: python %s <start|stop|restart|status>' % sys.argv[0]
+    if len(sys.argv) != 2:
+        print help_msg
+        sys.exit(1)
+    p_name = 'virtlet_host_cycler'
+    pid_fn = '/var/run/virtlet_host_cycler_daemon.pid'
+    log_fn = '/var/log/virtlet_host_cycler_output.log'
+    err_fn = '/var/log/virtlet_host_cycler_error.log'
+    cD1 = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
+ 
+    if sys.argv[1] == 'start':
+        cD1.start(log_fn)
+    elif sys.argv[1] == 'stop':
+        cD1.stop()
+    elif sys.argv[1] == 'restart':
+        cD1.restart(log_fn)
+    elif sys.argv[1] == 'status':
+        alive = cD1.is_running()
+        if alive:
+            print 'process [%s] is running ......' % cD1.get_pid()
+        else:
+            print 'daemon process [%s] stopped' %cD1.name
+    else:
+        print 'invalid argument!'
+        print help_msg
+
+def main():
+    config.load_kube_config(config_file=TOKEN)
+    while True:
+        host = client.CoreV1Api().read_node_status(name='node12')
+        node_watcher = HostCycler()
+        host.status = node_watcher.get_node_status()
+        client.CoreV1Api().replace_node_status(name='node12', body=host)
+        time.sleep(8)
+
+class HostCycler:
     
     def __init__(self):
         self.node_status = V1NodeStatus(addresses=self.get_status_address(), allocatable=self.get_status_allocatable(), 
@@ -140,13 +194,5 @@ class HostWatcher:
     node = property(get_node, "node's docstring")
     node_status = property(get_node_status, "node_status's docstring")
 
-if __name__ == '__main__':
-    config.load_kube_config(config_file=TOKEN)
-    host = client.CoreV1Api().read_node_status(name="node12")
-    r = HostWatcher()
-    print(r.get_node())
-    host.status = r.get_node_status()
-    print client.CoreV1Api().replace_node_status(name="node12", body=host)
-    
-#     print client.CoreV1Api().read_node_status(name="node11")
-    #client.CoreV1Api().patch_node_status(name="mocker", body=body)
+if __name__ == "__main__":
+    daemonize()
