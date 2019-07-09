@@ -6,7 +6,6 @@
   },
   "spec": {
     "image": "CentOS7",
-    "nodeName": "localhost.localdomain",
     "lifecycle": {
       "createDisk": {
         "pool": "default",
