@@ -1,10 +1,8 @@
-# KubeVirt
+# KubeVMM
 
-**KubeVirt** is a virtual machine management add-on for Kubernetes.
-The aim is to provide a common ground for virtualization solutions on top of
-Kubernetes.
+**KubeVMM** is a Kubernetes-based virtual machine management platform.
 
-**Note:** KubeVirt is a heavy work in progress.
+**Note:** KubeVMM is a heavy work in progress.
 
 **Authors**
 - wuheng@otcaix.iscas.ac.cn
@@ -19,8 +17,8 @@ Kubernetes.
 
 ## Virtualization extension for Kubernetes
 
-At its core, KubeVirt extends [Kubernetes](https://kubernetes.io/) by adding
-additional virtualization resource types (especially the `VM` type) through
+KubeVMM extends [Kubernetes](https://kubernetes.io/) by adding
+additional virtualization resource types through
 [Kubernetes's Custom Resource Definitions API](https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/).
 By using this mechanism, the Kubernetes API can be used to manage these `VM`
 resources alongside all other resources Kubernetes provides.
