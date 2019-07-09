@@ -1,5 +1,6 @@
 # KubeVMM
 
+
 **KubeVMM** is a Kubernetes-based virtual machine management platform.
 
 **Note:** KubeVMM is a heavy work in progress.
@@ -46,11 +47,11 @@ kubectl apply -f yamls/
 
 ## Capacities
 
-- VirtualMachine
+- VirtualMachine **(Supported)**
+- VirtualMachineDisk **(Supported)**
+- VirtualMachineSnapshot **(Supported)**
+- VirtualMachineImage **(Supported)**
 - VirtualMachineNetwork
-- VirtualMachineDisk
-- VirtualMachineSnapshot
-- VirtualMachineImage
 - VirtualMachineStoragePool
 
 # Architecture
