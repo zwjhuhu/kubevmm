@@ -141,8 +141,8 @@ spec:
     kind: VirtualMachineSnapshot
     plural: virtualmachinesnapshots
     shortNames:
-    - vms
-    - vmss
+    - vmsn
+    - vmsns
     singular: virtualmachinesnapshot
   scope: Namespaced
   version: v1alpha3
