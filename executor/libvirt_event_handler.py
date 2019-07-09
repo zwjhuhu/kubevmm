@@ -54,7 +54,7 @@ PLURAL = config_raw.get('VirtualMachine', 'plural')
 VERSION = config_raw.get('VirtualMachine', 'version')
 GROUP = config_raw.get('VirtualMachine', 'group')
 
-logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet_vm_cycler_output.log')
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet_libvirt_event_handler_output.log')
 
 class ClientDaemon(CDaemon):
     def __init__(self, name, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
@@ -74,9 +74,9 @@ def daemonize():
         print help_msg
         sys.exit(1)
     p_name = 'virtlet_vm_cycler'
-    pid_fn = '/var/run/virtlet_vm_cycler_daemon.pid'
-    log_fn = '/var/log/virtlet_vm_cycler_output.log'
-    err_fn = '/var/log/virtlet_vm_cycler_error.log'
+    pid_fn = '/var/run/virtlet_libvirt_event_handler_daemon.pid'
+    log_fn = '/var/log/virtlet_libvirt_event_handler_output.log'
+    err_fn = '/var/log/virtlet_libvirt_event_handler_error.log'
     cD1 = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  
     if sys.argv[1] == 'start':

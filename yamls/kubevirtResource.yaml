@@ -121,10 +121,10 @@ metadata:
   name: virtualmachinesnapshots.cloudplus.io
 spec:
   additionalPrinterColumns:
-  - JSONPath: .spec.snapshotName
+  - JSONPath: .spec.domainsnapshot.name.text
     name: NAME
     type: string
-  - JSONPath: .spec.VmName
+  - JSONPath: .spec.domainsnapshot.domain.name.text
     name: VM
     type: string  
   - JSONPath: .spec.status
@@ -141,8 +141,8 @@ spec:
     kind: VirtualMachineSnapshot
     plural: virtualmachinesnapshots
     shortNames:
-    - vms
-    - vmss
+    - vmsn
+    - vmsns
     singular: virtualmachinesnapshot
   scope: Namespaced
   version: v1alpha3
