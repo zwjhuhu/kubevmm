@@ -113,7 +113,7 @@ def toKubeJson(json):
             'interface', '_interface').replace('transient', '_transient').replace(
                     'nested-hv', 'nested_hv').replace('suspend-to-mem', 'suspend_to_mem').replace('suspend-to-disk', 'suspend_to_disk')
                     
-def updateDomainStructureInJson(jsondict, body):
+def updateXmlStructureInJson(jsondict, body):
     if jsondict:
         '''
         Get target VM name from Json.
@@ -636,11 +636,11 @@ def myDomainEventHandler(conn, dom, *args, **kwargs):
             logger.debug('Callback domain changes to virtlet')
             vm_xml = get_xml(dom.name())
             vm_json = toKubeJson(xmlToJson(vm_xml))
-            body = updateDomainStructureInJson(jsondict, vm_json)
+            body = updateXmlStructureInJson(jsondict, vm_json)
             modifyVM(dom.name(), body)
     except ApiException, e:
         if e.status == 404:
-            logger.debug('The vm(%s) no longer exists in kubevirt.' % dom.name())
+            logger.error('The vm(%s) does not exist in kubevirt.' % dom.name())
             return
         else:
             traceback.print_exc()
@@ -1009,4 +1009,5 @@ def main():
     time.sleep(2)
 
 if __name__ == "__main__":
+    config.load_kube_config(config_file=TOKEN)
     daemonize()

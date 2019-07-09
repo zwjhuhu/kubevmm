@@ -12,7 +12,7 @@ def set_logger(header,fn):
     handler1.setLevel(logging.DEBUG)
     handler2.setLevel(logging.DEBUG)
     
-    formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
+    formatter = logging.Formatter("%(asctime)s %(name)s %(lineno)s %(levelname)s %(message)s")
     handler1.setFormatter(formatter)
     handler2.setFormatter(formatter)
     

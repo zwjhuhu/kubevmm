@@ -62,8 +62,20 @@ def _get_dom(vm_):
     '''
     conn = __get_conn()
     if vm_ not in list_vms():
-        raise Exception('The specified vm is not present')
+        raise Exception('The specified vm is not present(%s).' % vm_)
     return conn.lookupByName(vm_)
+
+def _get_pool(pool_):
+    conn = __get_conn()
+    if pool_ not in list_pools():
+        raise Exception('The specified pool is not present(%s).' % pool_)
+    pool = conn.storagePoolLookupByName(pool_)
+    pool.refresh()
+    return pool
+
+def _get_vol(pool_, vol_):
+    pool = _get_pool(pool_)
+    return pool.storageVolLookupByName(vol_)
 
 def is_vm_exists(vm_):
     if vm_ in list_vms():
@@ -614,5 +626,48 @@ def undefine(vm_):
     dom = _get_dom(vm_)
     return dom.undefine() == 0
 
+def list_pools():
+    conn = __get_conn()
+    return conn.listStoragePools()
+
+def get_pool_path(pool_):
+    pool = _get_pool(pool_)
+    return pool.XMLDesc(0)
+
+def get_pool_xml(pool_):
+    pool = _get_pool(pool_)
+    return pool.XMLDesc(0)
+
+def list_all_volumes():
+    vols = []
+    for pool_ in list_pools():
+        pool = _get_pool(pool_)
+        for vol in pool.listAllVolumes():
+            vols.append(vol.name())
+    return vols
+
+def list_volumes(pool_):
+    pool = _get_pool(pool_)
+    vols = []
+    for vol in pool.listAllVolumes():
+        vols.append(vol.name())
+    return vols
+
+def get_volume_xml(pool_, vol_):
+    vol = _get_vol(pool_, vol_)
+    return vol.XMLDesc()
+
+def delete_volume(pool_, vol_):
+    vol = _get_vol(pool_, vol_)
+    return vol.delete()
+
+def is_volume_exists(vol_):
+    if vol_ in list_all_volumes():
+        return True
+    return False
+
 if __name__ == '__main__':
-    print(freecpu())
+    print(list_all_volumes())
+#     print(get_pool_xml('volumes'))
+#     print(list_volumes('volumes'))
+#     print(get_volume_xml('volumes', 'ddd.qcow2'))

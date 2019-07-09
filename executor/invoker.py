@@ -17,7 +17,9 @@ import subprocess
 import ConfigParser
 import xmltodict
 import socket
+import string
 import traceback
+import pprint
 from json import loads
 from json import dumps
 from StringIO import StringIO as _StringIO
@@ -35,7 +37,7 @@ from xmljson import badgerfish as bf
 Import local libs
 '''
 # sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
-from utils.libvirt_util import get_xml, destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists
+from utils.libvirt_util import get_xml, destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists, is_volume_exists
 from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
@@ -59,18 +61,40 @@ PLURAL_VM_DISK = config_raw.get('VirtualMachineDisk', 'plural')
 VERSION_VM_DISK = config_raw.get('VirtualMachineDisk', 'version')
 GROUP_VM_DISK = config_raw.get('VirtualMachineDisk', 'group')
 
-
-VMSUPPORTCMDS1 = config_raw._sections['VirtualMachineSupportCmds1']
-VMSUPPORTCMDS2 = config_raw._sections['VirtualMachineSupportCmds2']
-VMSUPPORTCMDSALL = dict(VMSUPPORTCMDS1, **VMSUPPORTCMDS2)
-VMDISKSUPPORTCMDS = config_raw._sections['VirtualMachineDiskSupportCmds']
-IMAGESUPPORTCMDS = config_raw._sections['VirtualMachineImageSupportCmds']
-
 LABEL = 'host=%s' % (socket.gethostname())
 
 logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtctl_output.log')
 
+'''
+Handle support CMDs settings in default.cfg.
+NOTE: if the key ends up with 'WithNameField' means that the CMD is using 'name' variable as index.
+      The key ends up with 'WithDomainField' means that the CMD is using 'domain' variable as index.
+      The key ends up with 'WithVolField' means that the CMD is using 'vol' variable as index.
+'''
+ALL_SUPPORT_CMDS = {}
+ALL_SUPPORT_CMDS_WITH_NAME_FIELD = {}
+ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD = {}
+ALL_SUPPORT_CMDS_WITH_VOL_FIELD = {}
+
+for k,v in config_raw._sections.items():
+    if string.find(k, 'SupportCmds') != -1:
+        ALL_SUPPORT_CMDS = dict(ALL_SUPPORT_CMDS, **v)
+        if string.find(k, 'WithNameField') != -1:
+            ALL_SUPPORT_CMDS_WITH_NAME_FIELD = dict(ALL_SUPPORT_CMDS_WITH_NAME_FIELD, **v)
+        elif string.find(k, 'WithDomainField') != -1:
+            ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD = dict(ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD, **v)
+        elif string.find(k, 'WithVolField') != -1:
+            ALL_SUPPORT_CMDS_WITH_VOL_FIELD = dict(ALL_SUPPORT_CMDS_WITH_VOL_FIELD, **v)
+
 def main():
+    logger.debug("---------------------------------------------------------------------------------")
+    logger.debug("---------------------------Starting Virtctl Daemon.------------------------------")
+    logger.debug("------Copyright (2019, ) Institute of Software, Chinese Academy of Sciences------")
+    logger.debug("---------------------------------------------------------------------------------")
+    
+    logger.debug("Loading configurations in 'default.cfg' ...")
+    logger.debug("All support CMDs are:")
+    logger.debug(ALL_SUPPORT_CMDS)
     watcher = watch.Watch()
     kwargs = {}
     kwargs['label_selector'] = LABEL
@@ -83,7 +107,7 @@ def vMWatcher(watcher, **kwargs):
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VM, version=VERSION_VM, plural=PLURAL_VM, **kwargs):
         operation_type = jsondict.get('type')
-#         print operation_type
+        print(operation_type)
         metadata_name = getMetadataName(jsondict)
         print('metadata name: %s' % metadata_name)
         jsondict = forceUsingMetadataName(metadata_name, jsondict)
@@ -114,9 +138,10 @@ def vMWatcher(watcher, **kwargs):
                 if cmd:     
                     runCmd(cmd)
         elif operation_type == 'MODIFIED':
-            cmd = unpackCmdFromJson(jsondict)
-            if cmd: 
-                runCmd(cmd)
+            if is_vm_exists(metadata_name):
+                cmd = unpackCmdFromJson(jsondict)
+                if cmd: 
+                    runCmd(cmd)
         elif operation_type == 'DELETED':
             if is_vm_exists(metadata_name):
                 if is_vm_active(metadata_name):
@@ -127,23 +152,24 @@ def vMDiskWatcher(watcher, **kwargs):
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VM_DISK, version=VERSION_VM_DISK, plural=PLURAL_VM_DISK, **kwargs):
         operation_type = jsondict.get('type')
-#         print operation_type
+        logger.debug(operation_type)
         metadata_name = getMetadataName(jsondict)
         logger.debug('metadata name: %s' % metadata_name)
         jsondict = forceUsingMetadataName(metadata_name, jsondict)
-        logger.debug(jsondict)
         if operation_type == 'ADDED':
             cmd = unpackCmdFromJson(jsondict)
             if cmd:
                 runCmd(cmd)
         elif operation_type == 'MODIFIED':
-            cmd = unpackCmdFromJson(jsondict)
-            if cmd: 
-                runCmd(cmd)
+            if is_volume_exists(metadata_name):
+                cmd = unpackCmdFromJson(jsondict)
+                if cmd: 
+                    runCmd(cmd)
         elif operation_type == 'DELETED':
-            cmd = unpackCmdFromJson(jsondict)
-            if cmd: 
-                runCmd(cmd)           
+            if is_volume_exists(metadata_name):
+                cmd = unpackCmdFromJson(jsondict)
+                if cmd: 
+                    runCmd(cmd)       
                 
                 
 def vMImageWatcher(watcher, **kwargs):
@@ -194,25 +220,17 @@ def forceUsingMetadataName(metadata_name,jsondict):
         the_key = None
         keys = lifecycle.keys()
         for key in keys:
-            if key in VMSUPPORTCMDSALL.keys():
-                cmd_head = VMSUPPORTCMDSALL.get(key)
+            if key in ALL_SUPPORT_CMDS.keys():
+#                 cmd_head = ALL_SUPPORT_CMDS.get(key)
                 the_key = key
-                break;
-            elif key in VMDISKSUPPORTCMDS.keys():
-                the_key = key
-                cmd_head = VMDISKSUPPORTCMDS.get(key)
-                break;
-            elif key in IMAGESUPPORTCMDS.keys():
-                the_key = key
-                cmd_head = IMAGESUPPORTCMDS.get(key)
                 break;
 #         print(cmd_head)
-        if the_key in VMSUPPORTCMDS1:
+        if the_key in ALL_SUPPORT_CMDS_WITH_NAME_FIELD:
             lifecycle[the_key]['name'] = metadata_name    
-        elif the_key in VMSUPPORTCMDS2:
+        elif the_key in ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD:
             lifecycle[the_key]['domain'] = metadata_name
-        elif the_key in VMDISKSUPPORTCMDS:
-            lifecycle[the_key]['name'] = metadata_name
+        elif the_key in ALL_SUPPORT_CMDS_WITH_VOL_FIELD:
+            lifecycle[the_key]['vol'] = metadata_name
     return jsondict
 
 
@@ -232,8 +250,8 @@ def _isInstallVMFromISO(jsondict):
             return False
         keys = lifecycle.keys()
         for key in keys:
-            if key in VMSUPPORTCMDS1.keys():
-                cmd_head = VMSUPPORTCMDS1.get(key)
+            if key in ALL_SUPPORT_CMDS.keys():
+                cmd_head = ALL_SUPPORT_CMDS.get(key)
                 break;
         if cmd_head and cmd_head.startswith('virt-install'):
             return True
@@ -255,8 +273,8 @@ def _isInstallVMFromImage(jsondict):
             return False
         keys = lifecycle.keys()
         for key in keys:
-            if key in VMSUPPORTCMDS1.keys():
-                cmd_head = VMSUPPORTCMDS1.get(key)
+            if key in ALL_SUPPORT_CMDS.keys():
+                cmd_head = ALL_SUPPORT_CMDS.get(key)
                 break;
         if cmd_head and cmd_head.startswith('virt-clone'):
             return True
@@ -280,7 +298,7 @@ def _preprocessInCreateVMFromImage(jsondict):
             return
         keys = lifecycle.keys()
         for key in keys:
-            if key in VMSUPPORTCMDSALL.keys():
+            if key in ALL_SUPPORT_CMDS.keys():
                 the_cmd_key = key
                 break;
         '''
@@ -378,17 +396,9 @@ def unpackCmdFromJson(jsondict):
                 return
             keys = lifecycle.keys()
             for key in keys:
-                if key in VMSUPPORTCMDSALL.keys():
+                if key in ALL_SUPPORT_CMDS.keys():
                     the_cmd_key = key
-                    cmd_head = VMSUPPORTCMDSALL.get(key)
-                    break;
-                elif key in VMDISKSUPPORTCMDS.keys():
-                    the_cmd_key = key
-                    cmd_head = VMDISKSUPPORTCMDS.get(key)
-                    break;
-                elif key in IMAGESUPPORTCMDS.keys():
-                    the_cmd_key = key
-                    cmd_head = IMAGESUPPORTCMDS.get(key)
+                    cmd_head = ALL_SUPPORT_CMDS.get(key)
                     break;
             '''
             Get the CMD body from 'dict' structure.
