@@ -7,10 +7,8 @@
   "spec": {
     "image": "CentOS7",
     "lifecycle": {
-      "createDisk": {
-        "pool": "volumes1",
-        "capacity": "10G",
-        "format": "qcow2"
+      "deleteDisk": {
+        "pool": "volumes1"
       }
     }
   }
