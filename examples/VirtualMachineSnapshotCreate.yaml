@@ -9,7 +9,7 @@
     "nodeName": "localhost.localdomain",
     "lifecycle": {
       "createSnapshot": {
-        "domain": "default",
+        "domain": "default"
       }
     }
   }
