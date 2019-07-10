@@ -661,9 +661,13 @@ def delete_volume(pool_, vol_):
     vol = _get_vol(pool_, vol_)
     return vol.delete()
 
-def is_volume_exists(vol_):
-    if vol_ in list_all_volumes():
-        return True
+def is_volume_exists(vol_, pool_=None):
+    if pool_:
+        if vol_ in list_volumes(pool_):
+            return True
+    else:
+        if vol_ in list_all_volumes():
+            return True
     return False
 
 if __name__ == '__main__':

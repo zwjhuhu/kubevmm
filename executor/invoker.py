@@ -20,6 +20,8 @@ import socket
 import string
 import traceback
 import pprint
+import time
+from threading import Thread
 from json import loads
 from json import dumps
 from StringIO import StringIO as _StringIO
@@ -32,6 +34,7 @@ from kubernetes import client, config, watch
 from kubernetes.client.rest import ApiException
 from xmltodict import unparse
 from xmljson import badgerfish as bf
+from libvirt import libvirtError
 
 '''
 Import local libs
@@ -95,119 +98,150 @@ def main():
     logger.debug("Loading configurations in 'default.cfg' ...")
     logger.debug("All support CMDs are:")
     logger.debug(ALL_SUPPORT_CMDS)
+    try:
+        thread_1 = Thread(target=vMWatcher)
+        thread_1.daemon = True
+        thread_1.name = 'vm_watcher'
+        thread_1.start()
+        thread_2 = Thread(target=vMDiskWatcher)
+        thread_2.daemon = True
+        thread_2.name = 'vm_disk_watcher'
+        thread_2.start()
+        thread_3 = Thread(target=vMImageWatcher)
+        thread_3.daemon = True
+        thread_3.name = 'vm_image_watcher'
+        thread_3.start()
+        thread_4 = Thread(target=vMSnapshotWatcher)
+        thread_4.daemon = True
+        thread_4.name = 'vm_snapshot_watcher'
+        thread_4.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            return
+        thread_1.join()
+        thread_2.join()
+        thread_3.join()
+        thread_4.join()
+    except:
+        logger.error(traceback.print_exc())
+    
+def vMWatcher():
     watcher = watch.Watch()
     kwargs = {}
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
-    vMDiskWatcher(watcher, **kwargs)
-    vMWatcher(watcher, **kwargs)
-    vMImageWatcher(watcher, **kwargs)
-    
-def vMWatcher(watcher, **kwargs):
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VM, version=VERSION_VM, plural=PLURAL_VM, **kwargs):
-        operation_type = jsondict.get('type')
-        print(operation_type)
-        metadata_name = getMetadataName(jsondict)
-        print('metadata name: %s' % metadata_name)
-        jsondict = forceUsingMetadataName(metadata_name, jsondict)
-#             print(jsondict)
-        if operation_type == 'ADDED':
-            if _isInstallVMFromISO(jsondict):
+        try:
+            operation_type = jsondict.get('type')
+            print(operation_type)
+            metadata_name = getMetadataName(jsondict)
+            print('metadata name: %s' % metadata_name)
+            jsondict = forceUsingMetadataName(metadata_name, jsondict)
+    #             print(jsondict)
+            if operation_type == 'ADDED':
+                if _isInstallVMFromISO(jsondict):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd:
+                        runCmd(cmd)
+                    if not is_vm_active(metadata_name):
+                        create(metadata_name)
+                elif _isInstallVMFromImage(jsondict):
+                    (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)
+                    '''
+                    Set new VM's CPU and Memory
+                    '''
+                    setvcpus(metadata_name, int(new_vm_vcpus), config=True)
+                    setmem(metadata_name, int(new_vm_memory), config=True)
+                    '''
+                    Start VM
+                    '''
+                    create(metadata_name)
+                else:
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd:     
+                        runCmd(cmd)
+            elif operation_type == 'MODIFIED':
+                if is_vm_exists(metadata_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)
+            elif operation_type == 'DELETED':
+                if is_vm_exists(metadata_name):
+                    if is_vm_active(metadata_name):
+                        destroy(metadata_name)
+                    undefine(metadata_name)
+        except:
+            logger.error(traceback.print_exc())
+        
+                
+def vMDiskWatcher():
+    watcher = watch.Watch()
+    kwargs = {}
+    kwargs['label_selector'] = LABEL
+    kwargs['watch'] = True
+    for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
+                                group=GROUP_VM_DISK, version=VERSION_VM_DISK, plural=PLURAL_VM_DISK, **kwargs):
+        try:
+            operation_type = jsondict.get('type')
+            logger.debug(operation_type)
+            metadata_name = getMetadataName(jsondict)
+            logger.debug('metadata name: %s' % metadata_name)
+            pool_name = _get_pool_name(jsondict)
+            jsondict = forceUsingMetadataName(metadata_name, jsondict)
+            if operation_type == 'ADDED':
                 cmd = unpackCmdFromJson(jsondict)
                 if cmd:
                     runCmd(cmd)
-                if not is_vm_active(metadata_name):
-                    create(metadata_name)
-            elif _isInstallVMFromImage(jsondict):
-                (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
-                cmd = unpackCmdFromJson(jsondict)
-                if cmd: 
-                    runCmd(cmd)
-                '''
-                Set new VM's CPU and Memory
-                '''
-                setvcpus(metadata_name, int(new_vm_vcpus), config=True)
-                setmem(metadata_name, int(new_vm_memory), config=True)
-                '''
-                Start VM
-                '''
-                create(metadata_name)
-            else:
-                cmd = unpackCmdFromJson(jsondict)
-                if cmd:     
-                    runCmd(cmd)
-        elif operation_type == 'MODIFIED':
-            if is_vm_exists(metadata_name):
-                cmd = unpackCmdFromJson(jsondict)
-                if cmd: 
-                    runCmd(cmd)
-        elif operation_type == 'DELETED':
-            if is_vm_exists(metadata_name):
-                if is_vm_active(metadata_name):
-                    destroy(metadata_name)
-                undefine(metadata_name)
-                
-def vMDiskWatcher(watcher, **kwargs):
-    for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
-                                group=GROUP_VM_DISK, version=VERSION_VM_DISK, plural=PLURAL_VM_DISK, **kwargs):
-        operation_type = jsondict.get('type')
-        logger.debug(operation_type)
-        metadata_name = getMetadataName(jsondict)
-        logger.debug('metadata name: %s' % metadata_name)
-        jsondict = forceUsingMetadataName(metadata_name, jsondict)
-        if operation_type == 'ADDED':
-            cmd = unpackCmdFromJson(jsondict)
-            if cmd:
-                runCmd(cmd)
-        elif operation_type == 'MODIFIED':
-            if is_volume_exists(metadata_name):
-                cmd = unpackCmdFromJson(jsondict)
-                if cmd: 
-                    runCmd(cmd)
-        elif operation_type == 'DELETED':
-            if is_volume_exists(metadata_name):
-                cmd = unpackCmdFromJson(jsondict)
-                if cmd: 
-                    runCmd(cmd)       
+            elif operation_type == 'MODIFIED':
+                if is_volume_exists(metadata_name, pool_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)
+            elif operation_type == 'DELETED':
+                if is_volume_exists(metadata_name, pool_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)   
+        except:
+            logger.error(traceback.print_exc())
                 
                 
-def vMImageWatcher(watcher, **kwargs):
+def vMImageWatcher():
+    watcher = watch.Watch()
+    kwargs = {}
+    kwargs['label_selector'] = LABEL
+    kwargs['watch'] = True
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VMI, version=VERSION_VMI, plural=PLURAL_VMI, **kwargs):
-        operation_type = jsondict.get('type')
-#         print operation_type
-        metadata_name = getMetadataName(jsondict)
-        print('metadata name: %s' % metadata_name)
-#         jsondict = forceUsingMetadataName(metadata_name, jsondict)
-# #             print(jsondict)
-#         if operation_type == 'ADDED':
-#             if _isInstallVMFromISO(jsondict):
-#                 cmd = unpackCmdFromJson(jsondict)
-#                 runCmd(cmd)
-#             elif _isInstallVMFromImage(jsondict):
-#                 (jsondict, new_vm_vcpus, new_vm_memory) = _preprocessInCreateVMFromImage(jsondict)
-#                 cmd = unpackCmdFromJson(jsondict)
-#                 runCmd(cmd)
-#                 '''
-#                 Set new VM's CPU and Memory
-#                 '''
-#                 setvcpus(metadata_name, int(new_vm_vcpus), config=True)
-#                 setmem(metadata_name, int(new_vm_memory), config=True)
-#                 '''
-#                 Start VM
-#                 '''
-#                 create(metadata_name)
-#             else:
-#                 cmd = unpackCmdFromJson(jsondict)
-#                 runCmd(cmd)
-#         elif operation_type == 'MODIFIED':
-#             cmd = unpackCmdFromJson(jsondict)
-#             runCmd(cmd)
-#         elif operation_type == 'DELETED':
-#             if metadata_name:
-#                 destroy(metadata_name)
-#                 undefine(metadata_name)
+        try:
+            operation_type = jsondict.get('type')
+    #         print operation_type
+            metadata_name = getMetadataName(jsondict)
+            print('metadata name: %s' % metadata_name)
+    #   d              undefine(metadata_name)
+        except:
+            logger.error(traceback.print_exc())
+        
+def vMSnapshotWatcher():
+    watcher = watch.Watch()
+    kwargs = {}
+    kwargs['label_selector'] = LABEL
+    kwargs['watch'] = True
+    for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
+                                group=GROUP_VMI, version=VERSION_VMI, plural=PLURAL_VMI, **kwargs):
+        try:
+            operation_type = jsondict.get('type')
+    #         print operation_type
+            metadata_name = getMetadataName(jsondict)
+            print('metadata name: %s' % metadata_name)
+        except:
+            logger.error(traceback.print_exc())
 
 def getMetadataName(jsondict):
     return jsondict['raw_object']['metadata']['name']
@@ -317,6 +351,30 @@ def _preprocessInCreateVMFromImage(jsondict):
                     continue
         print jsondict
         return (jsondict, new_vm_vcpus, new_vm_memory)
+    
+def _get_pool_name(jsondict):
+    pool_name = None
+    spec = jsondict['raw_object'].get('spec')
+    if spec:
+        '''
+        Iterate keys in 'spec' structure and map them to real CMDs in back-end.
+        Note that only the first CMD will be executed.
+        '''
+        the_cmd_key = ''
+        lifecycle = spec.get('lifecycle')
+        if not lifecycle:
+            return None
+        keys = lifecycle.keys()
+        for key in keys:
+            if key in ALL_SUPPORT_CMDS.keys():
+                the_cmd_key = key
+                break;
+        if the_cmd_key:
+            contents = lifecycle.get(the_cmd_key)
+            for k, v in contents.items():
+                if k == "pool":
+                    pool_name = v
+    return pool_name    
         
 def jsontoxml(jsonstr):
     json = jsonstr.replace('_interface', 'interface').replace('_transient', 'transient').replace(
