@@ -43,7 +43,6 @@ class ClientDaemon(CDaemon):
             invoker.main()
         except Exception, e:
             traceback.print_exc()
-            invoker.main()
             
 def daemonize():
     help_msg = 'Usage: python %s <start|stop|restart|status>' % sys.argv[0]
@@ -52,7 +51,7 @@ def daemonize():
         sys.exit(1)
     p_name = 'virtctl'
     pid_fn = '/var/run/virtctl_daemon.pid'
-    log_fn = '/var/log/virtctl_output.log'
+    log_fn = '/var/log/virtctl.log'
     err_fn = '/var/log/virtctl_error.log'
     cD = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  

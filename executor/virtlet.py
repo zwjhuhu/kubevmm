@@ -4,14 +4,20 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 @author: wuyuewen@otcaix.iscas.ac.cn
 @author: wuheng@otcaix.iscas.ac.cn
 '''
-
+    
 '''
 Import python libs
 '''
 import os, sys, subprocess
 
+'''
+Import local libs
+'''
+from utils import logger
+
 libvirt_event_handler = '%s/libvirt_event_handler.py' %(os.path.dirname(os.path.realpath(__file__)))
 host_cycler = '%s/host_cycler.py' %(os.path.dirname(os.path.realpath(__file__)))
+os_event_handler = '%s/os_event_handler.py' %(os.path.dirname(os.path.realpath(__file__)))
 
 '''
 Run back-end command in subprocess.
@@ -36,5 +42,7 @@ if __name__ == '__main__':
         sys.exit(1)
     cmd1 = 'python %s %s' %(libvirt_event_handler, sys.argv[1])
     cmd2 = 'python %s %s' %(host_cycler, sys.argv[1])
+    cmd3 = 'python %s %s' %(os_event_handler, sys.argv[1])
     print(runCmd(cmd1))
     print(runCmd(cmd2))
+    print(runCmd(cmd3))

@@ -77,6 +77,14 @@ def _get_vol(pool_, vol_):
     pool = _get_pool(pool_)
     return pool.storageVolLookupByName(vol_)
 
+def _get_all_snapshots(vm_):
+    vm = _get_dom(vm_)
+    return vm.snapshotListNames()
+
+def _get_snapshot(vm_, snap_):
+    vm = _get_dom(vm_)
+    return vm.snapshotLookupByName(snap_)
+
 def is_vm_exists(vm_):
     if vm_ in list_vms():
         return True
@@ -669,6 +677,15 @@ def is_volume_exists(vol_, pool_=None):
         if vol_ in list_all_volumes():
             return True
     return False
+
+def is_snapshot_exists(snap_, vm_):
+    if snap_ in _get_all_snapshots(vm_):
+        return True
+    return False
+
+def get_snapshot_xml(vm_, snap_):
+    snap = _get_snapshot(vm_, snap_)
+    return snap.getXMLDesc()
 
 if __name__ == '__main__':
     print(list_all_volumes())

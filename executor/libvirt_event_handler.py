@@ -54,7 +54,7 @@ PLURAL = config_raw.get('VirtualMachine', 'plural')
 VERSION = config_raw.get('VirtualMachine', 'version')
 GROUP = config_raw.get('VirtualMachine', 'group')
 
-logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet_libvirt_event_handler_output.log')
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet.log')
 
 class ClientDaemon(CDaemon):
     def __init__(self, name, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
@@ -62,21 +62,21 @@ class ClientDaemon(CDaemon):
         self.name = name
  
     def run(self, output_fn, **kwargs):
+        config.load_kube_config(config_file=TOKEN)
         try:
             main()
-        except Exception, e:
+        except:
             traceback.print_exc()
-            main()
 
 def daemonize():
     help_msg = 'Usage: python %s <start|stop|restart|status>' % sys.argv[0]
     if len(sys.argv) != 2:
         print help_msg
         sys.exit(1)
-    p_name = 'virtlet_vm_cycler'
+    p_name = 'virtlet_libvirt_event_handler'
     pid_fn = '/var/run/virtlet_libvirt_event_handler_daemon.pid'
-    log_fn = '/var/log/virtlet_libvirt_event_handler_output.log'
-    err_fn = '/var/log/virtlet_libvirt_event_handler_error.log'
+    log_fn = '/var/log/virtlet.log'
+    err_fn = '/var/log/virtlet_error.log'
     cD1 = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  
     if sys.argv[1] == 'start':
@@ -638,12 +638,8 @@ def myDomainEventHandler(conn, dom, *args, **kwargs):
             vm_json = toKubeJson(xmlToJson(vm_xml))
             body = updateXmlStructureInJson(jsondict, vm_json)
             modifyVM(dom.name(), body)
-    except ApiException, e:
-        if e.status == 404:
-            logger.error('The vm(%s) does not exist in kubevirt.' % dom.name())
-            return
-        else:
-            traceback.print_exc()
+    except:
+        logger.error('Oops! ', exc_info=1)
 
 
 def myDomainEventCallback(conn, dom, event, detail, opaque):
@@ -871,7 +867,6 @@ def usage():
 
 
 def main():
-    config.load_kube_config(config_file=TOKEN)
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hdl:", ["help", "debug", "loop=", "timeout="])
     except getopt.GetoptError as err:
@@ -1009,5 +1004,4 @@ def main():
     time.sleep(2)
 
 if __name__ == "__main__":
-    config.load_kube_config(config_file=TOKEN)
     daemonize()

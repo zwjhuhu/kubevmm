@@ -40,7 +40,7 @@ from libvirt import libvirtError
 Import local libs
 '''
 # sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
-from utils.libvirt_util import get_xml, destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists, is_volume_exists
+from utils.libvirt_util import destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists, is_volume_exists, is_snapshot_exists
 from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
@@ -63,10 +63,13 @@ GROUP_VMI = config_raw.get('VirtualMachineImage', 'group')
 PLURAL_VM_DISK = config_raw.get('VirtualMachineDisk', 'plural')
 VERSION_VM_DISK = config_raw.get('VirtualMachineDisk', 'version')
 GROUP_VM_DISK = config_raw.get('VirtualMachineDisk', 'group')
+PLURAL_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'plural')
+VERSION_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'version')
+GROUP_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'group')
 
 LABEL = 'host=%s' % (socket.gethostname())
 
-logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtctl_output.log')
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtctl.log')
 
 '''
 Handle support CMDs settings in default.cfg.
@@ -78,6 +81,7 @@ ALL_SUPPORT_CMDS = {}
 ALL_SUPPORT_CMDS_WITH_NAME_FIELD = {}
 ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD = {}
 ALL_SUPPORT_CMDS_WITH_VOL_FIELD = {}
+ALL_SUPPORT_CMDS_WITH_SNAPNAME_FIELD = {}
 
 for k,v in config_raw._sections.items():
     if string.find(k, 'SupportCmds') != -1:
@@ -88,11 +92,14 @@ for k,v in config_raw._sections.items():
             ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD = dict(ALL_SUPPORT_CMDS_WITH_DOMAIN_FIELD, **v)
         elif string.find(k, 'WithVolField') != -1:
             ALL_SUPPORT_CMDS_WITH_VOL_FIELD = dict(ALL_SUPPORT_CMDS_WITH_VOL_FIELD, **v)
+        elif string.find(k, 'WithSnapNameField') != -1:
+            ALL_SUPPORT_CMDS_WITH_SNAPNAME_FIELD = dict(ALL_SUPPORT_CMDS_WITH_SNAPNAME_FIELD, **v)        
 
 def main():
     logger.debug("---------------------------------------------------------------------------------")
-    logger.debug("---------------------------Starting Virtctl Daemon.------------------------------")
+    logger.debug("------------------------Welcome to Virtctl Daemon.-------------------------------")
     logger.debug("------Copyright (2019, ) Institute of Software, Chinese Academy of Sciences------")
+    logger.debug("---------author: wuyuewen@otcaix.iscas.ac.cn, wuheng@otcaix.iscas.ac.cn----------")
     logger.debug("---------------------------------------------------------------------------------")
     
     logger.debug("Loading configurations in 'default.cfg' ...")
@@ -125,7 +132,7 @@ def main():
         thread_3.join()
         thread_4.join()
     except:
-        logger.error(traceback.print_exc())
+        logger.error('Oops! ', exc_info=1)
     
 def vMWatcher():
     watcher = watch.Watch()
@@ -177,7 +184,7 @@ def vMWatcher():
                         destroy(metadata_name)
                     undefine(metadata_name)
         except:
-            logger.error(traceback.print_exc())
+            logger.error('Oops! ', exc_info=1)
         
                 
 def vMDiskWatcher():
@@ -192,7 +199,7 @@ def vMDiskWatcher():
             logger.debug(operation_type)
             metadata_name = getMetadataName(jsondict)
             logger.debug('metadata name: %s' % metadata_name)
-            pool_name = _get_pool_name(jsondict)
+            pool_name = _get_field(jsondict, 'pool')
             jsondict = forceUsingMetadataName(metadata_name, jsondict)
             if operation_type == 'ADDED':
                 cmd = unpackCmdFromJson(jsondict)
@@ -209,7 +216,7 @@ def vMDiskWatcher():
                     if cmd: 
                         runCmd(cmd)   
         except:
-            logger.error(traceback.print_exc())
+            logger.error('Oops! ', exc_info=1)
                 
                 
 def vMImageWatcher():
@@ -221,12 +228,26 @@ def vMImageWatcher():
                                 group=GROUP_VMI, version=VERSION_VMI, plural=PLURAL_VMI, **kwargs):
         try:
             operation_type = jsondict.get('type')
-    #         print operation_type
+            logger.debug(operation_type)
             metadata_name = getMetadataName(jsondict)
-            print('metadata name: %s' % metadata_name)
-    #   d              undefine(metadata_name)
+            logger.debug('metadata name: %s' % metadata_name)
+            jsondict = forceUsingMetadataName(metadata_name, jsondict)
+            if operation_type == 'ADDED':
+                cmd = unpackCmdFromJson(jsondict)
+                if cmd:
+                    runCmd(cmd)
+            elif operation_type == 'MODIFIED':
+                if is_vm_exists(metadata_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)
+            elif operation_type == 'DELETED':
+                if is_vm_exists(metadata_name):
+                    if is_vm_active(metadata_name):
+                        destroy(metadata_name)
+                    undefine(metadata_name)
         except:
-            logger.error(traceback.print_exc())
+            logger.error('Oops! ', exc_info=1)
         
 def vMSnapshotWatcher():
     watcher = watch.Watch()
@@ -234,18 +255,33 @@ def vMSnapshotWatcher():
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
-                                group=GROUP_VMI, version=VERSION_VMI, plural=PLURAL_VMI, **kwargs):
+                                group=GROUP_VM_SNAPSHOT, version=VERSION_VM_SNAPSHOT, plural=PLURAL_VM_SNAPSHOT, **kwargs):
         try:
             operation_type = jsondict.get('type')
-    #         print operation_type
+            logger.debug(operation_type)
             metadata_name = getMetadataName(jsondict)
-            print('metadata name: %s' % metadata_name)
+            logger.debug('metadata name: %s' % metadata_name)
+            vm_name = _get_field(jsondict, 'domain')
+            jsondict = forceUsingMetadataName(metadata_name, jsondict)
+            if operation_type == 'ADDED':
+                cmd = unpackCmdFromJson(jsondict)
+                if cmd:
+                    runCmd(cmd)
+            elif operation_type == 'MODIFIED':
+                if is_snapshot_exists(metadata_name, vm_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)
+            elif operation_type == 'DELETED':
+                if is_snapshot_exists(metadata_name, vm_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)  
         except:
-            logger.error(traceback.print_exc())
+            logger.error('Oops! ', exc_info=1)
 
 def getMetadataName(jsondict):
     return jsondict['raw_object']['metadata']['name']
-            
 
 def forceUsingMetadataName(metadata_name,jsondict):
     spec = jsondict['raw_object']['spec']
@@ -265,6 +301,8 @@ def forceUsingMetadataName(metadata_name,jsondict):
             lifecycle[the_key]['domain'] = metadata_name
         elif the_key in ALL_SUPPORT_CMDS_WITH_VOL_FIELD:
             lifecycle[the_key]['vol'] = metadata_name
+        elif the_key in ALL_SUPPORT_CMDS_WITH_SNAPNAME_FIELD:
+            lifecycle[the_key]['snapshotname'] = metadata_name
     return jsondict
 
 
@@ -352,7 +390,7 @@ def _preprocessInCreateVMFromImage(jsondict):
         print jsondict
         return (jsondict, new_vm_vcpus, new_vm_memory)
     
-def _get_pool_name(jsondict):
+def _get_field(jsondict, field):
     pool_name = None
     spec = jsondict['raw_object'].get('spec')
     if spec:
@@ -372,7 +410,7 @@ def _get_pool_name(jsondict):
         if the_cmd_key:
             contents = lifecycle.get(the_cmd_key)
             for k, v in contents.items():
-                if k == "pool":
+                if k == field:
                     pool_name = v
     return pool_name    
         

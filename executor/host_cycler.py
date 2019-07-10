@@ -46,20 +46,20 @@ config_raw.read(cfg)
 TOKEN = config_raw.get('Kubernetes', 'token_file')
 HOSTNAME = socket.gethostname()
 
-logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet_host_cycler_output.log')
- 
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet.log')
+
 class ClientDaemon(CDaemon):
     def __init__(self, name, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
         CDaemon.__init__(self, save_path, stdin, stdout, stderr, home_dir, umask, verbose)
         self.name = name
  
     def run(self, output_fn, **kwargs):
+        config.load_kube_config(config_file=TOKEN)
         try:
             main()
-        except Exception, e:
+        except:
             traceback.print_exc()
-            main()
-            
+
 def daemonize():
     help_msg = 'Usage: python %s <start|stop|restart|status>' % sys.argv[0]
     if len(sys.argv) != 2:
@@ -67,8 +67,8 @@ def daemonize():
         sys.exit(1)
     p_name = 'virtlet_host_cycler'
     pid_fn = '/var/run/virtlet_host_cycler_daemon.pid'
-    log_fn = '/var/log/virtlet_host_cycler_output.log'
-    err_fn = '/var/log/virtlet_host_cycler_error.log'
+    log_fn = '/var/log/virtlet.log'
+    err_fn = '/var/log/virtlet_error.log'
     cD1 = ClientDaemon(p_name, pid_fn, stderr=err_fn, verbose=1)
  
     if sys.argv[1] == 'start':
@@ -88,7 +88,6 @@ def daemonize():
         print help_msg
 
 def main():
-    config.load_kube_config(config_file=TOKEN)
     while True:
         host = client.CoreV1Api().read_node_status(name='node12')
         node_watcher = HostCycler()
