@@ -84,13 +84,13 @@ metadata:
   name: virtualmachinedisks.cloudplus.io
 spec:
   additionalPrinterColumns:
-  - JSONPath: .spec.volume.name
+  - JSONPath: .spec.volume.name.text
     name: NAME
     type: string
   - JSONPath: .spec.volume.target.format._type
     name: TYPE
     type: string  
-  - JSONPath: .spec.volume.target.path
+  - JSONPath: .spec.volume.target.path.text
     name: PATH
     type: string  
   - JSONPath: .spec.status
