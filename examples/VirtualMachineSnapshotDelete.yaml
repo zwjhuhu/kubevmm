@@ -7,7 +7,7 @@
   "spec": {
     "image": "CentOS7",
     "lifecycle": {
-      "createSnapshot": {
+      "deleteSnapshot": {
         "domain": "ddd"
       }
     }
