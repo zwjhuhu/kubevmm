@@ -86,6 +86,11 @@ def daemonize():
     else:
         print 'invalid argument!'
         print help_msg
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        return
 
 def main():
     while True:
