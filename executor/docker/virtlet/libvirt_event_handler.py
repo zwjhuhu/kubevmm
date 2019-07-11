@@ -94,11 +94,6 @@ def daemonize():
     else:
         print 'invalid argument!'
         print help_msg
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        return
 
 def modifyVM(name, body):
     retv = client.CustomObjectsApi().replace_namespaced_custom_object(
