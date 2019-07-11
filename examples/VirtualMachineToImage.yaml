@@ -14,8 +14,6 @@
     "nodeName": "node22",
     "lifecycle": {
       "convertVMToImage": {
-        "vmName": "ddd",
-        "imageName": "dda"
       }
     }
   }
