@@ -13,7 +13,7 @@
     "image": "CentOS7",
     "nodeName": "node22",
     "lifecycle": {
-      "unplugNIC": {
+      "unplugDisk": {
         "domain": "Centos",
         "target": "vdb",
         "live": true,
