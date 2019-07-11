@@ -133,6 +133,13 @@ def main():
         thread_4.join()
     except:
         logger.error('Oops! ', exc_info=1)
+        
+def test():
+    try:
+        vMDiskWatcher()
+    except:
+        traceback.print_exc()
+        logger.error('Oops! ', exc_info=1)
     
 def vMWatcher():
     watcher = watch.Watch()
@@ -193,7 +200,7 @@ def vMDiskWatcher():
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
-                                group=GROUP_VM_DISK, version=VERSION_VM_DISK, plural=PLURAL_VM_DISK, **kwargs):
+                                   group=GROUP_VM_DISK, version=VERSION_VM_DISK, plural=PLURAL_VM_DISK, **kwargs):
         try:
             operation_type = jsondict.get('type')
             logger.debug(operation_type)
@@ -549,3 +556,4 @@ def runCmd(cmd):
 if __name__ == '__main__':
     config.load_kube_config(config_file=TOKEN)
     main()
+#     test()

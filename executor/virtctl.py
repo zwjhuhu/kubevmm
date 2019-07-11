@@ -19,6 +19,7 @@ Import local libs
 # sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
 import invoker
 from utils.utils import CDaemon
+from utils import logger
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
@@ -31,6 +32,7 @@ config_raw = parser()
 config_raw.read(cfg)
 
 TOKEN = config_raw.get('Kubernetes', 'token_file')
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet.log')
 
 class ClientDaemon(CDaemon):
     def __init__(self, name, save_path, stdin=os.devnull, stdout=os.devnull, stderr=os.devnull, home_dir='.', umask=022, verbose=1):
@@ -41,8 +43,8 @@ class ClientDaemon(CDaemon):
         config.load_kube_config(config_file=TOKEN)
         try:
             invoker.main()
-        except Exception, e:
-            traceback.print_exc()
+        except:
+            logger.error('Oops! ', exc_info=1)
             
 def daemonize():
     help_msg = 'Usage: python %s <start|stop|restart|status>' % sys.argv[0]
