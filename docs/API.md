@@ -17,7 +17,7 @@
 
 
 
-## API: createAndStartVM
+## API: createAndStartVMFromISO
 
 **Desc**:create and start a Virtual Machine
 
