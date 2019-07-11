@@ -1,4 +1,4 @@
-FROM centos:7
+FROM registry.cn-hangzhou.aliyuncs.com/cloudplus-lab/kubevirt-base:v1.14.1
 
 RUN mkdir -p /home/virtlet/bin
 
@@ -13,16 +13,6 @@ ADD host_cycler.py /home/virtlet/bin
 ADD libvirt_event_handler.py /home/virtlet/bin
 
 ADD default.cfg /home/virtlet/bin
-
-RUN yum install epel-release -y
-
-RUN yum install virt-manager python2-devel python2-pip libvirt-devel gcc gcc-c++ glib-devel glibc-devel -y
-
-RUN pip install --upgrade pip
-
-RUN pip install --ignore-installed kubernetes libvirt-python xmljson xmltodict watchdog
-
-RUN yum clean all
 
 RUN rm -fr /tmp/*
 
