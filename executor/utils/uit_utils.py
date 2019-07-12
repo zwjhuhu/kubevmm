@@ -11,7 +11,9 @@ https://github.com/kubernetes/kubernetes/issues/51046
 from utils import runCmd
 
 def get_block_dev_json(block):
-    return runCmd('/usr/bin/qucil %s' % block)
+    cmd = '/usr/bin/qucli %s' % block
+    return runCmd(cmd)
 
 def is_block_dev_exists(block):
-    return runCmd('lvdisplay | grep %s' % block)
+    cmd = 'lvdisplay %s' % block
+    return runCmd(cmd)

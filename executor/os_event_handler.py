@@ -301,7 +301,7 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
         else:
             logger.debug("file created:{0}".format(event.src_path))
             _,block = os.path.split(event.src_path)
-            if is_block_dev_exists(block):
+            if is_block_dev_exists(event.src_path):
                 myVmBlockDevEventHandler('Create', block)
 
     def on_deleted(self, event):
@@ -310,7 +310,7 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
         else:
             logger.debug("file deleted:{0}".format(event.src_path))
             _,block = os.path.split(event.src_path)
-            if is_block_dev_exists(block):
+            if is_block_dev_exists(event.src_path):
                 myVmBlockDevEventHandler('Delete', block)
 
     def on_modified(self, event):

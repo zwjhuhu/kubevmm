@@ -9,6 +9,9 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 Import python libs
 '''
 import os, sys, time, signal, atexit, subprocess
+import logger
+
+logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet.log')
 
 '''
 Run back-end command in subprocess.
@@ -21,6 +24,7 @@ def runCmd(cmd):
     try:
         std_out = p.stdout.readlines()
         std_err = p.stderr.readlines()
+        logger.debug(std_out)
         return str.strip(std_out[0]) if std_out else ''
     finally:
         p.stdout.close()
