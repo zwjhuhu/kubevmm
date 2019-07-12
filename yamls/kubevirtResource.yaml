@@ -158,7 +158,7 @@ spec:
   - JSONPath: .spec.uitvol.data[0].name
     name: NAME
     type: string
-  - JSONPath: .spec.uitvol.data[0].devices[0].node
+  - JSONPath: .spec.uitvol.data[0].now_host
     name: ACTIVENODE
     type: string
   - JSONPath: .spec.uitvol.data[0].block_type
