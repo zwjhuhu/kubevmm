@@ -24,9 +24,7 @@ def runCmd(cmd):
     try:
         std_out = p.stdout.readlines()
         std_err = p.stderr.readlines()
-        if std_out:
-            logger.debug(str.strip(std_out[0]))
-        return str.strip(std_out[0]) if std_out else ''
+        return std_out
     finally:
         p.stdout.close()
         p.stderr.close()
