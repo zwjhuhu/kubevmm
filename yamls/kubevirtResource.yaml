@@ -184,8 +184,8 @@ spec:
     kind: VirtualMachineUITDisk
     plural: virtualmachineuitdisks
     shortNames:
-    - vmd
-    - vmds
+    - vmud
+    - vmuds
     singular: virtualmachineuitdisk
   scope: Namespaced
   version: v1alpha3 
