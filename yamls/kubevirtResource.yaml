@@ -155,19 +155,19 @@ metadata:
   name: virtualmachineuitdisks.cloudplus.io
 spec:
   additionalPrinterColumns:
-  - JSONPath: .spec.uitvol.data[0].name
+  - JSONPath: .spec.UitVolume.data[0].name
     name: NAME
     type: string
-  - JSONPath: .spec.uitvol.data[0].now_host
+  - JSONPath: .spec.UitVolume.data[0].now_host
     name: ACTIVENODE
     type: string
-  - JSONPath: .spec.uitvol.data[0].block_type
+  - JSONPath: .spec.UitVolume.data[0].block_type
     name: TYPE
     type: string  
-  - JSONPath: .spec.uitvol.data[0].path
+  - JSONPath: .spec.UitVolume.data[0].path
     name: PATH
     type: string  
-  - JSONPath: .spec.uitvol.data[0].size
+  - JSONPath: .spec.UitVolume.data[0].size
     name: SIZE
     type: string 
   - JSONPath: .spec.status

@@ -2,7 +2,7 @@
   "apiVersion": "cloudplus.io/v1alpha3",
   "kind": "VirtualMachine",
   "metadata": {
-    "name": "ddd"
+    "name": "os1"
   },
   "spec": {
     "domain": {
@@ -11,12 +11,11 @@
         }
     },
     "image": "CentOS7",
-    "nodeName": "node22",
     "lifecycle": {
       "plugDisk": {
-        "domain": "ddd",
-        "source": "/var/lib/libvirt/images/image1.qcow2",
-        "target": "vdb",
+        "source": "/dev/udisk1/udisk1",
+        "target": "sdb",
+        "targetbus": "scsi",
         "live": true,
         "config": true
       }

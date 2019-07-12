@@ -2,13 +2,12 @@
   "apiVersion": "cloudplus.io/v1alpha3",
   "kind": "VirtualMachineUITDisk",
   "metadata": {
-    "name": "disk1"
+    "name": "udisk2"
   },
   "spec": {
     "image": "CentOS7",
     "lifecycle": {
       "createUITDisk": {
-        "name": "vol2",
         "size": "10G",
         "type": "lvm",
         "raidL": "4 2 0",
