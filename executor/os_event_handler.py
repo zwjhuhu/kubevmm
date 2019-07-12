@@ -36,6 +36,7 @@ Import local libs
 from utils.libvirt_util import get_volume_xml, get_snapshot_xml
 from utils import logger
 from utils.utils import CDaemon
+from utils.uit_utils import is_block_dev_exists, get_block_dev_json
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
@@ -54,9 +55,13 @@ GROUP_VM_DISK = config_raw.get('VirtualMachineDisk', 'group')
 PLURAL_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'plural')
 VERSION_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'version')
 GROUP_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'group')
+PLURAL_BLOCK_DEV_UIT = config_raw.get('VirtualMahcineBlockDevUit', 'plural')
+VERSION_BLOCK_DEV_UIT = config_raw.get('VirtualMahcineBlockDevUit', 'version')
+GROUP_BLOCK_DEV_UIT = config_raw.get('VirtualMahcineBlockDevUit', 'group')
 
 VOL_DIRS = config_raw.items('DefaultVolumeDirs')
 SNAP_DIRS = config_raw.items('DefaultSnapshotDir')
+BLOCK_DEV_DIRS = config_raw.items('DefaultBlockDevDir')
 
 logger = logger.set_logger(os.path.basename(__file__), '/var/log/virtlet.log')
 
@@ -142,7 +147,11 @@ def updateXmlStructureInJson(jsondict, body):
 
 def myVmVolEventHandler(event, pool, vol):
     try:
-        jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP_VM_DISK, version=VERSION_VM_DISK, namespace='default', plural=PLURAL_VM_DISK, name=vol)
+        jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP_VM_DISK, 
+                                                                          version=VERSION_VM_DISK, 
+                                                                          namespace='default', 
+                                                                          plural=PLURAL_VM_DISK, 
+                                                                          name=vol)
     #     print(jsondict)
         if  event == "Delete":
             logger.debug('Callback volume deletion to virtlet')
@@ -193,7 +202,11 @@ class VmVolEventHandler(FileSystemEventHandler):
             
 def myVmSnapshotEventHandler(event, vm, snap):
     try:
-        jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP_VM_SNAPSHOT, version=VERSION_VM_SNAPSHOT, namespace='default', plural=PLURAL_VM_SNAPSHOT, name=snap)
+        jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP_VM_SNAPSHOT, 
+                                                                          version=VERSION_VM_SNAPSHOT, 
+                                                                          namespace='default', 
+                                                                          plural=PLURAL_VM_SNAPSHOT, 
+                                                                          name=snap)
     #     print(jsondict)
         if  event == "Delete":
             logger.debug('Callback snapshot deletion to virtlet')
@@ -246,6 +259,62 @@ class VmSnapshotEventHandler(FileSystemEventHandler):
         else:
             logger.debug("file modified:{0}".format(event.src_path))
             
+def myVmBlockDevEventHandler(event, block):
+    try:
+        jsondict = client.CustomObjectsApi().get_namespaced_custom_object(group=GROUP_BLOCK_DEV_UIT, 
+                                                                          version=VERSION_BLOCK_DEV_UIT, 
+                                                                          namespace='default', 
+                                                                          plural=PLURAL_BLOCK_DEV_UIT, 
+                                                                          name=block)
+    #     print(jsondict)
+        if  event == "Delete":
+            logger.debug('Callback snapshot deletion to virtlet')
+            deleteSnapshot(block, V1DeleteOptions())
+        else:
+            logger.debug('Callback snapshot changes to virtlet')
+            snap_json = get_block_dev_json(block)
+            body = updateXmlStructureInJson(jsondict, snap_json)
+            modifySnapshot(block, body)
+    except:
+        logger.error('Oops! ', exc_info=1)
+
+class VmBlockDevEventHandler(FileSystemEventHandler):
+    def __init__(self, field, target):
+        FileSystemEventHandler.__init__(self)
+        self.field = field
+        self.target = target
+
+    def on_moved(self, event):
+        if event.is_directory:
+            logger.debug("directory moved from {0} to {1}".format(event.src_path,event.dest_path))
+        else:
+            logger.debug("file moved from {0} to {1}".format(event.src_path,event.dest_path))
+
+    def on_created(self, event):
+        if event.is_directory:
+            logger.debug("directory created:{0}".format(event.src_path))
+        else:
+            logger.info(event)
+            logger.debug("file created:{0}".format(event.src_path))
+            _,block = os.path.split(event.src_path)
+            if is_block_dev_exists(block):
+                myVmBlockDevEventHandler('Create', block)
+
+    def on_deleted(self, event):
+        if event.is_directory:
+            logger.debug("directory deleted:{0}".format(event.src_path))
+        else:
+            logger.debug("file deleted:{0}".format(event.src_path))
+            _,block = os.path.split(event.src_path)
+            if is_block_dev_exists(block):
+                myVmBlockDevEventHandler('Delete', block)
+
+    def on_modified(self, event):
+        if event.is_directory:
+            logger.debug("directory modified:{0}".format(event.src_path))
+        else:
+            logger.debug("file modified:{0}".format(event.src_path))
+            
 def main():
     observer = Observer()
     for ob in VOL_DIRS:
@@ -257,6 +326,11 @@ def main():
         if not os.path.exists(ob[1]):
             os.makedirs(ob[1])
         event_handler = VmSnapshotEventHandler(ob[0], ob[1])
+        observer.schedule(event_handler,ob[1],True)
+    for ob in BLOCK_DEV_DIRS:
+        if not os.path.exists(ob[1]):
+            os.makedirs(ob[1])
+        event_handler = VmBlockDevEventHandler(ob[0], ob[1])
         observer.schedule(event_handler,ob[1],True)
     observer.start()
     try:

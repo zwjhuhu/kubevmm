@@ -8,7 +8,23 @@ Copyright (2019, ) Institute of Software, Chinese Academy of Sciences
 '''
 Import python libs
 '''
-import os, sys, time, signal, atexit
+import os, sys, time, signal, atexit, subprocess
+
+'''
+Run back-end command in subprocess.
+'''
+def runCmd(cmd):
+    std_err = None
+    if not cmd:
+        return
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        std_out = p.stdout.readlines()
+        std_err = p.stderr.readlines()
+        return str.strip(std_out[0]) if std_out else ''
+    finally:
+        p.stdout.close()
+        p.stderr.close()
 
 class CDaemon:
     '''

@@ -42,6 +42,7 @@ Import local libs
 # sys.path.append('%s/utils' % (os.path.dirname(os.path.realpath(__file__))))
 from utils.libvirt_util import destroy, undefine, create, setmem, setvcpus, is_vm_active, is_vm_exists, is_volume_exists, is_snapshot_exists
 from utils import logger
+from utils.uit_utils import is_block_dev_exists
 
 class parser(ConfigParser.ConfigParser):  
     def __init__(self,defaults=None):  
@@ -66,6 +67,9 @@ GROUP_VM_DISK = config_raw.get('VirtualMachineDisk', 'group')
 PLURAL_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'plural')
 VERSION_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'version')
 GROUP_VM_SNAPSHOT = config_raw.get('VirtualMachineSnapshot', 'group')
+PLURAL_BLOCK_DEV_UIT = config_raw.get('VirtualMahcineBlockDevUit', 'plural')
+VERSION_BLOCK_DEV_UIT = config_raw.get('VirtualMahcineBlockDevUit', 'version')
+GROUP_BLOCK_DEV_UIT = config_raw.get('VirtualMahcineBlockDevUit', 'group')
 
 LABEL = 'host=%s' % (socket.gethostname())
 
@@ -124,6 +128,10 @@ def main():
         thread_4.daemon = True
         thread_4.name = 'vm_snapshot_watcher'
         thread_4.start()
+        thread_5 = Thread(target=vMBlockDevWatcher())
+        thread_5.daemon = True
+        thread_5.name = 'vm_block_dev_watcher'
+        thread_5.start()
         try:
             while True:
                 time.sleep(1)
@@ -133,6 +141,7 @@ def main():
         thread_2.join()
         thread_3.join()
         thread_4.join()
+        thread_5.join()
     except:
         logger.error('Oops! ', exc_info=1)
         
@@ -290,6 +299,37 @@ def vMSnapshotWatcher():
                     cmd = unpackCmdFromJson(jsondict)
                     if cmd: 
                         runCmd(cmd)  
+        except:
+            logger.error('Oops! ', exc_info=1)
+
+def vMBlockDevWatcher():
+    watcher = watch.Watch()
+    kwargs = {}
+    kwargs['label_selector'] = LABEL
+    kwargs['watch'] = True
+    kwargs['timeout_seconds'] = int(TIMEOUT)
+    for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
+                                   group=GROUP_BLOCK_DEV_UIT, version=VERSION_BLOCK_DEV_UIT, plural=PLURAL_BLOCK_DEV_UIT, **kwargs):
+        try:
+            operation_type = jsondict.get('type')
+            logger.debug(operation_type)
+            metadata_name = getMetadataName(jsondict)
+            logger.debug('metadata name: %s' % metadata_name)
+            jsondict = forceUsingMetadataName(metadata_name, jsondict)
+            if operation_type == 'ADDED':
+                cmd = unpackCmdFromJson(jsondict)
+                if cmd:
+                    runCmd(cmd)
+            elif operation_type == 'MODIFIED':
+                if is_block_dev_exists(metadata_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)
+            elif operation_type == 'DELETED':
+                if is_block_dev_exists(metadata_name):
+                    cmd = unpackCmdFromJson(jsondict)
+                    if cmd: 
+                        runCmd(cmd)   
         except:
             logger.error('Oops! ', exc_info=1)
 
