@@ -323,12 +323,12 @@ def vMBlockDevWatcher():
                 if cmd:
                     runCmd(cmd)
             elif operation_type == 'MODIFIED':
-                if is_block_dev_exists(metadata_name):
+                if is_block_dev_exists('/dev/%s/%s' % (metadata_name, metadata_name)):
                     cmd = unpackCmdFromJson(jsondict)
                     if cmd: 
                         runCmd(cmd)
             elif operation_type == 'DELETED':
-                if is_block_dev_exists(metadata_name):
+                if is_block_dev_exists('/dev/%s/%s' % (metadata_name, metadata_name)):
                     cmd = unpackCmdFromJson(jsondict)
                     if cmd: 
                         runCmd(cmd)   
