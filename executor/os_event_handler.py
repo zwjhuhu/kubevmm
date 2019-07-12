@@ -300,8 +300,8 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
             logger.debug("directory created:{0}".format(event.src_path))
         else:
             logger.debug("file created:{0}".format(event.src_path))
-            _,block = os.path.split(event.src_path)
-            if is_block_dev_exists(event.src_path):
+            path,block = os.path.split(event.src_path)
+            if is_block_dev_exists(event.src_path) and path != "/dev/mapper":
                 myVmBlockDevEventHandler('Create', block)
 
     def on_deleted(self, event):
