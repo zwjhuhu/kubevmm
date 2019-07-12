@@ -148,7 +148,7 @@ def vMWatcher():
     kwargs = {}
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
-    kwargs['timeout_seconds'] = TIMEOUT
+    kwargs['timeout_seconds'] = int(TIMEOUT)
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VM, version=VERSION_VM, plural=PLURAL_VM, **kwargs):
         try:
@@ -202,7 +202,7 @@ def vMDiskWatcher():
     kwargs = {}
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
-    kwargs['timeout_seconds'] = TIMEOUT
+    kwargs['timeout_seconds'] = int(TIMEOUT)
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                    group=GROUP_VM_DISK, version=VERSION_VM_DISK, plural=PLURAL_VM_DISK, **kwargs):
         try:
@@ -235,7 +235,7 @@ def vMImageWatcher():
     kwargs = {}
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
-    kwargs['timeout_seconds'] = TIMEOUT
+    kwargs['timeout_seconds'] = int(TIMEOUT)
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VMI, version=VERSION_VMI, plural=PLURAL_VMI, **kwargs):
         try:
@@ -266,7 +266,7 @@ def vMSnapshotWatcher():
     kwargs = {}
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
-    kwargs['timeout_seconds'] = TIMEOUT
+    kwargs['timeout_seconds'] = int(TIMEOUT)
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                 group=GROUP_VM_SNAPSHOT, version=VERSION_VM_SNAPSHOT, plural=PLURAL_VM_SNAPSHOT, **kwargs):
         try:
