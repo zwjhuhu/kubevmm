@@ -124,6 +124,16 @@ def deleteSnapshot(name, body):
         group=GROUP_VM_SNAPSHOT, version=VERSION_VM_SNAPSHOT, namespace='default', plural=PLURAL_VM_SNAPSHOT, name=name, body=body)
     return retv
 
+def modifyDev(name, body):
+    retv = client.CustomObjectsApi().replace_namespaced_custom_object(
+        group=GROUP_BLOCK_DEV_UIT, version=VERSION_BLOCK_DEV_UIT, namespace='default', plural=PLURAL_BLOCK_DEV_UIT, name=name, body=body)
+    return retv
+
+def deleteDev(name, body):
+    retv = client.CustomObjectsApi().delete_namespaced_custom_object(
+        group=GROUP_BLOCK_DEV_UIT, version=VERSION_BLOCK_DEV_UIT, namespace='default', plural=PLURAL_BLOCK_DEV_UIT, name=name, body=body)
+    return retv
+
 def xmlToJson(xmlStr):
     return dumps(bf.data(fromstring(xmlStr)), sort_keys=True, indent=4)
 
@@ -132,11 +142,8 @@ def toKubeJson(json):
             'interface', '_interface').replace('transient', '_transient').replace(
                     'nested-hv', 'nested_hv').replace('suspend-to-mem', 'suspend_to_mem').replace('suspend-to-disk', 'suspend_to_disk')
                     
-def updateXmlStructureInJson(jsondict, body):
+def updateJsonRemoveLifecycle(jsondict, body):
     if jsondict:
-        '''
-        Get target VM name from Json.
-        '''
         spec = jsondict['spec']
         if spec:
             lifecycle = spec.get('lifecycle')
@@ -160,7 +167,7 @@ def myVmVolEventHandler(event, pool, vol):
             logger.debug('Callback volume changes to virtlet')
             vol_xml = get_volume_xml(pool, vol)
             vol_json = toKubeJson(xmlToJson(vol_xml))
-            body = updateXmlStructureInJson(jsondict, vol_json)
+            body = updateJsonRemoveLifecycle(jsondict, vol_json)
             modifyVol(vol, body)
     except:
         logger.error('Oops! ', exc_info=1)
@@ -214,7 +221,7 @@ def myVmSnapshotEventHandler(event, vm, snap):
             logger.debug('Callback snapshot changes to virtlet')
             snap_xml = get_snapshot_xml(vm, snap)
             snap_json = toKubeJson(xmlToJson(snap_xml))
-            body = updateXmlStructureInJson(jsondict, snap_json)
+            body = updateJsonRemoveLifecycle(jsondict, snap_json)
             modifySnapshot(snap, body)
     except:
         logger.error('Oops! ', exc_info=1)
@@ -266,13 +273,13 @@ def myVmBlockDevEventHandler(event, block):
                                                                           name=block)
     #     print(jsondict)
         if  event == "Delete":
-            logger.debug('Callback snapshot deletion to virtlet')
-            deleteSnapshot(block, V1DeleteOptions())
+            logger.debug('Callback block dev deletion to virtlet')
+            deleteDev(block, V1DeleteOptions())
         else:
-            logger.debug('Callback snapshot changes to virtlet')
-            snap_json = get_block_dev_json(block)
-            body = updateXmlStructureInJson(jsondict, snap_json)
-            modifySnapshot(block, body)
+            logger.debug('Callback block dev changes to virtlet')
+            block_json = get_block_dev_json(block)
+            body = updateJsonRemoveLifecycle(jsondict, block_json)
+            modifyDev(block, body)
     except:
         logger.error('Oops! ', exc_info=1)
 
