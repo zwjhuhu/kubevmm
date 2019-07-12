@@ -313,7 +313,8 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
         if event.is_directory:
             logger.debug("directory modified:{0}".format(event.src_path))
         else:
-            logger.debug("file modified:{0}".format(event.src_path))
+#             logger.debug("file modified:{0}".format(event.src_path))
+            pass
             
 def main():
     observer = Observer()
