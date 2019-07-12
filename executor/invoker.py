@@ -128,7 +128,7 @@ def main():
         thread_4.daemon = True
         thread_4.name = 'vm_snapshot_watcher'
         thread_4.start()
-        thread_5 = Thread(target=vMBlockDevWatcher())
+        thread_5 = Thread(target=vMBlockDevWatcher)
         thread_5.daemon = True
         thread_5.name = 'vm_block_dev_watcher'
         thread_5.start()
@@ -309,7 +309,7 @@ def vMBlockDevWatcher():
     kwargs['watch'] = True
     kwargs['timeout_seconds'] = int(TIMEOUT)
     logger.debug('UIT')
-    logger.debug(GROUP_BLOCK_DEV_UIT, VERSION_BLOCK_DEV_UIT,PLURAL_BLOCK_DEV_UIT)
+    logger.debug(GROUP_BLOCK_DEV_UIT, VERSION_BLOCK_DEV_UIT, PLURAL_BLOCK_DEV_UIT)
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                    group=GROUP_BLOCK_DEV_UIT, version=VERSION_BLOCK_DEV_UIT, plural=PLURAL_BLOCK_DEV_UIT, **kwargs):
         try:
