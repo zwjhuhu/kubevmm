@@ -147,7 +147,7 @@ def main():
         
 def test():
     try:
-        vMDiskWatcher()
+        vMBlockDevWatcher()
     except:
         traceback.print_exc()
         logger.error('Oops! ', exc_info=1)
@@ -308,6 +308,8 @@ def vMBlockDevWatcher():
     kwargs['label_selector'] = LABEL
     kwargs['watch'] = True
     kwargs['timeout_seconds'] = int(TIMEOUT)
+    logger.debug('UIT')
+    logger.debug(GROUP_BLOCK_DEV_UIT, VERSION_BLOCK_DEV_UIT,PLURAL_BLOCK_DEV_UIT)
     for jsondict in watcher.stream(client.CustomObjectsApi().list_cluster_custom_object,
                                    group=GROUP_BLOCK_DEV_UIT, version=VERSION_BLOCK_DEV_UIT, plural=PLURAL_BLOCK_DEV_UIT, **kwargs):
         try:
