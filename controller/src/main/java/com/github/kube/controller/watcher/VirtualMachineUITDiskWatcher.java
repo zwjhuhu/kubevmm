@@ -51,7 +51,7 @@ public class VirtualMachineUITDiskWatcher implements Watcher<VirtualMachineUITDi
 	public final static String ACTION_REMOVE = "DELETED";
 
 	// pod attributions
-	public final static String POD_PREFIX = "disk2pod";
+	public final static String POD_PREFIX = "uit2pod";
 
 	public final static String POD_NAMESPACE = "default";
 	
@@ -150,7 +150,7 @@ public class VirtualMachineUITDiskWatcher implements Watcher<VirtualMachineUITDi
 
 	public final static String CONTENT_ANNOTATION = "crdYaml";
 
-	public final static String PLURAL = "virtualmachinedisks";
+	public final static String PLURAL = "virtualmachineuitdisks";
 
 	public final static String GROUP = "cloudplus.io";
 
