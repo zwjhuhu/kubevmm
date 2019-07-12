@@ -24,11 +24,11 @@ def runCmd(cmd):
     try:
         std_out = p.stdout.readlines()
         std_err = p.stderr.readlines()
-        logger.debug(std_out)
         if std_out:
+            logger.debug(std_out)
             return std_out[0]
         else:
-            return []
+            return std_out
     finally:
         p.stdout.close()
         p.stderr.close()
