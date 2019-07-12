@@ -149,7 +149,7 @@ def updateJsonRemoveLifecycle(jsondict, body):
             lifecycle = spec.get('lifecycle')
             if lifecycle:
                 del spec['lifecycle']
-            spec.update(loads(body))
+            spec.update(loads(str(body)))
     return jsondict
 
 def myVmVolEventHandler(event, pool, vol):
