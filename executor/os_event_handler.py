@@ -310,8 +310,8 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
         else:
             logger.debug("file deleted:{0}".format(event.src_path))
             _,block = os.path.split(event.src_path)
-            if is_block_dev_exists(event.src_path):
-                myVmBlockDevEventHandler('Delete', block)
+#             if is_block_dev_exists(event.src_path):
+            myVmBlockDevEventHandler('Delete', block)
 
     def on_modified(self, event):
         if event.is_directory:

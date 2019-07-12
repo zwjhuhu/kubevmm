@@ -15,5 +15,5 @@ def get_block_dev_json(block):
     return runCmd(cmd)
 
 def is_block_dev_exists(block):
-    cmd = 'ucli vol show | grep %s' % block
+    cmd = 'lvdisplay %s' % block
     return runCmd(cmd)
