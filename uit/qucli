@@ -1,0 +1,2 @@
+res=$(OFMT=JSON ucli vol show $1)
+echo "{\"UitVolume\":$res }"
