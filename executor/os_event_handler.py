@@ -181,7 +181,6 @@ class VmVolEventHandler(FileSystemEventHandler):
         if event.is_directory:
             logger.debug("directory created:{0}".format(event.src_path))
         else:
-            logger.info(event)
             logger.debug("file created:{0}".format(event.src_path))
             _,vol = os.path.split(event.src_path)
             myVmVolEventHandler('Create', self.pool, vol)
@@ -236,7 +235,6 @@ class VmSnapshotEventHandler(FileSystemEventHandler):
         if event.is_directory:
             logger.debug("directory created:{0}".format(event.src_path))
         else:
-            logger.info(event)
             logger.debug("file created:{0}".format(event.src_path))
             dirs,snap_file = os.path.split(event.src_path)
             _,vm = os.path.split(dirs)
@@ -294,7 +292,6 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
         if event.is_directory:
             logger.debug("directory created:{0}".format(event.src_path))
         else:
-            logger.info(event)
             logger.debug("file created:{0}".format(event.src_path))
             _,block = os.path.split(event.src_path)
             if is_block_dev_exists(block):
@@ -311,7 +308,8 @@ class VmBlockDevEventHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if event.is_directory:
-            logger.debug("directory modified:{0}".format(event.src_path))
+#             logger.debug("directory modified:{0}".format(event.src_path))
+            pass
         else:
 #             logger.debug("file modified:{0}".format(event.src_path))
             pass
