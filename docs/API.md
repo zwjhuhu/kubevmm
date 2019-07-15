@@ -97,7 +97,7 @@ metadata.setName("VM");
 vm.setMetadata(metadata );
 VirtualMachineSpec spec = new VirtualMachineSpec();
 Lifecycle lifecycle = new Lifecycle();
-CreateAndStartVM createAndStartVM = new CreateAndStartVM();
+createAndStartVMFromISO createAndStartVM = new createAndStartVMFromISO();
 {
 	createAndStartVM.setName("string");
 	createAndStartVM.setMemory("string");
